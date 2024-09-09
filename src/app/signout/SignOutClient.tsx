@@ -1,25 +1,30 @@
 'use client';
 
 import { signOut } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Suspense } from 'react';
-import { ClientSafeProvider } from "next-auth/react";
+import type { ClientSafeProvider } from "next-auth/react";
 
-export default function SignOutClient({ providers }: { providers: Record<string, ClientSafeProvider> | null }) {
-  const router = useRouter();
+function SignOutButton() {
   const searchParams = useSearchParams();
 
+  return (
+    <button onClick={() => signOut({ 
+      callbackUrl: searchParams.get('callbackUrl') ?? "/"
+    })}>
+      Sign out
+    </button>
+  );
+}
+
+export default function SignOutClient({ providers }: { providers: Record<string, ClientSafeProvider> | null }) {
   if (!providers) return null;
 
   return (
-    <Suspense>
-    <div>
-        <button onClick={() => signOut({ 
-            callbackUrl: searchParams.get('callbackUrl') ?? "/"
-          })}>
-        Sign out
-      </button>
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <div>
+        <SignOutButton />
+      </div>
     </Suspense>
   );
 }
