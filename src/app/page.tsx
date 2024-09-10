@@ -72,7 +72,7 @@ export default async function Home() {
                   DEV Community is a community of 2,027,354 amazing developers
                 </h2>
                 <p className="text-sm text-gray-500 mb-4">
-                  We're a place where coders share, stay up-to-date and grow their careers.
+                  We&apos;re a place where coders share, stay up-to-date and grow their careers.
                 </p>
                 <div className="max-w-[208px] sm:max-w-[160px] md:max-w-[160px] lg:max-w-[208px] w-full h-[84px] rounded-md flex-col items-center justify-center">
                   <a className="inline-flex items-center justify-center w-full px-[15px] py-[7px] mb-[4px] text-sm border-[1px] border-black rounded-md">
