@@ -771,7 +771,7 @@ export default async function Home() {
                 </a>
               </div>
             </section>
-            <section className="mt-2 px-4 pb-4">
+            <section className="mt-2 px-4 pb-4 border-b-[1.5px]">
               <header>
                 <h4 className="font-mono text-sm font-bold py-2">
                   trending guides/resources
@@ -779,102 +779,204 @@ export default async function Home() {
               </header>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                  9 open-source gems to become the ultimate developer
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                  Global Talent Visa: How to Move to the UK Without an Employer
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                  Modern API Development with Node.js, Express, and TypeScript using Clean Architecture
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                7 Free APIs for Your Next Projects
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                  The Future of Web Development: Emerging Trends and Technologies Every Developer Should Know
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                  Introducing Dev Encyclopedia: A "Wikipedia", but for developers
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                  Understanding the Linux Filesystem: An In-Depth Guide for DevOps Engineers
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                  How to Make Money From Coding: A Beginner-Friendly Practical Guide
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                  DevOps Project - The Ultimate CICD Corporate DevOps PIpeline Project
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                  Mastering SOLID Principles in React: Elevating Your Code Quality
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                  How to implement a Distributed Lock using Redis
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                  Dear developers...
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                  12 Best JavScript Animation Libraries to Supercharge Your Web Projects in 2024
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                  How to let ChatGPT call functions in your app
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                  End-to-End DevOps Project: Building, Deploying and Monitoring a Full-Stack Application
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                  10+ More Advanced Project Ideas to Level Up Your Developer Skills: Part 2
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                  10+ Advanced Project Ideas for Developers: Challenge Your Skills!
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                  15 JavaScript Array Functions You Should Master as a Senior Dev 
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                  Frontend Dev + Data Structures & Algorithms: How DSA Can Power Your React App
+                </a>
+              </div>
+            </section>
+            <section className="mt-2 px-4 pb-4 border-b-[1.5px]">
+              <header>
+                <h4 className="font-mono text-sm font-bold py-2">
+                  recently queried
+                </h4>
+              </header>
+              <div className="flex flex-col text-sm">
+                <a className="flex flex-row items-center p-4">
+                  JavaScript Playground
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10 Things You Can Learn From Netflix's Architecture
+                  Windows Terminal Customization
+                </a>
+              </div>
+              <div className="flex flex-col text-sm">
+                <a className="flex flex-row items-center p-4">
+                  Java Import JSON Library
+                </a>
+              </div>
+              <div className="flex flex-col text-sm">
+                <a className="flex flex-row items-center p-4">
+                  Vscode Vim
+                </a>
+              </div>
+              <div className="flex flex-col text-sm">
+                <a className="flex flex-row items-center p-4">
+                  Best VSCode Extensions 
+                </a>
+              </div>
+              <div className="flex flex-col text-sm">
+                <a className="flex flex-row items-center p-4">
+                  Handwriting Generator
+                </a>
+              </div>
+              <div className="flex flex-col text-sm">
+                <a className="flex flex-row items-center p-4">
+                  Pseudo Code
+                </a>
+              </div>
+              <div className="flex flex-col text-sm">
+                <a className="flex flex-row items-center p-4">
+                  Button Animation CSS
+                </a>
+              </div>
+              <div className="flex flex-col text-sm">
+                <a className="flex flex-row items-center p-4">
+                  Beginner Python Projects
+                </a>
+              </div>
+              <div className="flex flex-col text-sm">
+                <a className="flex flex-row items-center p-4">
+                  GCC for Windows
+                </a>
+              </div>
+              <div className="flex flex-col text-sm">
+                <a className="flex flex-row items-center p-4">
+                  Node Scheduler
+                </a>
+              </div>
+              <div className="flex flex-col text-sm">
+                <a className="flex flex-row items-center p-4">
+                  SSN Validation
+                </a>
+              </div>
+              <div className="flex flex-col text-sm">
+                <a className="flex flex-row items-center p-4">
+                  Readme Template
+                </a>
+              </div>
+              <div className="flex flex-col text-sm">
+                <a className="flex flex-row items-center p-4">
+                  CSS Game 
+                </a>
+              </div>
+              <div className="flex flex-col text-sm">
+                <a className="flex flex-row items-center p-4">
+                  Pure OS
+                </a>
+              </div>
+              <div className="flex flex-col text-sm">
+                <a className="flex flex-row items-center p-4">
+                  Peppermint Linux OS
+                </a>
+              </div>
+              <div className="flex flex-col text-sm">
+                <a className="flex flex-row items-center p-4">
+                  Letsencrypt Wildcard
+                </a>
+              </div>
+              <div className="flex flex-col text-sm">
+                <a className="flex flex-row items-center p-4">
+                  CSS Text Outline
+                </a>
+              </div>
+              <div className="flex flex-col text-sm">
+                <a className="flex flex-row items-center p-4">
+                  Tic Tac Toe Python
+                </a>
+              </div>
+              <div className="flex flex-col text-sm">
+                <a className="flex flex-row items-center p-4">
+                  VSCode Shortcuts 
                 </a>
               </div>
             </section>
