@@ -1,5 +1,5 @@
 'use client';
-
+import React from 'react';
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import type { ClientSafeProvider } from "next-auth/react";
@@ -9,12 +9,19 @@ import { BsTwitterX } from "react-icons/bs";
 import { ImGithub } from "react-icons/im";
 import { ImFacebook2 } from "react-icons/im";
 import { IoTerminal } from "react-icons/io5";
+import { IoMailSharp } from "react-icons/io5";
+declare module './SignUpClient';
 
-function SignInButtons({ providers }: { providers: Record<string, ClientSafeProvider> | null }) {
+
+interface SignUpClientProps {
+  providers: Record<string, ClientSafeProvider> | null;
+}
+
+export default function SignUpClient({ providers }: SignUpClientProps) {
+
   const searchParams = useSearchParams();
-
+  
   if (!providers) return null;
-
   return (
     <div className="flex flex-col items-center justify-center p-4 bg-white">
       <div className="flex flex-col items-center justify-center px-12 pt-6 pb-12 mx-auto w-[640px]">
@@ -37,7 +44,7 @@ function SignInButtons({ providers }: { providers: Record<string, ClientSafeProv
                   callbackUrl: searchParams.get('callbackUrl') ?? "/"
                 })}>
                   <GrApple className="justify-start w-5 h-5"/>
-                  <span className="justify-center mx-auto text-sm">Continue with Apple</span>
+                  <span className="justify-center mx-auto text-sm">Sign Up with Apple</span>
               </button>
             </div>
           ))}
@@ -49,7 +56,7 @@ function SignInButtons({ providers }: { providers: Record<string, ClientSafeProv
                   callbackUrl: searchParams.get('callbackUrl') ?? "/"
                 })}>
                   <ImFacebook2 className="justify-start w-5 h-5"/>
-                  <span className="justify-center mx-auto text-sm">Continue with Facebook</span>
+                  <span className="justify-center mx-auto text-sm">Sign Up with Facebook</span>
               </button>
             </div>
           ))}
@@ -61,7 +68,7 @@ function SignInButtons({ providers }: { providers: Record<string, ClientSafeProv
                   callbackUrl: searchParams.get('callbackUrl') ?? "/"
                 })}>
                   <IoTerminal className="justify-start w-5 h-5"/>
-                  <span className="justify-center mx-auto text-sm">Continue with Forem</span>
+                  <span className="justify-center mx-auto text-sm">Sign Up with Forem</span>
               </button>
             </div>
           ))}
@@ -73,7 +80,7 @@ function SignInButtons({ providers }: { providers: Record<string, ClientSafeProv
                   callbackUrl: searchParams.get('callbackUrl') ?? "/"
                 })}>
                   <ImGithub className="justify-start w-5 h-5"/>
-                  <span className="justify-center mx-auto text-sm">Continue with GitHub</span>
+                  <span className="justify-center mx-auto text-sm">Sign Up with GitHub</span>
               </button>
             </div>
           ))}
@@ -85,7 +92,7 @@ function SignInButtons({ providers }: { providers: Record<string, ClientSafeProv
                   callbackUrl: searchParams.get('callbackUrl') ?? "/"
                 })}>
                   <GrGoogle className="justify-start w-5 h-5"/>
-                  <span className="justify-center mx-auto text-sm">Continue with Google</span>
+                  <span className="justify-center mx-auto text-sm">Sign Up with Google</span>
               </button>
             </div>
           ))}
@@ -97,20 +104,32 @@ function SignInButtons({ providers }: { providers: Record<string, ClientSafeProv
                   callbackUrl: searchParams.get('callbackUrl') ?? "/"
                 })}>
                   <BsTwitterX className="justify-start w-5 h-5"/>
-                  <span className="justify-center mx-auto text-sm">Continue with Twitter (X)</span>
+                  <span className="justify-center mx-auto text-sm">Sign Up with Twitter (X)</span>
+              </button>
+            </div>
+          ))}
+          </div>
+          <div className="mr-auto p-3 w-full m-[1px] border-[1.5px] border-gray-300 rounded-md">
+          {Object.values(providers).map((provider) => (
+            <div key={provider.name} className="">
+              <button className="w-full flex flex-row items-center" onClick={() => signIn(provider.id, {
+                  callbackUrl: searchParams.get('callbackUrl') ?? "/"
+                })}>
+                  <IoMailSharp className="justify-start w-5 h-5"/>
+                  <span className="justify-center mx-auto text-sm">Sign Up with Email</span>
               </button>
             </div>
           ))}
           </div>
         </div>
         <div className="w-full flex flex-col items-center justify-center">
-          <div className="w-full flex flex-row items-center justify-center my-5">
+          {/* <div className="w-full flex flex-row items-center justify-center my-5">
             <div className="w-1/2 h-[1px] bg-gray-300"></div>
             <div className="mx-4 text-gray-500">OR</div>
             <div className="w-1/2 h-[1px] bg-gray-300"></div>
-          </div>
+          </div> */}
           {/* form for email and password */}
-          <form className="w-full flex flex-col items-center justify-center">
+          {/* <form className="w-full flex flex-col items-center justify-center">
             <div className="w-full flex flex-col items-center justify-center mb-3">
               <label htmlFor="email" className="text-md justify-start mr-auto">Email</label>
               <input type="email" className="w-full px-2 py-[6.5px] border-[1px] mt-2 border-gray-300 rounded-md" />
@@ -119,7 +138,6 @@ function SignInButtons({ providers }: { providers: Record<string, ClientSafeProv
               <label htmlFor="password" className="text-md justify-start mr-auto">Password</label>
               <input type="password" className="w-full px-2 py-[6.5px] border-[1px] mt-2 border-gray-300 rounded-md" />
             </div>
-            {/* remember me and forgot password */}
             <div className="w-full flex flex-row items-center justify-between mb-3">
               <div className="flex flex-row items-center justify-center">
                 <input type="checkbox" className="w-4 h-4 border border-gray-300 rounded-md" />
@@ -130,9 +148,9 @@ function SignInButtons({ providers }: { providers: Record<string, ClientSafeProv
             <div className="w-full flex flex-col items-center justify-center mb-[5px] pt-3">
               <button type="submit" className="w-full bg-purple-500 text-white rounded-md h-12 px-5 py-3">Log In</button>
             </div>
-          </form>
+          </form> */}
           <div className="w-full flex flex-col items-center justify-center mt-6 px-16">
-            <p className="text-sm text-gray-500 text-center italic">By signing in, you are agreeing to our 
+            <p className="text-sm text-gray-500 text-center italic">By signing up, you are agreeing to our 
               <a href="/privacy-policy" className="pl-1 text-purple-500">privacy policy</a>, 
               <a href="/terms-of-use" className="pl-1 text-purple-500">terms of use</a> and 
               <a href="/code-of-conduct" className="pl-1 text-purple-500">code of conduct</a> . 
@@ -143,8 +161,8 @@ function SignInButtons({ providers }: { providers: Record<string, ClientSafeProv
             <div className="w-full h-[1px] bg-gray-300"></div>
           </div>
           <div className="w-full flex flex-row items-center justify-center pb-6">
-            <p className="text-md text-center">New to DEV Community?</p>
-            <a href="/signup" className="pl-1 text-purple-500">Create account.</a>
+            <p className="text-md text-center">Already have an account?</p>
+            <a href="/signin" className="pl-1 text-purple-500">Log in.</a>
           </div>
         </div>
 
@@ -152,15 +170,23 @@ function SignInButtons({ providers }: { providers: Record<string, ClientSafeProv
     </div>
   );
 }
-
-export default function SignInClient({ providers }: { providers: Record<string, ClientSafeProvider> | null }) {
-  return (
-    <div className="">
-      <div className="">
-        <Suspense fallback={<div>Loading...</div>}>
-          <SignInButtons providers={providers} />
-        </Suspense>
-      </div>
-    </div>
-  );
-}
+// const SignUpClient: React.FC<SignUpButtons> = ({ providers }) => {
+//   return (
+//     <div>
+//       {/* Your sign-up form will go here */}
+//       <h1>Sign Up</h1>
+//     </div>
+//   );
+// };
+// export default SignUpClient;
+// export default function SignUpClient({ providers }: { providers: Record<string, ClientSafeProvider> | null }) {
+//   return (
+//     <div className="">
+//       <div className="">
+//         <Suspense fallback={<div>Loading...</div>}>
+//           <SignUpButtons providers={providers} />
+//         </Suspense>
+//       </div>
+//     </div>
+//   );
+// }

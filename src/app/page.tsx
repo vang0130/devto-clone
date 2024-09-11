@@ -57,10 +57,10 @@ export default async function Home() {
             </form>
           </div>
           <div className="ml-auto flex items-center">
-            <a className="rounded-md px-4 py-2 mr-2 text-sm lg:px-4 py-2 sm:px-3 sm:py-1 sm:text-base">
+            <a href="/signin" className="rounded-md px-4 py-2 mr-2 text-sm lg:px-4 py-2 sm:px-3 sm:py-1 sm:text-base">
               Log In
             </a>
-            <a className="rounded-md border border-black px-2 py-1 text-sm sm:px-3 sm:py-2 sm:text-base">
+            <a href="/signup" className="rounded-md border border-black px-2 py-1 text-sm sm:px-3 sm:py-2 sm:text-base">
               Create Account
             </a>
           </div>
@@ -79,10 +79,10 @@ export default async function Home() {
                 their careers.
               </p>
               <div className="h-[84px] w-full max-w-[208px] flex-col items-center justify-center rounded-md sm:max-w-[160px] md:max-w-[160px] lg:max-w-[208px]">
-                <a className="mb-[4px] inline-flex w-full items-center justify-center rounded-md border-[1px] border-black px-[15px] py-[7px] text-sm">
+                <a className="mb-[4px] inline-flex w-full items-center justify-center rounded-md border-[1px] border-black px-[15px] py-[7px] text-sm" href="/signup">
                   Create account
                 </a>
-                <a className="inline-flex w-full items-center justify-center px-[15px] py-[7px] text-sm">
+                <a className="inline-flex w-full items-center justify-center px-[15px] py-[7px] text-sm" href="/signin">
                   Log in
                 </a>
               </div>
@@ -726,8 +726,8 @@ export default async function Home() {
                 <a className="p-4 flex flex-col">
                   Google @ New Shortcut!
                   <div className="pt-1">
-                    <div className="inline-block bg-yellow-400 rounded-md px-1 items-center">
-                      <span className="text-orange-800 text-xs items-center">New</span>
+                    <div className="inline-block bg-yellow-400 rounded-full px-2 py-0.5 leading-none">
+                      <span className="text-black text-xs font-semibold">New</span>
                     </div>
                   </div>
                 </a>
@@ -982,13 +982,6 @@ export default async function Home() {
             </section>
           </div>
         </div>
-        {/* <div className="max-w-[15rem] sm:max-w-[16rem] md:max-w-[10rem] lg:max-w-[20rem] w-full bg-gray-100">
-          </div>
-          <main className="flex-grow bg-white max-">
-          </main>
-          <div className="w-64 bg-gray-100">
-          </div> */}
-        {/* </div> */}
       </div>
     </HydrateClient>
   );
