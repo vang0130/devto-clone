@@ -13,12 +13,13 @@ import { IoMailSharp } from "react-icons/io5";
 declare module './SignUpClient';
 
 
-interface SignUpClientProps {
-  providers: Record<string, ClientSafeProvider> | null;
-}
+// interface SignUpClientProps {
+//   providers: Record<string, ClientSafeProvider> | null;
+// }
 
-export default function SignUpClient({ providers }: SignUpClientProps) {
+// export default function SignUpClient({ providers }: SignUpClientProps) {
 
+function SignUpButtons({ providers }: { providers: Record<string, ClientSafeProvider> | null }) {
   const searchParams = useSearchParams();
   
   if (!providers) return null;
@@ -123,32 +124,6 @@ export default function SignUpClient({ providers }: SignUpClientProps) {
           </div>
         </div>
         <div className="w-full flex flex-col items-center justify-center">
-          {/* <div className="w-full flex flex-row items-center justify-center my-5">
-            <div className="w-1/2 h-[1px] bg-gray-300"></div>
-            <div className="mx-4 text-gray-500">OR</div>
-            <div className="w-1/2 h-[1px] bg-gray-300"></div>
-          </div> */}
-          {/* form for email and password */}
-          {/* <form className="w-full flex flex-col items-center justify-center">
-            <div className="w-full flex flex-col items-center justify-center mb-3">
-              <label htmlFor="email" className="text-md justify-start mr-auto">Email</label>
-              <input type="email" className="w-full px-2 py-[6.5px] border-[1px] mt-2 border-gray-300 rounded-md" />
-            </div>
-            <div className="w-full flex flex-col items-center justify-center mb-3">
-              <label htmlFor="password" className="text-md justify-start mr-auto">Password</label>
-              <input type="password" className="w-full px-2 py-[6.5px] border-[1px] mt-2 border-gray-300 rounded-md" />
-            </div>
-            <div className="w-full flex flex-row items-center justify-between mb-3">
-              <div className="flex flex-row items-center justify-center">
-                <input type="checkbox" className="w-4 h-4 border border-gray-300 rounded-md" />
-                <label htmlFor="remember" className="text-md ml-2">Remember me</label>
-              </div>
-              <a href="/forgot-password" className="text-md text-purple-500">Forgot password?</a>
-            </div>
-            <div className="w-full flex flex-col items-center justify-center mb-[5px] pt-3">
-              <button type="submit" className="w-full bg-purple-500 text-white rounded-md h-12 px-5 py-3">Log In</button>
-            </div>
-          </form> */}
           <div className="w-full flex flex-col items-center justify-center mt-6 px-16">
             <p className="text-sm text-gray-500 text-center italic">By signing up, you are agreeing to our 
               <a href="/privacy-policy" className="pl-1 text-purple-500">privacy policy</a>, 
@@ -170,23 +145,15 @@ export default function SignUpClient({ providers }: SignUpClientProps) {
     </div>
   );
 }
-// const SignUpClient: React.FC<SignUpButtons> = ({ providers }) => {
-//   return (
-//     <div>
-//       {/* Your sign-up form will go here */}
-//       <h1>Sign Up</h1>
-//     </div>
-//   );
-// };
-// export default SignUpClient;
-// export default function SignUpClient({ providers }: { providers: Record<string, ClientSafeProvider> | null }) {
-//   return (
-//     <div className="">
-//       <div className="">
-//         <Suspense fallback={<div>Loading...</div>}>
-//           <SignUpButtons providers={providers} />
-//         </Suspense>
-//       </div>
-//     </div>
-//   );
-// }
+
+export default function SignUpClient({ providers }: { providers: Record<string, ClientSafeProvider> | null }) {
+  return (
+    <div className="">
+      <div className="">
+        <Suspense fallback={<div>Loading...</div>}>
+          <SignUpButtons providers={providers} />
+        </Suspense>
+      </div>
+    </div>
+  );
+}

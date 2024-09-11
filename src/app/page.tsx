@@ -804,7 +804,7 @@ export default async function Home() {
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  Introducing Dev Encyclopedia: A "Wikipedia", but for developers
+                  Introducing Dev Encyclopedia: A &quot;Wikipedia&quot;, but for developers
                 </a>
               </div>
               <div className="flex flex-col text-sm">
