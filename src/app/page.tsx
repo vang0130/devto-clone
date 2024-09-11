@@ -44,7 +44,7 @@ export default async function Home() {
             <img src="/images/logo.png" alt="logo" className="w-[40px] sm:w-[50px]" />
           </a>
 
-          <div className="mx-4 hidden max-w-2xl flex-grow sm:block">
+          <div className="mx-4 hidden max-w-2xl flex-grow hidden sm:block">
             <form className="border-grey-900 flex h-[40px] items-center rounded-md border">
               <button className="pl-2 pr-1">
                 <Image src="/images/search.svg" alt="search" width={20} height={20} />
@@ -57,20 +57,24 @@ export default async function Home() {
             </form>
           </div>
           <div className="ml-auto flex items-center">
-            <a href="/signin" className="rounded-md px-4 py-2 mr-2 text-sm lg:px-4 py-2 sm:px-3 sm:py-1 sm:text-base">
-              Log In
-            </a>
-            <a href="/signup" className="rounded-md border border-black px-2 py-1 text-sm sm:px-3 sm:py-2 sm:text-base">
-              Create Account
-            </a>
+            <div className="flex flex-col hidden sm:block">
+              <a href="/signin" className="rounded-md px-4 py-2 mr-2 text-sm lg:px-4 py-2 sm:px-3 sm:py-1 sm:text-base">
+                Log In
+              </a>
+            </div>
+            <div className="flex flex-col sm:flex-row">
+              <a href="/signup" className="rounded-md border border-black px-2 py-1 text-sm sm:px-3 sm:py-2 sm:text-base">
+                Create Account
+              </a>
+            </div>
           </div>
         </div>
       </header>
       <div className="mx-auto flex min-h-screen w-full max-w-[86.25rem] flex-col px-4 pt-[72px] sm:px-2 lg:px-4">
         {/* <div className="flex flex-grow"> */}
-        <div className="grid flex-grow grid-cols-[15rem,1fr,1fr,1fr] gap-4">
-          <div className="w-full max-w-[10rem] sm:max-w-[6rem] md:max-w-[10rem] lg:max-w-[15rem]">
-            <div className="min-h-[320px] rounded-md bg-white px-4 py-4 sm:px-2 sm:py-2 lg:px-4 lg:py-4 border-[1.5px]">
+        <div className="grid flex-grow lg:grid-cols-[15rem,1fr,1fr,1fr] md:grid-cols-[1fr,1fr,1fr] sm:grid-cols-[1fr,1fr] gap-4">
+          <div className="hidden sm:block md:col-span-1 lg:max-w-[15rem] items-center">
+            <div className="rounded-md bg-white px-4 py-4 sm:px-2 sm:py-2 lg:px-4 lg:py-4 border-[1.5px]">
               <h2 className="mb-4 text-xl font-bold">
                 DEV Community is a community of 2,027,354 amazing developers
               </h2>
@@ -78,7 +82,7 @@ export default async function Home() {
                 We&apos;re a place where coders share, stay up-to-date and grow
                 their careers.
               </p>
-              <div className="h-[84px] w-full max-w-[208px] flex-col items-center justify-center rounded-md sm:max-w-[160px] md:max-w-[160px] lg:max-w-[208px]">
+              <div className="w-full max-w-[208px] flex-col items-center mx-auto justify-center rounded-md sm:max-w-[160px] md:max-w-[160px] lg:max-w-[208px]">
                 <a className="mb-[4px] inline-flex w-full items-center justify-center rounded-md border-[1px] border-black px-[15px] py-[7px] text-sm" href="/signup">
                   Create account
                 </a>
@@ -688,7 +692,7 @@ export default async function Home() {
               </div>
             </div>
           </div>
-          <div className="w-full space-y-4">
+          <div className="hidden col-span-1 w-full space-y-4 md:block">
             <section className="rounded-md bg-white border-[1.5px]">
               <header className="py-3 px-4">
                 <h3 className="text-xl font-bold text-gray-700">
