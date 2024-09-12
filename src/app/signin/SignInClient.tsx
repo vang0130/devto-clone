@@ -9,6 +9,7 @@ import { BsTwitterX } from "react-icons/bs";
 import { ImGithub } from "react-icons/im";
 import { ImFacebook2 } from "react-icons/im";
 import { IoTerminal } from "react-icons/io5";
+import Image from "next/image";
 
 function SignInButtons({ providers }: { providers: Record<string, ClientSafeProvider> | null }) {
   const searchParams = useSearchParams();
@@ -20,7 +21,7 @@ function SignInButtons({ providers }: { providers: Record<string, ClientSafeProv
       <div className="flex flex-col items-center justify-center lg:px-12 pt-6 pb-12 mx-auto w-[288px] md:w-[400px] lg:w-[640px]">
         <div className="flex flex-col items-center justify-center mb-6">
           <a href="/">
-            <img src="/images/logo.png" alt="logo" className="w-[60px]" />
+            <Image src="/images/logo.png" alt="logo" className="w-[60px]" />
           </a>
           <h1 className="mt-6 text-3xl font-bold text-center">
             Join the DEV Community

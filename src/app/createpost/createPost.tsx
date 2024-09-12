@@ -21,7 +21,7 @@ const createPost = () => {
       <div className="mx-auto grid h-screen max-w-[1380px] grid-cols-1 grid-rows-[min-content,1fr,min-content] flex-col sm:grid-cols-[64px,7fr,3fr] md:px-2 sm:gap-x-2 lg:gap-x-4 lg:px-4">
         <div className="row-start-1 col-start-1 flex h-[56px] flex-row sm:col-end-3 items-center">
           <div className="hidden h-[56px] items-center md:flex">
-            <img src="/images/logo.png" alt="logo" className="mr-4 w-[50px]" />
+            <Image src="/images/logo.png" alt="logo" className="mr-4 w-[50px]" />
           </div>
           <div className="hidden h-[56px] items-center justify-start md:flex">
             <span className="text-md text-center">Create Post</span>

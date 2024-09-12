@@ -41,7 +41,7 @@ export default async function Home() {
       <header className="fixed left-0 right-0 top-0 h-[56px] bg-white border-b-[1.5px]">
         <div className="justify-start mx-auto flex h-full w-full max-w-[1380px] items-center px-4 sm:px-2 lg:px-4">
           <a className="flex items-center">
-            <img src="/images/logo.png" alt="logo" className="w-[50px]" />
+            <Image src="/images/logo.png" alt="logo" className="w-[50px]" />
             {/* <p className="text-center text-2xl text-white">
                 {session && <span>Logged in as {session.user?.name}</span>}
               </p> */}
@@ -479,7 +479,7 @@ export default async function Home() {
                 <h4 className="text-md mb-[10px] font-bold">
                   Thank you to our Diamond Sponsor Neon
                 </h4>
-                <img
+                <Image
                   src="/images/neon.png"
                   alt="neon"
                   className="mb-[20px] h-full w-full rounded-md"
@@ -508,7 +508,7 @@ export default async function Home() {
                     Share your first DEV post and join a vibrant community of
                     tech enthusiasts!
                   </p>
-                  <img
+                  <Image
                     src="/images/write.png"
                     alt="write-badge"
                     className="mb-[20px] h-full w-full rounded-md"
@@ -572,7 +572,7 @@ export default async function Home() {
               <div className="rounded-md bg-white p-5 border-[1.5px]">
                 <div className="mb-2 mr-2 flex max-h-[35px] items-center">
                   <div className="mr-2 w-8 h-8 rounded-full overflow-hidden">
-                    <img
+                    <Image
                       src="/images/winter.png"
                       alt="logo"
                       className="w-full h-full object-cover"
@@ -635,7 +635,7 @@ export default async function Home() {
               <div className="rounded-md bg-white p-5 border-[1.5px]">
                 <div className="mb-2 mr-2 flex max-h-[35px] items-center">
                   <div className="mr-2 w-8 h-8 rounded-full overflow-hidden">
-                    <img
+                    <Image
                       src="/images/winter.png"
                       alt="logo"
                       className="w-full h-full object-cover"
