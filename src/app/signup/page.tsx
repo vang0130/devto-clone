@@ -1,4 +1,3 @@
-// import SignUpClient from './SignUpClient';
 import SignUpClient from './SignUpClient';
 import { getProviders } from "next-auth/react";
 

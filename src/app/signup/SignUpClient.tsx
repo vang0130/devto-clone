@@ -25,15 +25,15 @@ function SignUpButtons({ providers }: { providers: Record<string, ClientSafeProv
   if (!providers) return null;
   return (
     <div className="flex flex-col items-center justify-center p-4 bg-white">
-      <div className="flex flex-col items-center justify-center px-12 pt-6 pb-12 mx-auto w-[640px]">
+      <div className="flex flex-col items-center justify-center lg:px-12 pt-6 pb-12 mx-auto w-[288px] md:w-[400px] lg:w-[640px]">
         <div className="flex flex-col items-center justify-center mb-6">
           <a href="/">
             <img src="/images/logo.png" alt="logo" className="w-[60px]" />
           </a>
-          <h1 className="mt-6 text-3xl font-bold">
+          <h1 className="mt-6 text-3xl font-bold text-center">
             Join the DEV Community
           </h1>
-          <p className="mt-2 text-md text-gray-500">
+          <p className="mt-2 text-md text-gray-500 text-center">
             DEV Community is a community of 2,0333,865 amazing developers
           </p>
         </div>
@@ -124,7 +124,7 @@ function SignUpButtons({ providers }: { providers: Record<string, ClientSafeProv
           </div>
         </div>
         <div className="w-full flex flex-col items-center justify-center">
-          <div className="w-full flex flex-col items-center justify-center mt-6 px-16">
+          <div className="w-full flex flex-col items-center justify-center mt-6 lg:px-16">
             <p className="text-sm text-gray-500 text-center italic">By signing up, you are agreeing to our 
               <a href="/privacy-policy" className="pl-1 text-purple-500">privacy policy</a>, 
               <a href="/terms-of-use" className="pl-1 text-purple-500">terms of use</a> and 

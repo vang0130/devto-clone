@@ -39,12 +39,14 @@ export default async function Home() {
   return (
     <HydrateClient>
       <header className="fixed left-0 right-0 top-0 h-[56px] bg-white border-b-[1.5px]">
-        <div className="justify-left mx-auto flex h-full w-full max-w-[1380px] items-center px-4 sm:px-2 lg:px-4">
+        <div className="justify-start mx-auto flex h-full w-full max-w-[1380px] items-center px-4 sm:px-2 lg:px-4">
           <a className="flex items-center">
-            <img src="/images/logo.png" alt="logo" className="w-[40px] sm:w-[50px]" />
-          </a>
-
-          <div className="mx-4 max-w-2xl flex-grow hidden sm:block">
+            <img src="/images/logo.png" alt="logo" className="w-[50px]" />
+            {/* <p className="text-center text-2xl text-white">
+                {session && <span>Logged in as {session.user?.name}</span>}
+              </p> */}
+            </a>
+          <div className="mr-auto mx-4 max-w-2xl hidden sm:block sm:w-[400px] md:w-[600px] lg:w-[680px]">
             <form className="border-grey-900 flex h-[40px] items-center rounded-md border">
               <button className="pl-2 pr-1">
                 <Image src="/images/search.svg" alt="search" width={20} height={20} />
@@ -56,25 +58,29 @@ export default async function Home() {
               />
             </form>
           </div>
-          <div className="ml-auto flex items-center">
-            <div className="flex-col hidden sm:block">
-              <a href="/signin" className="rounded-md px-4 mr-2 text-sm lg:px-4 py-2 sm:px-3 sm:py-1 sm:text-base">
-                Log In
-              </a>
+            <div className="ml-auto flex items-center">
+              <div className="flex-col hidden md:block">
+                <a href={session ? "/signout" : "/signin"}>
+                  <div className="rounded-md px-4 mr-2 text-sm lg:px-4 py-2 sm:px-3 sm:py-1 sm:text-base min-w-[100px] text-center">
+                    {session ? "Sign Out" : "Sign In"}
+                  </div>
+                </a>
+              </div>
+              <div className="">
+                <a href={session ? "/post" : "/signup"} > 
+                <div className="flex items-center justify-center rounded-md border border-black text-sm px-3 py-2 w-[140px] text-center">
+                  {session ? "Create Post" : "Create Account"}
+                </div>
+                </a>
+              </div>
             </div>
-            <div className="flex flex-col sm:flex-row">
-              <a href="/signup" className="rounded-md border border-black px-2 py-1 text-sm sm:px-3 sm:py-2 sm:text-base">
-                Create Account
-              </a>
-            </div>
-          </div>
         </div>
       </header>
       <div className="mx-auto flex min-h-screen w-full max-w-[86.25rem] flex-col px-4 pt-[72px] sm:px-2 lg:px-4">
         {/* <div className="flex flex-grow"> */}
         <div className="grid flex-grow lg:grid-cols-[15rem,1fr,1fr,1fr] md:grid-cols-[15rem,1fr] sm:grid-cols-[1fr] gap-4">
           <div className="hidden md:block lg:max-w-[15rem] items-center">
-            <div className="rounded-md bg-white px-4 py-4 sm:px-2 sm:py-2 lg:px-4 lg:py-4 border-[1.5px]">
+            {/* <div className="rounded-md bg-white px-4 py-4 sm:px-2 sm:py-2 lg:px-4 lg:py-4 border-[1.5px] mb-4">
               <h2 className="mb-4 text-xl font-bold">
                 DEV Community is a community of 2,027,354 amazing developers
               </h2>
@@ -90,8 +96,8 @@ export default async function Home() {
                   Log in
                 </a>
               </div>
-            </div>
-            <nav className="mb-4 mt-4 flex min-h-[600px] flex-col text-sm">
+            </div> */}
+            <nav className="mb-4 flex min-h-[600px] flex-col text-sm">
               <ul className="min-h-[40px]">
                 <li className="min-h-[40px]">
                   <a className="flex items-center px-4 py-2">
