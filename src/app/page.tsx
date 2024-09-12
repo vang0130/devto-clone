@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { getServerAuthSession } from "t3/server/auth";
-import { api, HydrateClient } from "t3/trpc/server";
+import { HydrateClient } from "t3/trpc/server";
 import { HiOutlineBookmark } from "react-icons/hi2";
 import { HiOutlineHome } from "react-icons/hi2";
 import { HiOutlineMicrophone } from "react-icons/hi2";
