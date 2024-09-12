@@ -5,9 +5,26 @@ export default {
     darkMode: ["class"],
     content: ["./src/**/*.tsx"],
   theme: {
-  	extend: {
-  		fontFamily: {
-  			sans: ["var(--font-geist-sans)", ...fontFamily.sans]
+	screens: {
+		'sm': '660px',
+		// => @media (min-width: 640px) { ... }
+  
+		'md': '768px',
+		// => @media (min-width: 768px) { ... }
+  
+		'lg': '1024px',
+		// => @media (min-width: 1024px) { ... }
+  
+		'xl': '1280px',
+		// => @media (min-width: 1280px) { ... }
+  
+		'2xl': '1536px',
+		// => @media (min-width: 1536px) { ... }
+	  },
+	},
+	extend: {
+      fontFamily: {
+        sans: ["var(--font-geist-sans)", ...fontFamily.sans]
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
@@ -54,9 +71,8 @@ export default {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
-  		}
-  	}
-  },
-  plugins: [require("tailwindcss-animate")],
-} satisfies Config;
+  			},
+  		},
+	},
+	plugins: [require("tailwindcss-animate")]
+} as Config;

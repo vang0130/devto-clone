@@ -44,7 +44,7 @@ export default async function Home() {
             <img src="/images/logo.png" alt="logo" className="w-[40px] sm:w-[50px]" />
           </a>
 
-          <div className="mx-4 hidden max-w-2xl flex-grow hidden sm:block">
+          <div className="mx-4 max-w-2xl flex-grow hidden sm:block">
             <form className="border-grey-900 flex h-[40px] items-center rounded-md border">
               <button className="pl-2 pr-1">
                 <Image src="/images/search.svg" alt="search" width={20} height={20} />
@@ -57,8 +57,8 @@ export default async function Home() {
             </form>
           </div>
           <div className="ml-auto flex items-center">
-            <div className="flex flex-col hidden sm:block">
-              <a href="/signin" className="rounded-md px-4 py-2 mr-2 text-sm lg:px-4 py-2 sm:px-3 sm:py-1 sm:text-base">
+            <div className="flex-col hidden sm:block">
+              <a href="/signin" className="rounded-md px-4 mr-2 text-sm lg:px-4 py-2 sm:px-3 sm:py-1 sm:text-base">
                 Log In
               </a>
             </div>
@@ -730,8 +730,8 @@ export default async function Home() {
                 <a className="p-4 flex flex-col">
                   Google @ New Shortcut!
                   <div className="pt-1">
-                    <div className="inline-block bg-yellow-400 rounded-full px-2 py-0.5 leading-none">
-                      <span className="text-black text-xs font-semibold">New</span>
+                    <div className="inline-block bg-yellow-400 rounded-md px-1 items-center">
+                      <span className="text-orange-800 text-xs items-center">New</span>
                     </div>
                   </div>
                 </a>
