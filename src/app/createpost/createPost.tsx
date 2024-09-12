@@ -119,7 +119,7 @@ const createPost = () => {
                 co-workers or local communities.
               </li>
               <li>
-                Ask people to leave questions for you in the comments. It's a
+                Ask people to leave questions for you in the comments. It&apos;s a
                 great way to spark additional discussion describing personally
                 why you wrote it or why people might find it helpful.
               </li>
