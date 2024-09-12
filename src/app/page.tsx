@@ -34,7 +34,7 @@ export default async function Home() {
   // const hello = await api.post.hello({ text: "from tRPC" });
   const session = await getServerAuthSession();
 
-  void api.post.getLatest.prefetch();
+  // void api.post.getLatest.prefetch();
 
   return (
     <HydrateClient>
@@ -77,7 +77,6 @@ export default async function Home() {
         </div>
       </header>
       <div className="mx-auto flex min-h-screen w-full max-w-[86.25rem] flex-col px-4 pt-[72px] sm:px-2 lg:px-4">
-        {/* <div className="flex flex-grow"> */}
         <div className="grid flex-grow lg:grid-cols-[15rem,1fr,1fr,1fr] md:grid-cols-[15rem,1fr] sm:grid-cols-[1fr] gap-4">
           <div className="hidden md:block lg:max-w-[15rem] items-center">
             {/* <div className="rounded-md bg-white px-4 py-4 sm:px-2 sm:py-2 lg:px-4 lg:py-4 border-[1.5px] mb-4">
