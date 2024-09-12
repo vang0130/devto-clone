@@ -67,7 +67,7 @@ export default async function Home() {
                 </a>
               </div>
               <div className="">
-                <a href={session ? "/post" : "/signup"} > 
+                <a href={session ? "/createpost" : "/signup"} > 
                 <div className="flex items-center justify-center rounded-md border border-black text-sm px-3 py-2 w-[140px] text-center">
                   {session ? "Create Post" : "Create Account"}
                 </div>
