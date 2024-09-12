@@ -6,7 +6,7 @@ export default {
     content: ["./src/**/*.tsx"],
   theme: {
 	screens: {
-		'sm': '660px',
+		'sm': '640px',
 		// => @media (min-width: 640px) { ... }
   
 		'md': '768px',

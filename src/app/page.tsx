@@ -72,8 +72,8 @@ export default async function Home() {
       </header>
       <div className="mx-auto flex min-h-screen w-full max-w-[86.25rem] flex-col px-4 pt-[72px] sm:px-2 lg:px-4">
         {/* <div className="flex flex-grow"> */}
-        <div className="grid flex-grow lg:grid-cols-[15rem,1fr,1fr,1fr] md:grid-cols-[1fr,1fr,1fr] sm:grid-cols-[1fr,1fr] gap-4">
-          <div className="hidden sm:block md:col-span-1 lg:max-w-[15rem] items-center">
+        <div className="grid flex-grow lg:grid-cols-[15rem,1fr,1fr,1fr] md:grid-cols-[15rem,1fr] sm:grid-cols-[1fr] gap-4">
+          <div className="hidden md:block lg:max-w-[15rem] items-center">
             <div className="rounded-md bg-white px-4 py-4 sm:px-2 sm:py-2 lg:px-4 lg:py-4 border-[1.5px]">
               <h2 className="mb-4 text-xl font-bold">
                 DEV Community is a community of 2,027,354 amazing developers
@@ -547,7 +547,7 @@ export default async function Home() {
               </p>
             </footer>
           </div>
-          <div className="col-span-2">
+          <div className="lg:col-span-2 md:col-span-1">
             <header className="m:p-0 m:px-0 m:mb-2 fs-l mb-2 h-[43px]">
               <nav className="m:mx-0 s:flex -mx-3 items-center justify-between">
                 <ul className="flex items-center">
@@ -692,7 +692,7 @@ export default async function Home() {
               </div>
             </div>
           </div>
-          <div className="hidden col-span-1 w-full space-y-4 md:block">
+          <div className="hidden w-full space-y-4 lg:block">
             <section className="rounded-md bg-white border-[1.5px]">
               <header className="py-3 px-4">
                 <h3 className="text-xl font-bold text-gray-700">
