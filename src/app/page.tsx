@@ -605,7 +605,8 @@ export default async function Home() {
                         {post.createdById}
                       </div>
                       <div className="flex max-h-[15px] items-center text-xs">
-                        {new Date(post.createdAt).toLocaleDateString()}
+                        Sep 9
+                        {/* {new Date(post.createdAt).toLocaleDateString()} */}
                         {/* {post.createdAt.toLocaleDateString()} */}
                       </div>
                     </div>
