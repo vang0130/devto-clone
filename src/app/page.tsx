@@ -31,7 +31,8 @@ import { TfiComment } from "react-icons/tfi";
 // import AllPosts from "./createpost/allPosts";
 
 import { HiOutlineBookmark } from "react-icons/hi2";
-import { api } from "t3/trpc/react";
+import { api } from "t3/trpc/server";
+
 
 export default async function Home() {
   // const hello = await api.post.hello({ text: "from tRPC" });
