@@ -1,6 +1,6 @@
 // import Link from "next/link";
 import Image from "next/image";
-
+import React from "react";
 import { getServerAuthSession } from "t3/server/auth";
 import { HydrateClient } from "t3/trpc/server";
 import { HiOutlineHome } from "react-icons/hi2";
@@ -28,14 +28,17 @@ import { RiTwitchFill } from "react-icons/ri";
 import { SiMcdonalds } from "react-icons/si";
 import { BsThreeDots } from "react-icons/bs";
 import { TfiComment } from "react-icons/tfi";
-import AllPosts from "./createpost/allPosts";
+// import AllPosts from "./createpost/allPosts";
 
-import { api } from "t3/trpc/server";
+import { HiOutlineBookmark } from "react-icons/hi2";
+import { api } from "t3/trpc/react";
 
 export default async function Home() {
   // const hello = await api.post.hello({ text: "from tRPC" });
   const session = await getServerAuthSession();
 
+  const { data: allPosts } = api.post.findMany.useQuery(); // Destructure to get data
+  
   // void api.post.allPosts.prefetch();
   return (
     <HydrateClient>
