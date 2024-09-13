@@ -209,14 +209,14 @@ const CreatePost = () => {
           </button>
         </div>
       </div>
-      {latestPost ? (
+      {/* {latestPost ? (
         <p className="truncate">
           Your most recent post: {latestPost.name}. Your content is{" "}
           {latestPost.content}
         </p>
       ) : (
         <p>You have no posts yet.</p>
-      )}
+      )} */}
     </div>
   );
 };
