@@ -38,13 +38,13 @@ import Image from "next/image";
 // }
 
 
-const createPost = () => {
+const CreatePost = () => {
   const [latestPost] = api.post.getLatest.useSuspenseQuery();
 
   const utils = api.useUtils();
   const [name, setName] = useState("");
   const [content, setContent] = useState("");
-  const [id, setId] = useState(0);
+  const [id] = useState(0);
   
   const savePost = api.post.create.useMutation({
     onSuccess: async () => {
