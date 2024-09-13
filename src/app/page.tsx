@@ -38,7 +38,7 @@ export default async function Home() {
   // const hello = await api.post.hello({ text: "from tRPC" });
   const session = await getServerAuthSession();
 
-  const allPosts = await api.post.findMany();
+  // const allPosts = await api.post.findMany();
   
   // void api.post.allPosts.prefetch();
   return (
