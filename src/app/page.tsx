@@ -38,7 +38,7 @@ export default async function Home() {
   // const hello = await api.post.hello({ text: "from tRPC" });
   const session = await getServerAuthSession();
 
-  // const allPosts = await api.post.findMany();
+  const allPosts = await api.post.findMany();
   
   // void api.post.allPosts.prefetch();
   return (
@@ -586,7 +586,7 @@ export default async function Home() {
               </nav>
             </header>
             {/* <AllPosts /> */}
-            {/* <div className="mb-2 flex flex-col space-y-4">
+            <div className="mb-2 flex flex-col space-y-4">
               {allPosts?.map((post) => (
                 <div
                   key={post.id}
@@ -664,7 +664,7 @@ export default async function Home() {
                   </div>
                 </div>
               ))}
-            </div> */}
+            </div>
             {/* <div className="mb-2 flex flex-col space-y-4">
               <div className="rounded-md border-[1.5px] bg-white p-5">
                 <div className="mb-2 mr-2 flex max-h-[35px] items-center">
