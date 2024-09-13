@@ -38,7 +38,7 @@ export default async function Home() {
   // const hello = await api.post.hello({ text: "from tRPC" });
   const session = await getServerAuthSession();
 
-  const { data: allPosts } = api.post.findMany.useQuery(); // Destructure to get data
+  const allPosts = await api.post.findMany();
   
   // void api.post.allPosts.prefetch();
   return (
@@ -587,8 +587,6 @@ export default async function Home() {
             </header>
             {/* <AllPosts /> */}
             <div className="mb-2 flex flex-col space-y-4">
-              {/* display all posts here */}
-              {/* number of divs dependent on number of posts in database */}
               {allPosts?.map((post) => (
                 <div
                   key={post.id}
