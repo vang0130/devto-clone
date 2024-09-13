@@ -3,7 +3,7 @@
 import { signOut } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import { Suspense } from 'react';
 import type { ClientSafeProvider } from "next-auth/react";
 
@@ -15,8 +15,8 @@ function SignOutButton() {
     <div className="flex w-full h-full flex-col justify-center items-center">
       <header className="fixed left-0 right-0 top-0 h-[56px] bg-white border-b-[1.5px]">
         <div className="justify-start mx-auto flex h-full w-full max-w-[1380px] items-center px-4 sm:px-2 lg:px-4">
-          <a className="flex items-center">
-            <Image src="/images/logo.png" alt="logo" className="w-[50px]" />
+          <a className="flex items-center" href="/">
+            <Image src="/images/logo.png" alt="logo" className="" width={50} height={50} />
           </a>
           <div className="mr-auto mx-4 max-w-2xl hidden sm:block sm:w-[400px] md:w-[600px] lg:w-[680px]">
             <form className="border-grey-900 flex h-[40px] items-center rounded-md border">

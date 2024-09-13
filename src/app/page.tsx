@@ -3,7 +3,6 @@ import Image from "next/image";
 
 import { getServerAuthSession } from "t3/server/auth";
 import { HydrateClient } from "t3/trpc/server";
-import { HiOutlineBookmark } from "react-icons/hi2";
 import { HiOutlineHome } from "react-icons/hi2";
 import { HiOutlineMicrophone } from "react-icons/hi2";
 import { IoPricetagsOutline } from "react-icons/io5";
@@ -29,27 +28,33 @@ import { RiTwitchFill } from "react-icons/ri";
 import { SiMcdonalds } from "react-icons/si";
 import { BsThreeDots } from "react-icons/bs";
 import { TfiComment } from "react-icons/tfi";
+import AllPosts from "./createpost/allPosts";
 
 export default async function Home() {
   // const hello = await api.post.hello({ text: "from tRPC" });
   const session = await getServerAuthSession();
 
   // void api.post.getLatest.prefetch();
-
   return (
     <HydrateClient>
-      <header className="fixed left-0 right-0 top-0 h-[56px] bg-white border-b-[1.5px]">
-        <div className="justify-start mx-auto flex h-full w-full max-w-[1380px] items-center px-4 sm:px-2 lg:px-4">
-          <a className="flex items-center">
-            <Image src="/images/logo.png" alt="logo" className="w-[50px]" />
+      {/* <AllPosts /> */}
+      <header className="fixed left-0 right-0 top-0 h-[56px] border-b-[1.5px] bg-white">
+        <div className="mx-auto flex h-full w-full max-w-[1380px] items-center justify-start px-4 sm:px-2 lg:px-4">
+          <a className="flex items-center" href="/">
+            <Image src="/images/logo.png" alt="logo" width={50} height={50} />
             {/* <p className="text-center text-2xl text-white">
                 {session && <span>Logged in as {session.user?.name}</span>}
               </p> */}
-            </a>
-          <div className="mr-auto mx-4 max-w-2xl hidden sm:block sm:w-[400px] md:w-[600px] lg:w-[680px]">
+          </a>
+          <div className="mx-4 mr-auto hidden max-w-2xl sm:block sm:w-[400px] md:w-[600px] lg:w-[680px]">
             <form className="border-grey-900 flex h-[40px] items-center rounded-md border">
               <button className="pl-2 pr-1">
-                <Image src="/images/search.svg" alt="search" width={20} height={20} />
+                <Image
+                  src="/images/search.svg"
+                  alt="search"
+                  width={20}
+                  height={20}
+                />
               </button>
               <input
                 type="text"
@@ -58,27 +63,27 @@ export default async function Home() {
               />
             </form>
           </div>
-            <div className="ml-auto flex items-center">
-              <div className="flex-col hidden md:block">
-                <a href={session ? "/signout" : "/signin"}>
-                  <div className="rounded-md px-4 mr-2 text-sm lg:px-4 py-2 sm:px-3 sm:py-1 sm:text-base min-w-[100px] text-center">
-                    {session ? "Sign Out" : "Sign In"}
-                  </div>
-                </a>
-              </div>
-              <div className="">
-                <a href={session ? "/createpost" : "/signup"} > 
-                <div className="flex items-center justify-center rounded-md border border-black text-sm px-3 py-2 w-[140px] text-center">
+          <div className="ml-auto flex items-center">
+            <div className="hidden flex-col md:block">
+              <a href={session ? "/signout" : "/signin"}>
+                <div className="mr-2 min-w-[100px] rounded-md px-4 py-2 text-center text-sm sm:px-3 sm:py-1 sm:text-base lg:px-4">
+                  {session ? "Sign Out" : "Sign In"}
+                </div>
+              </a>
+            </div>
+            <div className="">
+              <a href={session ? "/createpost" : "/signup"}>
+                <div className="flex w-[140px] items-center justify-center rounded-md border border-black px-3 py-2 text-center text-sm">
                   {session ? "Create Post" : "Create Account"}
                 </div>
-                </a>
-              </div>
+              </a>
             </div>
+          </div>
         </div>
       </header>
       <div className="mx-auto flex min-h-screen w-full max-w-[86.25rem] flex-col px-4 pt-[72px] sm:px-2 lg:px-4">
-        <div className="grid flex-grow lg:grid-cols-[15rem,1fr,1fr,1fr] md:grid-cols-[15rem,1fr] sm:grid-cols-[1fr] gap-4">
-          <div className="hidden md:block lg:max-w-[15rem] items-center">
+        <div className="grid flex-grow gap-4 sm:grid-cols-[1fr] md:grid-cols-[15rem,1fr] lg:grid-cols-[15rem,1fr,1fr,1fr]">
+          <div className="hidden items-center md:block lg:max-w-[15rem]">
             {/* <div className="rounded-md bg-white px-4 py-4 sm:px-2 sm:py-2 lg:px-4 lg:py-4 border-[1.5px] mb-4">
               <h2 className="mb-4 text-xl font-bold">
                 DEV Community is a community of 2,027,354 amazing developers
@@ -468,7 +473,7 @@ export default async function Home() {
                 </div>
               </div>
             </nav>
-            <div className="flex min-h-[320px] flex-col rounded-md bg-white px-3 pb-4 pt-3 sm:px-2 sm:py-2 lg:px-4 lg:py-4 border-[1.5px]">
+            <div className="flex min-h-[320px] flex-col rounded-md border-[1.5px] bg-white px-3 pb-4 pt-3 sm:px-2 sm:py-2 lg:px-4 lg:py-4">
               <div className="flex min-h-[32px] items-center">
                 <div className="text-sm">💎 DEV Diamond Sponsors</div>
                 <button className="ml-auto">
@@ -482,7 +487,9 @@ export default async function Home() {
                 <Image
                   src="/images/neon.png"
                   alt="neon"
-                  className="mb-[20px] h-full w-full rounded-md"
+                  className="mb-[20px] h-full rounded-md"
+                  width={100}
+                  height={100}
                 />
                 <p className="text-md mb-[20px] font-light">
                   <em className="">
@@ -493,7 +500,7 @@ export default async function Home() {
               </div>
             </div>
             <div className="pt-4">
-              <div className="flex max-h-[413px] min-h-[320px] flex-col overflow-y-auto rounded-md bg-white px-3 pb-4 pt-3 sm:px-2 sm:py-2 lg:px-4 lg:py-4 border-[1.5px]">
+              <div className="flex max-h-[413px] min-h-[320px] flex-col overflow-y-auto rounded-md border-[1.5px] bg-white px-3 pb-4 pt-3 sm:px-2 sm:py-2 lg:px-4 lg:py-4">
                 <div className="flex min-h-[32px] items-center">
                   <div className="text-sm">DEV Community</div>
                   <button className="ml-auto">
@@ -511,7 +518,9 @@ export default async function Home() {
                   <Image
                     src="/images/write.png"
                     alt="write-badge"
-                    className="mb-[20px] h-full w-full rounded-md"
+                    className="mb-[20px] h-full rounded-md"
+                    width={100}
+                    height={100}
                   />
                   <a className="mb-[4px] inline-flex w-full items-center justify-center rounded-md border-[1px] border-black px-[15px] py-[7px] text-sm">
                     Write Your First Post
@@ -552,12 +561,14 @@ export default async function Home() {
               </p>
             </footer>
           </div>
-          <div className="lg:col-span-2 md:col-span-1">
+          <div className="md:col-span-1 lg:col-span-2">
             <header className="m:p-0 m:px-0 m:mb-2 fs-l mb-2 h-[43px]">
               <nav className="m:mx-0 s:flex -mx-3 items-center justify-between">
                 <ul className="flex items-center">
                   <li>
-                    <a className="flex items-center px-3 py-2 font-bold">Relevant</a>
+                    <a className="flex items-center px-3 py-2 font-bold">
+                      Relevant
+                    </a>
                   </li>
                   <li>
                     <a className="flex items-center px-3 py-2">Latest</a>
@@ -568,14 +579,15 @@ export default async function Home() {
                 </ul>
               </nav>
             </header>
-            <div className="mb-2 flex flex-col space-y-4">
-              <div className="rounded-md bg-white p-5 border-[1.5px]">
+              <AllPosts />
+            {/* <div className="mb-2 flex flex-col space-y-4">
+              <div className="rounded-md border-[1.5px] bg-white p-5">
                 <div className="mb-2 mr-2 flex max-h-[35px] items-center">
-                  <div className="mr-2 w-8 h-8 rounded-full overflow-hidden">
-                    <Image
+                  <div className="mr-2 h-8 w-8 overflow-hidden rounded-full">
+                    <img
                       src="/images/winter.png"
                       alt="logo"
-                      className="w-full h-full object-cover"
+                      className="h-full w-full object-cover"
                     />
                   </div>
                   <div className="flex flex-col">
@@ -587,44 +599,54 @@ export default async function Home() {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col items-center lg:pl-[40px] md:pl-[20px] pl-[10px]">
+                <div className="flex flex-col items-center pl-[10px] md:pl-[20px] lg:pl-[40px]">
                   <h2 className="mb-1 text-2xl font-bold">
                     <a>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Quisquam, quos.
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Quisquam, quos.
                     </a>
                   </h2>
                   <div className="mb-2 flex w-full text-gray-500">
-                    <a className="text-sm px-[7px] py-[4px]" href="/t/react">
-                    #react
+                    <a className="px-[7px] py-[4px] text-sm" href="/t/react">
+                      #react
                     </a>
-                    <a className="text-sm px-[7px] py-[4px]" href="/t/javascript">
-                    #javascript
+                    <a
+                      className="px-[7px] py-[4px] text-sm"
+                      href="/t/javascript"
+                    >
+                      #javascript
                     </a>
-                    <a className="text-sm px-[7px] py-[4px]" href="/t/webdev">
-                    #webdev
+                    <a className="px-[7px] py-[4px] text-sm" href="/t/webdev">
+                      #webdev
                     </a>
-                    <a className="text-sm px-[7px] py-[4px]" href="/t/programming">
-                    #programming
+                    <a
+                      className="px-[7px] py-[4px] text-sm"
+                      href="/t/programming"
+                    >
+                      #programming
                     </a>
                   </div>
-                  <div className="flex flex-row w-full items-center">
+                  <div className="flex w-full flex-row items-center">
                     <div className="flex flex-row items-center">
-                      <a className="text-sm pl-2 pr-3 py-1 items-center">
+                      <a className="items-center py-1 pl-2 pr-3 text-sm">
                         <span>💖🦄🤯👏🔥</span>
-                        <span className="text-gray-500 ml-[14px]">190 reactions</span>
+                        <span className="ml-[14px] text-gray-500">
+                          190 reactions
+                        </span>
                       </a>
-                      <a className="text-sm pl-2 pr-3 py-1 flex-row flex items-center">
-                        <div className="h-6 w-6 mr-1 flex flex-row items-center">
+                      <a className="flex flex-row items-center py-1 pl-2 pr-3 text-sm">
+                        <div className="mr-1 flex h-6 w-6 flex-row items-center">
                           <TfiComment className="h-4 w-4" />
                         </div>
                         <span className="text-gray-500">19 comments</span>
                       </a>
                     </div>
-                    <div className="flex flex-row ml-auto items-center">
-                      <small className="text-gray-500 mr-2 items-center">4 min read</small>
+                    <div className="ml-auto flex flex-row items-center">
+                      <small className="mr-2 items-center text-gray-500">
+                        4 min read
+                      </small>
                       <button className="p-2">
-                        <span className="h-6 w-6 flex items-center justify-center">
+                        <span className="flex h-6 w-6 items-center justify-center">
                           <HiOutlineBookmark className="h-5 w-5" />
                         </span>
                       </button>
@@ -632,13 +654,13 @@ export default async function Home() {
                   </div>
                 </div>
               </div>
-              <div className="rounded-md bg-white p-5 border-[1.5px]">
+              <div className="rounded-md border-[1.5px] bg-white p-5">
                 <div className="mb-2 mr-2 flex max-h-[35px] items-center">
-                  <div className="mr-2 w-8 h-8 rounded-full overflow-hidden">
-                    <Image
+                  <div className="mr-2 h-8 w-8 overflow-hidden rounded-full">
+                    <img
                       src="/images/winter.png"
                       alt="logo"
-                      className="w-full h-full object-cover"
+                      className="h-full w-full object-cover"
                     />
                   </div>
                   <div className="flex flex-col">
@@ -650,44 +672,54 @@ export default async function Home() {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col items-center lg:pl-[40px] md:pl-[20px] pl-[10px]">
+                <div className="flex flex-col items-center pl-[10px] md:pl-[20px] lg:pl-[40px]">
                   <h2 className="mb-1 text-2xl font-bold">
                     <a>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Quisquam, quos.
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Quisquam, quos.
                     </a>
                   </h2>
                   <div className="mb-2 flex w-full text-gray-500">
-                    <a className="text-sm px-[7px] py-[4px]" href="/t/react">
-                    #react
+                    <a className="px-[7px] py-[4px] text-sm" href="/t/react">
+                      #react
                     </a>
-                    <a className="text-sm px-[7px] py-[4px]" href="/t/javascript">
-                    #javascript
+                    <a
+                      className="px-[7px] py-[4px] text-sm"
+                      href="/t/javascript"
+                    >
+                      #javascript
                     </a>
-                    <a className="text-sm px-[7px] py-[4px]" href="/t/webdev">
-                    #webdev
+                    <a className="px-[7px] py-[4px] text-sm" href="/t/webdev">
+                      #webdev
                     </a>
-                    <a className="text-sm px-[7px] py-[4px]" href="/t/programming">
-                    #programming
+                    <a
+                      className="px-[7px] py-[4px] text-sm"
+                      href="/t/programming"
+                    >
+                      #programming
                     </a>
                   </div>
-                  <div className="flex flex-row w-full items-center">
+                  <div className="flex w-full flex-row items-center">
                     <div className="flex flex-row items-center">
-                      <a className="text-sm pl-2 pr-3 py-1 items-center">
+                      <a className="items-center py-1 pl-2 pr-3 text-sm">
                         <span>💖🦄🤯👏🔥</span>
-                        <span className="text-gray-500 ml-[14px]">190 reactions</span>
+                        <span className="ml-[14px] text-gray-500">
+                          190 reactions
+                        </span>
                       </a>
-                      <a className="text-sm pl-2 pr-3 py-1 flex-row flex items-center">
-                        <div className="h-6 w-6 mr-1 flex flex-row items-center">
+                      <a className="flex flex-row items-center py-1 pl-2 pr-3 text-sm">
+                        <div className="mr-1 flex h-6 w-6 flex-row items-center">
                           <TfiComment className="h-4 w-4" />
                         </div>
                         <span className="text-gray-500">19 comments</span>
                       </a>
                     </div>
-                    <div className="flex flex-row ml-auto items-center">
-                      <small className="text-gray-500 mr-2 items-center">4 min read</small>
+                    <div className="ml-auto flex flex-row items-center">
+                      <small className="mr-2 items-center text-gray-500">
+                        4 min read
+                      </small>
                       <button className="p-2">
-                        <span className="h-6 w-6 flex items-center justify-center">
+                        <span className="flex h-6 w-6 items-center justify-center">
                           <HiOutlineBookmark className="h-5 w-5" />
                         </span>
                       </button>
@@ -695,94 +727,92 @@ export default async function Home() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="hidden w-full space-y-4 lg:block">
-            <section className="rounded-md bg-white border-[1.5px]">
-              <header className="py-3 px-4">
+            <section className="rounded-md border-[1.5px] bg-white">
+              <header className="px-4 py-3">
                 <h3 className="text-xl font-bold text-gray-700">
                   <a href="/t/discuss">#discuss</a>
                 </h3>
-                <div className="text-gray-500 text-xs">
-                   Discussion threads targeting the whole community 
+                <div className="text-xs text-gray-500">
+                  Discussion threads targeting the whole community
                 </div>
               </header>
               <div>
-                <a className="p-4 flex flex-col">
+                <a className="flex flex-col p-4">
                   ✨ Cursor AI Editor - Is It Actually Useful?
-                  <div className="text-gray-500 text-xs pt-1">
-                    3 comments
-                  </div>
+                  <div className="pt-1 text-xs text-gray-500">3 comments</div>
                 </a>
               </div>
               <div>
-                <a className="p-4 flex flex-col">
+                <a className="flex flex-col p-4">
                   I&apos;m a Developer, But Lately, I&apos;m Just Stuck
-                  <div className="text-gray-500 text-xs pt-1">
-                    20 comments
-                  </div>
+                  <div className="pt-1 text-xs text-gray-500">20 comments</div>
                 </a>
               </div>
               <div>
-                <a className="p-4 flex flex-col">
+                <a className="flex flex-col p-4">
                   Meme Monday
-                  <div className="text-gray-500 text-xs pt-1">
-                    45 comments
-                  </div>
+                  <div className="pt-1 text-xs text-gray-500">45 comments</div>
                 </a>
               </div>
               <div>
-                <a className="p-4 flex flex-col">
+                <a className="flex flex-col p-4">
                   Google @ New Shortcut!
                   <div className="pt-1">
-                    <div className="inline-block bg-yellow-400 rounded-md px-1 items-center">
-                      <span className="text-orange-800 text-xs items-center">New</span>
+                    <div className="inline-block items-center rounded-md bg-yellow-400 px-1">
+                      <span className="items-center text-xs text-orange-800">
+                        New
+                      </span>
                     </div>
                   </div>
                 </a>
               </div>
               <div>
-                <a className="p-4 flex flex-col">
+                <a className="flex flex-col p-4">
                   Why Writing Your Own Tools Is More Important Than You Think
                   <div className="pt-1">
-                    <div className="inline-block bg-yellow-400 rounded-md px-1 items-center">
-                      <span className="text-orange-800 text-xs items-center">New</span>
+                    <div className="inline-block items-center rounded-md bg-yellow-400 px-1">
+                      <span className="items-center text-xs text-orange-800">
+                        New
+                      </span>
                     </div>
                   </div>
                 </a>
               </div>
             </section>
-            <section className="rounded-md bg-white border-[1.5px]">
-              <header className="py-3 px-4">
+            <section className="rounded-md border-[1.5px] bg-white">
+              <header className="px-4 py-3">
                 <h3 className="text-xl font-bold text-gray-700">
                   <a href="/t/discuss">#watercooler</a>
                 </h3>
-                <div className="text-gray-500 text-xs">
-                   Light, and off-topic conversation
+                <div className="text-xs text-gray-500">
+                  Light, and off-topic conversation
                 </div>
               </header>
               <div>
-                <a className="p-4 flex flex-col">
+                <a className="flex flex-col p-4">
                   Meme Monday
-                  <div className="text-gray-500 text-xs pt-1">
-                    45 comments
-                  </div>
+                  <div className="pt-1 text-xs text-gray-500">45 comments</div>
                 </a>
               </div>
               <div>
-                <a className="p-4 flex flex-col">
+                <a className="flex flex-col p-4">
                   Web Developers, AI, and Development Fundamentals
                   <div className="pt-1">
-                    <div className="inline-block bg-yellow-400 rounded-md px-1 items-center">
-                      <span className="text-orange-800 text-xs items-center">New</span>
+                    <div className="inline-block items-center rounded-md bg-yellow-400 px-1">
+                      <span className="items-center text-xs text-orange-800">
+                        New
+                      </span>
                     </div>
                   </div>
                 </a>
               </div>
             </section>
-            <section className="mt-2 px-4 pb-4 border-b-[1.5px]">
+            <section className="mt-2 border-b-[1.5px] px-4 pb-4">
               <header>
-                <h4 className="font-mono text-sm font-bold py-2">
+                <h4 className="py-2 font-mono text-sm font-bold">
                   trending guides/resources
                 </h4>
               </header>
@@ -798,42 +828,49 @@ export default async function Home() {
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  Modern API Development with Node.js, Express, and TypeScript using Clean Architecture
+                  Modern API Development with Node.js, Express, and TypeScript
+                  using Clean Architecture
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                7 Free APIs for Your Next Projects
+                  7 Free APIs for Your Next Projects
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  The Future of Web Development: Emerging Trends and Technologies Every Developer Should Know
+                  The Future of Web Development: Emerging Trends and
+                  Technologies Every Developer Should Know
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  Introducing Dev Encyclopedia: A &quot;Wikipedia&quot;, but for developers
+                  Introducing Dev Encyclopedia: A &quot;Wikipedia&quot;, but for
+                  developers
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  Understanding the Linux Filesystem: An In-Depth Guide for DevOps Engineers
+                  Understanding the Linux Filesystem: An In-Depth Guide for
+                  DevOps Engineers
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  How to Make Money From Coding: A Beginner-Friendly Practical Guide
+                  How to Make Money From Coding: A Beginner-Friendly Practical
+                  Guide
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  DevOps Project - The Ultimate CICD Corporate DevOps PIpeline Project
+                  DevOps Project - The Ultimate CICD Corporate DevOps PIpeline
+                  Project
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  Mastering SOLID Principles in React: Elevating Your Code Quality
+                  Mastering SOLID Principles in React: Elevating Your Code
+                  Quality
                 </a>
               </div>
               <div className="flex flex-col text-sm">
@@ -848,7 +885,8 @@ export default async function Home() {
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  12 Best JavScript Animation Libraries to Supercharge Your Web Projects in 2024
+                  12 Best JavScript Animation Libraries to Supercharge Your Web
+                  Projects in 2024
                 </a>
               </div>
               <div className="flex flex-col text-sm">
@@ -858,33 +896,38 @@ export default async function Home() {
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  End-to-End DevOps Project: Building, Deploying and Monitoring a Full-Stack Application
+                  End-to-End DevOps Project: Building, Deploying and Monitoring
+                  a Full-Stack Application
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10+ More Advanced Project Ideas to Level Up Your Developer Skills: Part 2
+                  10+ More Advanced Project Ideas to Level Up Your Developer
+                  Skills: Part 2
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  10+ Advanced Project Ideas for Developers: Challenge Your Skills!
+                  10+ Advanced Project Ideas for Developers: Challenge Your
+                  Skills!
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  15 JavaScript Array Functions You Should Master as a Senior Dev 
+                  15 JavaScript Array Functions You Should Master as a Senior
+                  Dev
                 </a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  Frontend Dev + Data Structures & Algorithms: How DSA Can Power Your React App
+                  Frontend Dev + Data Structures & Algorithms: How DSA Can Power
+                  Your React App
                 </a>
               </div>
             </section>
-            <section className="mt-2 px-4 pb-4 border-b-[1.5px]">
+            <section className="mt-2 border-b-[1.5px] px-4 pb-4">
               <header>
-                <h4 className="font-mono text-sm font-bold py-2">
+                <h4 className="py-2 font-mono text-sm font-bold">
                   recently queried
                 </h4>
               </header>
@@ -904,13 +947,11 @@ export default async function Home() {
                 </a>
               </div>
               <div className="flex flex-col text-sm">
-                <a className="flex flex-row items-center p-4">
-                  Vscode Vim
-                </a>
+                <a className="flex flex-row items-center p-4">Vscode Vim</a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  Best VSCode Extensions 
+                  Best VSCode Extensions
                 </a>
               </div>
               <div className="flex flex-col text-sm">
@@ -919,9 +960,7 @@ export default async function Home() {
                 </a>
               </div>
               <div className="flex flex-col text-sm">
-                <a className="flex flex-row items-center p-4">
-                  Pseudo Code
-                </a>
+                <a className="flex flex-row items-center p-4">Pseudo Code</a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
@@ -939,14 +978,10 @@ export default async function Home() {
                 </a>
               </div>
               <div className="flex flex-col text-sm">
-                <a className="flex flex-row items-center p-4">
-                  Node Scheduler
-                </a>
+                <a className="flex flex-row items-center p-4">Node Scheduler</a>
               </div>
               <div className="flex flex-col text-sm">
-                <a className="flex flex-row items-center p-4">
-                  SSN Validation
-                </a>
+                <a className="flex flex-row items-center p-4">SSN Validation</a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
@@ -954,14 +989,10 @@ export default async function Home() {
                 </a>
               </div>
               <div className="flex flex-col text-sm">
-                <a className="flex flex-row items-center p-4">
-                  CSS Game 
-                </a>
+                <a className="flex flex-row items-center p-4">CSS Game</a>
               </div>
               <div className="flex flex-col text-sm">
-                <a className="flex flex-row items-center p-4">
-                  Pure OS
-                </a>
+                <a className="flex flex-row items-center p-4">Pure OS</a>
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
@@ -985,7 +1016,7 @@ export default async function Home() {
               </div>
               <div className="flex flex-col text-sm">
                 <a className="flex flex-row items-center p-4">
-                  VSCode Shortcuts 
+                  VSCode Shortcuts
                 </a>
               </div>
             </section>

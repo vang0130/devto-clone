@@ -29,7 +29,7 @@ function SignUpButtons({ providers }: { providers: Record<string, ClientSafeProv
       <div className="flex flex-col items-center justify-center lg:px-12 pt-6 pb-12 mx-auto w-[288px] md:w-[400px] lg:w-[640px]">
         <div className="flex flex-col items-center justify-center mb-6">
           <a href="/">
-            <Image src="/images/logo.png" alt="logo" className="w-[60px]" />
+            <Image src="/images/logo.png" alt="logo" className="" width={60} height={60} />
           </a>
           <h1 className="mt-6 text-3xl font-bold text-center">
             Join the DEV Community

@@ -16,10 +16,18 @@ export const postRouter = createTRPCRouter({
     }),
 
   create: protectedProcedure
-    .input(z.object({ name: z.string().min(1), content: z.string().min(1) }))
+    .input(z.object({ name: z.string().min(1), content: z.string().min(1), id: z.number().optional() }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.post.create({
-        data: {
+      return ctx.db.post.upsert({
+        where: { id: input.id },
+        update: {
+          // id: input.id,
+          name: input.name,
+          content: input.content,
+          // createdBy: { connect: { id: ctx.session.user.id } },
+        },
+        create: {
+          // id: input.id,
           name: input.name,
           content: input.content,
           createdBy: { connect: { id: ctx.session.user.id } },
@@ -36,8 +44,23 @@ export const postRouter = createTRPCRouter({
     return post ?? null;
   }),
 
+  findMany: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.db.post.findMany({
+      orderBy: { createdAt: "desc" },
+      // where: { createdBy: { id: ctx.session.user.id } },
+    });
+  }),
+
+  count: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.db.post.count({
+      // where: { createdBy: { id: ctx.session.user.id } },
+    });
+  }),
+
   getSecretMessage: protectedProcedure.query(() => {
     return "you can now see this secret message!";
   }),
 });
+
+
 
