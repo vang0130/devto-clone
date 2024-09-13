@@ -39,18 +39,18 @@ import Image from "next/image";
 
 
 const CreatePost = () => {
-  const [latestPost] = api.post.getLatest.useSuspenseQuery();
+  // const [latestPost] = api.post.getLatest.useSuspenseQuery();
 
   const utils = api.useUtils();
   const [name, setName] = useState("");
   const [content, setContent] = useState("");
   const [id] = useState(0);
   
-  const savePost = api.post.create.useMutation({
-    onSuccess: async () => {
-      await utils.post.invalidate();
-    },
-  });
+  // const savePost = api.post.create.useMutation({
+  //   onSuccess: async () => {
+  //     await utils.post.invalidate();
+  //   },
+  // });
 
   const createPost = api.post.create.useMutation({
     onSuccess: async () => {
@@ -200,12 +200,12 @@ const CreatePost = () => {
           <button
             onClick={(e) => {
               e.preventDefault();
-              savePost.mutate({ name, content, id });
+              createPost.mutate({ name, content, id });
             }}
             className="mr-2 flex h-[40px] items-center justify-center whitespace-nowrap rounded-md px-4 py-2"
-            disabled={savePost.isPending}
+            disabled={createPost.isPending}
           >
-            {savePost.isPending ? "Saving..." : "Save draft"}
+            {createPost.isPending ? "Saving..." : "Save draft"}
           </button>
         </div>
       </div>
