@@ -3,25 +3,36 @@
 import { signOut } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-// import { useSession } from "next-auth/react";
 import { Suspense } from 'react';
 import type { ClientSafeProvider } from "next-auth/react";
+import { PiBellSimple } from "react-icons/pi";
+import { useSession } from 'next-auth/react';
+import PopUpComponent from '../profileoptions/profileOptions';
+import SideBar from '../sidebar/sideBar';
+import { RiSearchLine } from "react-icons/ri";
 
 function SignOutButton() {
-  // const { data: session } = useSession();
+  const { data: session } = useSession();
   const searchParams = useSearchParams();
 
   return (
     <div className="flex w-full h-full flex-col justify-center items-center">
-      <header className="fixed left-0 right-0 top-0 h-[56px] bg-white border-b-[1.5px]">
-        <div className="justify-start mx-auto flex h-full w-full max-w-[1380px] items-center px-4 sm:px-2 lg:px-4">
+      <header className="fixed left-0 right-0 top-0 h-[56px] border-b-[1.5px] bg-white">
+        <div className="mx-auto flex h-full w-full max-w-[1380px] items-center justify-start md:px-2 sm:px-1 lg:px-4">
+          <SideBar />
+          {/* <button className="md:hidden mx-2 p-2">
+            <RiMenuFill className="h-6 w-6" />
+          </button> */}
           <a className="flex items-center" href="/">
-            <Image src="/images/logo.png" alt="logo" className="" width={50} height={50} />
+            <Image src="/images/logo.png" alt="logo" width={50} height={50} />
+            {/* <p className="text-center text-2xl text-white">
+                {session && <span>Logged in as {session.user?.name}</span>}
+              </p> */}
           </a>
-          <div className="mr-auto mx-4 max-w-2xl hidden sm:block sm:w-[400px] md:w-[600px] lg:w-[680px]">
+          <div className="mx-4 hidden flex-grow max-w-2xl sm:block lg:w-[680px]">
             <form className="border-grey-900 flex h-[40px] items-center rounded-md border">
               <button className="pl-2 pr-1">
-                <Image src="/images/search.svg" alt="search" width={20} height={20} />
+                <RiSearchLine className="h-6 w-6" />
               </button>
               <input
                 type="text"
@@ -30,23 +41,65 @@ function SignOutButton() {
               />
             </form>
           </div>
-            <div className="ml-auto flex items-center">
-              <div className="flex-col hidden md:block">
-                <a href="/signout">
-                  <div className="rounded-md px-4 mr-2 text-sm lg:px-4 py-2 sm:px-3 sm:py-1 sm:text-base min-w-[100px] text-center">
-                    Sign Out 
-                  </div>
-                </a>
-              </div>
-              <div className="">
-                <a href="/" > 
-                <div className="flex items-center justify-center rounded-md border border-black text-sm px-3 py-2 w-[140px] text-center">
+          {session ?
+          <div className="ml-auto flex items-center">
+            {/* <div className="hidden flex-col md:block">
+              <a href={session ? "/signout" : "/signin"}>
+                <div className="mr-2 min-w-[100px] rounded-md px-4 py-2 text-center text-sm sm:px-3 sm:py-1 sm:text-base lg:px-4">
+                  {session ? "Sign Out" : "Log In"}
+                </div>
+              </a>
+            </div> */}
+            <div className="">
+              <a href="/createpost">
+                <div className="hidden sm:flex w-[116.5px] mr-2 items-center justify-center rounded-md border border-black px-3 py-2 text-center text-sm">
                   Create Post
                 </div>
-                </a>
-              </div>
+              </a>
             </div>
-          {/* } */}
+            <div className="p-2 sm:hidden">
+              <a href="/">  
+                <RiSearchLine className="h-6 w-6" />
+              </a>
+            </div>
+            <div className="p-2 mx-1">
+              <a href="">
+                <PiBellSimple className="h-6 w-6" />
+              </a>
+            </div>
+            <div className="p-2 mx-1">
+              <PopUpComponent />
+              {/* <button onClick={() => setIsPopupVisible(true)}>
+                <img src="/images/winter.png" alt="avatar" className="h-8 w-8 rounded-full object-cover" />
+              {isPopupVisible && (
+                <div className="absolute top-10 right-0 bg-white border border-gray-300 rounded-md shadow-md p-2">
+                  <p>User Profile</p>
+                  <p>Settings</p>
+                  <p>Logout</p>
+                </div>
+              )}
+              </button> */}
+            </div>
+          </div>
+          : null}
+          {!session ?
+          <div className="ml-auto flex items-center">
+            <div className="hidden flex-col md:block">
+              <a href="/signin">
+                <div className="mr-2 min-w-[100px] rounded-md px-4 py-2 text-center text-sm sm:px-3 sm:py-1 sm:text-base lg:px-4">
+                  Log In
+                </div>
+              </a>
+            </div>
+            <div className="">
+              <a href="/signup">
+                <div className="flex w-[140px] items-center justify-center rounded-md border border-black px-3 py-2 text-center text-sm mr-2">
+                  Create Account
+                </div>
+              </a>
+            </div>
+          </div>
+          : null}
         </div>
       </header>
       <div className="w-full min-h-screen flex flex-col py-[56px] items-center justify-center">

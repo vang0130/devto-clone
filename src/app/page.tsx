@@ -1,6 +1,7 @@
 // import Link from "next/link";
 import Image from "next/image";
 import React from "react";
+
 import { getServerAuthSession } from "t3/server/auth";
 import { HydrateClient } from "t3/trpc/server";
 import { HiOutlineHome } from "react-icons/hi2";
@@ -28,17 +29,19 @@ import { RiTwitchFill } from "react-icons/ri";
 import { SiMcdonalds } from "react-icons/si";
 import { BsThreeDots } from "react-icons/bs";
 import { TfiComment } from "react-icons/tfi";
-// import AllPosts from "./createpost/allPosts";
-
+import { PiBellSimple } from "react-icons/pi";
+import PopUpComponent from './profileoptions/profileOptions';
 import { HiOutlineBookmark } from "react-icons/hi2";
 import { api } from "t3/trpc/server";
-
+import { RiMenuFill } from "react-icons/ri";
+import SideBar from './sidebar/sideBar';
+import { RiSearchLine } from "react-icons/ri";
 
 export default async function Home() {
   // const hello = await api.post.hello({ text: "from tRPC" });
   const session = await getServerAuthSession();
-
   const allPosts = await api.post.findMany();
+  
   // print posts to console
    console.table(allPosts)
   // void api.post.allPosts.prefetch();
@@ -46,22 +49,21 @@ export default async function Home() {
     <HydrateClient>
       {/* <AllPosts /> */}
       <header className="fixed left-0 right-0 top-0 h-[56px] border-b-[1.5px] bg-white">
-        <div className="mx-auto flex h-full w-full max-w-[1380px] items-center justify-start px-4 sm:px-2 lg:px-4">
+        <div className="mx-auto flex h-full w-full max-w-[1380px] items-center justify-start md:px-2 sm:px-1 lg:px-4">
+          <SideBar />
+          {/* <button className="md:hidden mx-2 p-2">
+            <RiMenuFill className="h-6 w-6" />
+          </button> */}
           <a className="flex items-center" href="/">
             <Image src="/images/logo.png" alt="logo" width={50} height={50} />
             {/* <p className="text-center text-2xl text-white">
                 {session && <span>Logged in as {session.user?.name}</span>}
               </p> */}
           </a>
-          <div className="mx-4 mr-auto hidden max-w-2xl sm:block sm:w-[400px] md:w-[600px] lg:w-[680px]">
+          <div className="mx-4 hidden flex-grow max-w-2xl sm:block lg:w-[680px]">
             <form className="border-grey-900 flex h-[40px] items-center rounded-md border">
               <button className="pl-2 pr-1">
-                <Image
-                  src="/images/search.svg"
-                  alt="search"
-                  width={20}
-                  height={20}
-                />
+                <RiSearchLine className="h-6 w-6" />
               </button>
               <input
                 type="text"
@@ -70,44 +72,89 @@ export default async function Home() {
               />
             </form>
           </div>
+          {session ?
           <div className="ml-auto flex items-center">
-            <div className="hidden flex-col md:block">
+            {/* <div className="hidden flex-col md:block">
               <a href={session ? "/signout" : "/signin"}>
                 <div className="mr-2 min-w-[100px] rounded-md px-4 py-2 text-center text-sm sm:px-3 sm:py-1 sm:text-base lg:px-4">
                   {session ? "Sign Out" : "Log In"}
                 </div>
               </a>
+            </div> */}
+            <div className="">
+              <a href="/createpost">
+                <div className="hidden sm:flex w-[116.5px] mr-2 items-center justify-center rounded-md border border-black px-3 py-2 text-center text-sm">
+                  Create Post
+                </div>
+              </a>
+            </div>
+            <div className="p-2 sm:hidden">
+              <a href="/">  
+                <RiSearchLine className="h-6 w-6" />
+              </a>
+            </div>
+            <div className="p-2 mx-1">
+              <a href="">
+                <PiBellSimple className="h-6 w-6" />
+              </a>
+            </div>
+            <div className="p-2 mx-1">
+              <PopUpComponent />
+              {/* <button onClick={() => setIsPopupVisible(true)}>
+                <img src="/images/winter.png" alt="avatar" className="h-8 w-8 rounded-full object-cover" />
+              {isPopupVisible && (
+                <div className="absolute top-10 right-0 bg-white border border-gray-300 rounded-md shadow-md p-2">
+                  <p>User Profile</p>
+                  <p>Settings</p>
+                  <p>Logout</p>
+                </div>
+              )}
+              </button> */}
+            </div>
+          </div>
+          : null}
+          {!session ?
+          <div className="ml-auto flex items-center">
+            <div className="hidden flex-col md:block">
+              <a href="/signin">
+                <div className="mr-2 min-w-[100px] rounded-md px-4 py-2 text-center text-sm sm:px-3 sm:py-1 sm:text-base lg:px-4">
+                  Log In
+                </div>
+              </a>
             </div>
             <div className="">
-              <a href={session ? "/createpost" : "/signup"}>
-                <div className="flex w-[140px] items-center justify-center rounded-md border border-black px-3 py-2 text-center text-sm">
-                  {session ? "Create Post" : "Create Account"}
+              <a href="/signup">
+                <div className="flex w-[140px] items-center justify-center rounded-md border border-black px-3 py-2 text-center text-sm mr-2">
+                  Create Account
                 </div>
               </a>
             </div>
           </div>
+          : null}
         </div>
       </header>
-      <div className="mx-auto flex min-h-screen w-full max-w-[86.25rem] flex-col px-4 pt-[72px] sm:px-2 lg:px-4">
-        <div className="grid flex-grow gap-4 sm:grid-cols-[1fr] md:grid-cols-[15rem,1fr] lg:grid-cols-[15rem,1fr,1fr,1fr]">
-          <div className="hidden items-center md:block lg:max-w-[15rem]">
-            <div className="rounded-md bg-white px-4 py-4 sm:px-2 sm:py-2 lg:px-4 lg:py-4 border-[1.5px] mb-4">
-              <h2 className="mb-4 text-xl font-bold">
-                DEV Community is a community of 2,027,354 amazing developers
-              </h2>
-              <p className="mb-4 text-sm text-gray-500">
-                We&apos;re a place where coders share, stay up-to-date and grow
-                their careers.
-              </p>
-              <div className="w-full max-w-[208px] flex-col items-center mx-auto justify-center rounded-md sm:max-w-[160px] md:max-w-[160px] lg:max-w-[208px]">
-                <a className="mb-[4px] inline-flex w-full items-center justify-center rounded-md border-[1px] border-black px-[15px] py-[7px] text-sm" href="/signup">
-                  Create account
-                </a>
-                <a className="inline-flex w-full items-center justify-center px-[15px] py-[7px] text-sm" href="/signin">
-                  Log in
-                </a>
+      <div className="mx-auto flex min-h-screen w-full sm:max-w-[86.25rem] flex-col sm:px-2 pt-[72px] lg:px-4">
+        <div className="grid flex-grow sm:gap-2 lg:gap-4 grid-cols-[1fr] sm:grid-cols-[15rem,1fr] lg:grid-cols-[15rem,1fr,1fr,1fr]">
+          <div className="hidden items-center sm:block lg:max-w-[15rem]">
+            {!session ?
+              <div className="flex flex-col rounded-md bg-white px-4 py-4 sm:px-2 sm:py-2 lg:px-4 lg:py-4 border-[1.5px] mb-4 items-center">
+                <h2 className="mb-4 text-xl font-bold">
+                  DEV Community is a community of 2,027,354 amazing developers
+                </h2>
+                <p className="mb-4 text-sm text-gray-500">
+                  We&apos;re a place where coders share, stay up-to-date and grow
+                  their careers.
+                </p>
+                <div className="w-full mr-2 max-w-[208px] flex-col items-center justify-center rounded-md sm:max-w-[160px] md:max-w-[160px] lg:max-w-[208px]">
+                  <a className="mb-[4px] inline-flex w-full items-center justify-center rounded-md border-[1px] border-black px-[15px] py-[7px] text-sm" href="/signup">
+                    Create account
+                  </a>
+                  <a className="inline-flex w-full items-center justify-center px-[15px] py-[7px] text-sm" href="/signin">
+                    Log in
+                  </a>
+                </div>
               </div>
-            </div>
+            : null}
             <nav className="mb-4 flex min-h-[600px] flex-col text-sm">
               <ul className="min-h-[40px]">
                 <li className="min-h-[40px]">
@@ -569,8 +616,8 @@ export default async function Home() {
             </footer>
           </div>
           <div className="md:col-span-1 lg:col-span-2">
-            <header className="m:p-0 m:px-0 m:mb-2 fs-l mb-2 h-[43px]">
-              <nav className="m:mx-0 s:flex -mx-3 items-center justify-between">
+            <header className="md:p-0 md:mb-2 fs-l mb-2 h-[43px]">
+              <nav className="px-3 sm:px-0 md:mx-0 sm:flex items-center justify-between">
                 <ul className="flex items-center">
                   <li>
                     <a className="flex items-center px-3 py-2 font-bold">
@@ -590,7 +637,7 @@ export default async function Home() {
               {allPosts?.map((post) => (
                 <div
                   key={post.id}
-                  className="rounded-md border-[1.5px] bg-white p-5"
+                  className="rounded-md border-[1.5px] bg-white p-5 w-full"
                 >
                   <div className="mb-2 mr-2 flex max-h-[35px] items-center">
                     <div className="mr-2 h-8 w-8 overflow-hidden rounded-full">
@@ -624,15 +671,18 @@ export default async function Home() {
                       <div className="flex flex-row items-center">
                         <a className="items-center py-1 pl-2 pr-3 text-sm">
                           <span>💖🦄🤯👏🔥</span>
-                          <span className="ml-[14px] text-gray-500">
+                          <span className="hidden sm:inline-block ml-[14px] text-gray-500">
                             190 reactions
+                          </span>
+                          <span className="inline-block sm:hidden ml-[14px] text-gray-500">
+                            190
                           </span>
                         </a>
                         <a className="flex flex-row items-center py-1 pl-2 pr-3 text-sm">
                           <div className="mr-1 flex h-6 w-6 flex-row items-center">
                             <TfiComment className="h-4 w-4" />
                           </div>
-                          <span className="text-gray-500">19 comments</span>
+                          <span className="hidden sm:inline-block text-gray-500">19 comments</span>
                         </a>
                       </div>
                       <div className="ml-auto flex flex-row items-center">

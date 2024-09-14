@@ -26,7 +26,7 @@ function SignUpButtons({ providers }: { providers: Record<string, ClientSafeProv
   if (!providers) return null;
   return (
     <div className="flex flex-col items-center justify-center p-4 bg-white">
-      <div className="flex flex-col items-center justify-center md:px-12 pt-6 pb-12 mx-auto w-[288px] md:w-[640px] lg:w-[640px]">
+      <div className="flex flex-col items-center justify-center md:px-12 pt-6 pb-12 mx-auto w-full md:w-[640px] lg:w-[640px]">
         <div className="flex flex-col items-center justify-center mb-6">
           <a href="/">
             <Image src="/images/logo.png" alt="logo" className="" width={60} height={60} />

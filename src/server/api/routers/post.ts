@@ -16,7 +16,7 @@ export const postRouter = createTRPCRouter({
   //   }),
 
   create: protectedProcedure
-    .input(z.object({ name: z.string().min(1), content: z.string().min(1), tags: z.array(z.string()).min(1).max(4), id: z.number().optional() }))
+    .input(z.object({ name: z.string().min(1), content: z.string().min(1), tags: z.array(z.string()).max(4), id: z.number().optional() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.post.upsert({
         where: { id: input.id },
