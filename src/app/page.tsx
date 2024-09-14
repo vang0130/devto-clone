@@ -39,7 +39,8 @@ export default async function Home() {
   const session = await getServerAuthSession();
 
   const allPosts = await api.post.findMany();
-  
+  // print posts to console
+   console.table(allPosts)
   // void api.post.allPosts.prefetch();
   return (
     <HydrateClient>
@@ -73,7 +74,7 @@ export default async function Home() {
             <div className="hidden flex-col md:block">
               <a href={session ? "/signout" : "/signin"}>
                 <div className="mr-2 min-w-[100px] rounded-md px-4 py-2 text-center text-sm sm:px-3 sm:py-1 sm:text-base lg:px-4">
-                  {session ? "Sign Out" : "Sign In"}
+                  {session ? "Sign Out" : "Log In"}
                 </div>
               </a>
             </div>
@@ -90,7 +91,7 @@ export default async function Home() {
       <div className="mx-auto flex min-h-screen w-full max-w-[86.25rem] flex-col px-4 pt-[72px] sm:px-2 lg:px-4">
         <div className="grid flex-grow gap-4 sm:grid-cols-[1fr] md:grid-cols-[15rem,1fr] lg:grid-cols-[15rem,1fr,1fr,1fr]">
           <div className="hidden items-center md:block lg:max-w-[15rem]">
-            {/* <div className="rounded-md bg-white px-4 py-4 sm:px-2 sm:py-2 lg:px-4 lg:py-4 border-[1.5px] mb-4">
+            <div className="rounded-md bg-white px-4 py-4 sm:px-2 sm:py-2 lg:px-4 lg:py-4 border-[1.5px] mb-4">
               <h2 className="mb-4 text-xl font-bold">
                 DEV Community is a community of 2,027,354 amazing developers
               </h2>
@@ -106,7 +107,7 @@ export default async function Home() {
                   Log in
                 </a>
               </div>
-            </div> */}
+            </div>
             <nav className="mb-4 flex min-h-[600px] flex-col text-sm">
               <ul className="min-h-[40px]">
                 <li className="min-h-[40px]">
@@ -585,7 +586,6 @@ export default async function Home() {
                 </ul>
               </nav>
             </header>
-            {/* <AllPosts /> */}
             <div className="mb-2 flex flex-col space-y-4">
               {allPosts?.map((post) => (
                 <div
@@ -614,7 +614,12 @@ export default async function Home() {
                       <a>{post.name}</a>
                     </h2>
                     <div className="mb-2 flex w-full text-gray-500">
-                      <a className="px-[7px] py-[4px] text-sm" href="/t/react">
+                      {post.tags.map((tag) => (
+                        <a className="px-[7px] py-[4px] text-sm" href={`/t/${tag}`}>
+                          {tag}
+                        </a>
+                      ))}
+                      {/* <a className="px-[7px] py-[4px] text-sm" href="/t/react">
                         #react
                       </a>
                       <a
@@ -631,7 +636,7 @@ export default async function Home() {
                         href="/t/programming"
                       >
                         #programming
-                      </a>
+                      </a> */}
                     </div>
                     <div className="flex w-full flex-row items-center">
                       <div className="flex flex-row items-center">

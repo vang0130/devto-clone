@@ -7,16 +7,16 @@ import {
 } from "../trpc";
 
 export const postRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `Hello ${input.text}`,
-      };
-    }),
+  // hello: publicProcedure
+  //   .input(z.object({ text: z.string() }))
+  //   .query(({ input }) => {
+  //     return {
+  //       greeting: `Hello ${input.text}`,
+  //     };
+  //   }),
 
   create: protectedProcedure
-    .input(z.object({ name: z.string().min(1), content: z.string().min(1), id: z.number().optional() }))
+    .input(z.object({ name: z.string().min(1), content: z.string().min(1), tags: z.array(z.string()).min(1).max(4), id: z.number().optional() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.post.upsert({
         where: { id: input.id },
@@ -24,34 +24,36 @@ export const postRouter = createTRPCRouter({
           // id: input.id,
           name: input.name,
           content: input.content,
+          tags: input.tags,
           // createdBy: { connect: { id: ctx.session.user.id } },
         },
         create: {
           // id: input.id,
           name: input.name,
           content: input.content,
+          tags: input.tags,
           createdBy: { connect: { id: ctx.session.user.id } },
         },
       });
     }),
 
-  getLatest: protectedProcedure.query(async ({ ctx }) => {
-    const post = await ctx.db.post.findFirst({
-      orderBy: { createdAt: "desc" },
-      where: { createdBy: { id: ctx.session.user.id } },
-    });
+  // getLatest: protectedProcedure.query(async ({ ctx }) => {
+  //   const post = await ctx.db.post.findFirst({
+  //     orderBy: { createdAt: "desc" },
+  //     where: { createdBy: { id: ctx.session.user.id } },
+  //   });
 
-    return post ?? null;
-  }),
+  //   return post ?? null;
+  // }),
 
-  findMany: protectedProcedure.query(async ({ ctx }) => {
+  findMany: publicProcedure.query(async ({ ctx }) => {
     return ctx.db.post.findMany({
       orderBy: { createdAt: "desc" },
       // where: { createdBy: { id: ctx.session.user.id } },
     });
   }),
 
-  count: protectedProcedure.query(async ({ ctx }) => {
+  count: publicProcedure.query(async ({ ctx }) => {
     return ctx.db.post.count({
       // where: { createdBy: { id: ctx.session.user.id } },
     });

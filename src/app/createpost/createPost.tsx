@@ -44,6 +44,7 @@ const CreatePost = () => {
   const utils = api.useUtils();
   const [name, setName] = useState("");
   const [content, setContent] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
   const [id] = useState(0);
   
   // const savePost = api.post.create.useMutation({
@@ -57,6 +58,7 @@ const CreatePost = () => {
       await utils.post.invalidate();
       setName("");
       setContent("");
+      setTags([]);
     },
   });
 
@@ -106,10 +108,28 @@ const CreatePost = () => {
               ></input>
             </div>
             <div className="relative flex h-9 w-full">
-              <input
-                className="h-9 w-full focus:outline-none"
-                placeholder="Add up to 4 tags..."
-              ></input>
+              <ul>
+                <li>
+                  <input
+                    className="h-9 w-full focus:outline-none"
+                    placeholder="Add up to 4 tags..."
+                    type="text"
+                    value={tags.join(' ')}
+                    onChange={(e) => setTags(e.target.value.split(' '))}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Space') {
+                        e.preventDefault();
+                        const newTag = tags.join(' ').trim();
+                        if (!tags.includes(newTag)) {
+                          setTags([...tags, newTag]);
+                        }
+                        setTags([...tags, ]);
+                      }
+                    }}
+                  >
+                  </input>
+                </li>
+              </ul>
             </div>
           </div>
           <div className="flex w-full flex-col px-3 md:px-12 lg:px-16">
@@ -154,14 +174,13 @@ const CreatePost = () => {
               </div>
             </div>
           </div>
-          <div className="flex w-full flex-grow flex-col items-start px-3 pb-3 md:px-12 md:pb-8 lg:px-16">
-            <input
-              type="text"
+          <div className="flex w-full flex-grow flex-col px-3 pb-3 md:px-12 md:pb-8 lg:px-16">
+            <textarea
               placeholder="Write your post content here..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="w-full resize-none items-start font-mono focus:outline-none md:min-h-[189px]"
-            ></input>
+              className="w-full resize-none items-start font-mono focus:outline-none md:min-h-[189px] break-words whitespace-pre-wrap"
+            ></textarea>
           </div>
         </div>
         <div className="row-start-2 hidden h-full flex-col justify-between sm:col-span-1 sm:col-start-3 md:flex">
@@ -189,7 +208,7 @@ const CreatePost = () => {
           <button
             onClick={(e) => {
               e.preventDefault();
-              createPost.mutate({ name, content, id});
+              createPost.mutate({ name, content, tags, id});
             }}
             className="mr-2 flex h-[40px] min-w-min items-center justify-center whitespace-nowrap rounded-md bg-blue-500 px-4 py-2 text-white"
             type="submit"
@@ -200,7 +219,7 @@ const CreatePost = () => {
           <button
             onClick={(e) => {
               e.preventDefault();
-              createPost.mutate({ name, content, id });
+              createPost.mutate({ name, content, tags, id });
             }}
             className="mr-2 flex h-[40px] items-center justify-center whitespace-nowrap rounded-md px-4 py-2"
             disabled={createPost.isPending}
