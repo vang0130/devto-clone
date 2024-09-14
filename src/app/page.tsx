@@ -602,10 +602,11 @@ export default async function Home() {
                     </div>
                     <div className="flex flex-col">
                       <div className="flex max-h-[17.5px] items-center text-sm">
-                        {post.createdById}
+                        {post.createdByName}
                       </div>
                       <div className="flex max-h-[15px] items-center text-xs">
-                        {new Date(post.createdAt).toLocaleDateString()}
+                        {/* {new Date(post.createdAt).toLocaleDateString()} */}
+                        {new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                       </div>
                     </div>
                   </div>
