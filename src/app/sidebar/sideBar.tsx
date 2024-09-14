@@ -1,11 +1,9 @@
 
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
-// import { getServerAuthSession } from "t3/server/auth";
 import { RiMenuFill } from "react-icons/ri";
 
-import Image from "next/image";
 
 import { HiOutlineHome } from "react-icons/hi2";
 import { HiOutlineMicrophone } from "react-icons/hi2";
@@ -30,7 +28,6 @@ import { RiGithubFill } from "react-icons/ri";
 import { RiFacebookBoxFill } from "react-icons/ri";
 import { RiTwitchFill } from "react-icons/ri";
 import { SiMcdonalds } from "react-icons/si";
-// import { BsThreeDots } from "react-icons/bs";
 import { TfiComment } from "react-icons/tfi";
 import { IoIosClose } from "react-icons/io";
 
@@ -39,16 +36,23 @@ import { IoIosClose } from "react-icons/io";
 
 export default function SideBarClient() {
 
+//   const { data: session } = useSession();
+//   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+//   const [isSidebarClosed, setIsSidebarClosed] = useState(true);
+//   const openSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
+//   const closeSidebar = () => setIsSidebarClosed(isSidebarClosed);
   const { data: session } = useSession();
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
 
-  const openSidebar = () => setIsSidebarVisible(!isSidebarVisible);
+  const toggleSidebar = useCallback(() => {
+    setIsSidebarVisible(prev => !prev);
+  }, []);
 
-  const closeSidebar = () => setIsSidebarVisible(false);
 
   return (
     <div className="overflow-scroll">
-        <button className="sm:hidden mx-2 p-2" onClick={openSidebar}>
+        <button className="sm:hidden mx-2 p-2" onClick={toggleSidebar}>
             <RiMenuFill className="h-6 w-6" />
         </button>
         {isSidebarVisible && (
@@ -58,7 +62,7 @@ export default function SideBarClient() {
         <div className="h-full w-[300px] overflow-scroll absolute top-0 left-0 bg-white items-center">
             <header className="h-[56px] w-full px-4 flex flex-row align-center items-center">
                 <p className="font-bold text-xl justify-start">DEV Community</p>
-                <button className="ml-auto justify-end" onClick={closeSidebar}>
+                <button className="ml-auto justify-end" onClick={toggleSidebar}>
                     <IoIosClose className="h-6 w-6" />
                 </button>
 
