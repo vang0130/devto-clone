@@ -605,7 +605,6 @@ export default async function Home() {
                         {post.createdByName}
                       </div>
                       <div className="flex max-h-[15px] items-center text-xs">
-                        {/* {new Date(post.createdAt).toLocaleDateString()} */}
                         {new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                       </div>
                     </div>
@@ -616,28 +615,10 @@ export default async function Home() {
                     </h2>
                     <div className="mb-2 flex w-full text-gray-500">
                       {post.tags.map((tag) => (
-                        <a className="px-[7px] py-[4px] text-sm" href={`/t/${tag}`}>
+                        <a key={tag} className="px-[7px] py-[4px] text-sm" href={`/t/${tag}`}>
                           {tag}
                         </a>
                       ))}
-                      {/* <a className="px-[7px] py-[4px] text-sm" href="/t/react">
-                        #react
-                      </a>
-                      <a
-                        className="px-[7px] py-[4px] text-sm"
-                        href="/t/javascript"
-                      >
-                        #javascript
-                      </a>
-                      <a className="px-[7px] py-[4px] text-sm" href="/t/webdev">
-                        #webdev
-                      </a>
-                      <a
-                        className="px-[7px] py-[4px] text-sm"
-                        href="/t/programming"
-                      >
-                        #programming
-                      </a> */}
                     </div>
                     <div className="flex w-full flex-row items-center">
                       <div className="flex flex-row items-center">
