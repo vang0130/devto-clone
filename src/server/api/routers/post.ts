@@ -6,15 +6,9 @@ import {
   publicProcedure,
 } from "../trpc";
 
-export const postRouter = createTRPCRouter({
-  // hello: publicProcedure
-  //   .input(z.object({ text: z.string() }))
-  //   .query(({ input }) => {
-  //     return {
-  //       greeting: `Hello ${input.text}`,
-  //     };
-  //   }),
 
+
+export const postRouter = createTRPCRouter({
   create: protectedProcedure
     .input(z.object({ name: z.string().min(1), content: z.string().min(1), tags: z.array(z.string()).max(4), id: z.number().optional() }))
     .mutation(async ({ ctx, input }) => {
@@ -37,18 +31,18 @@ export const postRouter = createTRPCRouter({
       });
     }),
 
-  // getLatest: protectedProcedure.query(async ({ ctx }) => {
-  //   const post = await ctx.db.post.findFirst({
-  //     orderBy: { createdAt: "desc" },
-  //     where: { createdBy: { id: ctx.session.user.id } },
-  //   });
-
-  //   return post ?? null;
-  // }),
+  getUserPosts: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.db.post.findMany({
+      where: { createdBy: { id: ctx.session.user.id } },
+      orderBy: { createdAt: "desc" },
+      include: { createdBy: true },
+    });
+  }),
 
   findMany: publicProcedure.query(async ({ ctx }) => {
     return ctx.db.post.findMany({
       orderBy: { createdAt: "desc" },
+      include: { createdBy: true },
       // where: { createdBy: { id: ctx.session.user.id } },
     });
   }),

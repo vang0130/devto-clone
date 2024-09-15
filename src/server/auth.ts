@@ -22,6 +22,12 @@ declare module "next-auth" {
       id: string;
       // ...other properties
       // role: UserRole;
+      bio: string;
+      location: string;
+      website: string;
+      createdAt: string;
+      posts: Post[];
+      comments: Comment[];
     } & DefaultSession["user"];
   }
 
@@ -29,6 +35,17 @@ declare module "next-auth" {
   //   // ...other properties
   //   // role: UserRole;
   // }
+  interface Post {
+    id: string;
+    name: string;
+    content: string;
+    createdAt: string;
+  }
+  interface Comment {
+    id: string;
+    content: string;
+    createdAt: string;
+  }
 }
 
 /**
@@ -72,7 +89,6 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/signin",
     signOut: "/signout",
-    // signUp: "/signup",
   }
 };
 

@@ -20,14 +20,15 @@ model Post {
     name      String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    createdBy   User   @relation(fields: [createdByName], references: [name])
-    // createdById String
-    createdByName String
+    // user name and id in createdBy
+    createdBy   User   @relation(fields: [createdById], references: [id])
+    // createdByName String
+    createdById String 
     content     String
     tags        String[]
     @@index([name])
     Comment Comment[]
-    @@index([createdByName])
+    // @@index([createdByName, createdById])
 }
 
 model Comment {
@@ -36,12 +37,13 @@ model Comment {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    createdBy   User   @relation(fields: [createdByName], references: [name])
-    // createdById String
-    createdByName String
+    createdBy   User   @relation(fields: [createdById], references: [id])
+    // createdByName String
+    // set id to user id
+    createdById String
     content     String
-
-    @@index([createdByName])
+    @@index([name])
+    // @@index([createdByName])
     post        Post @relation(fields: [id], references: [id])
     // postid Int?
 }
@@ -78,15 +80,19 @@ model Session {
 
 model User {
     id            String    @id @default(cuid())
-    name          String    @unique @default("John Doe")
+    name          String?   @unique @default("John Doe")
+    // @@unique([name, id])
     email         String?   @unique
     emailVerified DateTime?
     image         String?
+    bio           String?    @default("")
+    location      String?    @default("")
+    website       String?    @default("")
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
-
-    Comment Comment[]
+    createdAt     DateTime  @default(now())
+    comments      Comment[]
 }
 
 model VerificationToken {

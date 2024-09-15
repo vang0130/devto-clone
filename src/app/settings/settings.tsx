@@ -12,12 +12,25 @@ import { PiPlant } from "react-icons/pi";
 import { BsMailbox } from "react-icons/bs";
 import { HiOutlineOfficeBuilding } from "react-icons/hi";
 import { BsLightningCharge } from "react-icons/bs";
+import { api } from "src/trpc/react";
+
+import { UploadForm } from "src/app/upload/(form)/form"
 
 export default function SettingsClient() {
-    const { data: session } = useSession();
-    const [websiteURL, setWebsiteURL] = useState('');
+    const { data: session, update } = useSession();
+    const [website, setWebsiteURL] = useState('');
     const [location, setLocation] = useState('');
     const [bio, setBio] = useState('');
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    // const [file, setFile] = useState<File | null>(null);
+
+    // const [uploading, setUploading] = useState(false); 
+    const handleUserInfoChanges = api.user.updateUserInfo?.useMutation({
+        onSuccess: async () => {
+            await update({ name, email, website, location, bio });
+        },
+    });
 
   return (
     <div>
@@ -60,16 +73,6 @@ export default function SettingsClient() {
             </div>
             <div className="p-2 mx-1">
               <PopUpComponent />
-              {/* <button onClick={() => setIsPopupVisible(true)}>
-                <img src="/images/winter.png" alt="avatar" className="h-8 w-8 rounded-full object-cover" />
-              {isPopupVisible && (
-                <div className="absolute top-10 right-0 bg-white border border-gray-300 rounded-md shadow-md p-2">
-                  <p>User Profile</p>
-                  <p>Settings</p>
-                  <p>Logout</p>
-                </div>
-              )}
-              </button> */}
             </div>
           </div>
           : null}
@@ -156,14 +159,23 @@ export default function SettingsClient() {
         <h2 className="text-2xl font-bold col-span-1">User</h2>
         <div className="flex flex-col col-span-1">
             <label>Name</label>
-            <input type="text" placeholder={session?.user?.name ?? ''} className="p-[6.5px] mt-2 w-full h-[39px] border border-gray-300 rounded-md bg-white">
-            </input>
+            <input 
+            type="text" 
+            placeholder={session?.user?.name ?? ''} 
+            className="p-[6.5px] mt-2 w-full h-[39px] border border-gray-300 rounded-md bg-white"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            />
         </div>
         <div className="flex flex-col col-span-1">
             <label>Email</label>
-            <input type="email" placeholder={session?.user?.email ?? ''} className="p-[6.5px] mt-2 w-full h-[39px] border border-gray-300 rounded-md bg-white">
-            </input>
-
+            <input 
+            type="email" 
+            placeholder={session?.user?.email ?? ''} 
+            className="p-[6.5px] mt-2 w-full h-[39px] border border-gray-300 rounded-md bg-white"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            />
         </div>
         <div className="grid grid-cols-[min-content,1fr] gap-1 items-center">
             <input type="checkbox" className="h-[14px] w-[14px] border border-gray-300 rounded-md bg-white m-[3px]">
@@ -172,7 +184,10 @@ export default function SettingsClient() {
         </div>
         <div className="flex flex-col col-span-1">
             <label>Username</label>
-            <input type="text" placeholder={session?.user?.id ?? ''} className="p-[6.5px] mt-2 w-full h-[39px] border border-gray-300 rounded-md bg-white">
+            <input 
+            type="text" 
+            placeholder={session?.user?.id ?? ''} 
+            className="p-[6.5px] mt-2 w-full h-[39px] border border-gray-300 rounded-md bg-white">
             </input>
         </div>
         <div className="flex flex-col col-span-1">
@@ -180,19 +195,32 @@ export default function SettingsClient() {
             <div className="mt-2 flex items-center">
                 <div className="mr-2 h-16 items-center justify-center flex w-min-content">
                       <img
-                        src="/images/winter.png"
+                        src={session?.user?.image || "/images/avatar.png"}
                         alt="logo"
                         className="h-12 w-12 flex items-center justify-start object-cover rounded-full overflow-hidden"
                       />
                 </div>
                 <div className="flex flex-grow items-center justify-start p-3">
-                    <label className="cursor-pointer bg-gray-300 rounded-md items-center justify-center flex w-[100px] h-[40px]">
+                    <UploadForm/>
+                    {/* <label className="cursor-pointer bg-gray-300 rounded-md items-center justify-center flex w-[100px] h-[40px]">
                         Browse...
-                        <input accept="image/*" type="file" className="hidden" />
-                    </label>
+                        <input
+                        id="file" 
+                        accept="image/png, image/jpeg" 
+                        type="file" 
+                        className="hidden" 
+                        onChange={(e) => {
+                          const files = e.target.files 
+                          if (files && files[0]) {
+                            setFile(files[0])
+                          }
+                        }}
+                        />
+                    </label> */}
                 </div>
             </div>
         </div>
+
         </div>
     <div className="flex flex-col col-span-1"></div>
 
@@ -201,20 +229,20 @@ export default function SettingsClient() {
         <div className="flex flex-col col-span-1">
             <label>Website URL</label>
             <input type="url" 
-            placeholder="https://yoursite.com" 
+            placeholder={session?.user?.website || "https://yoursite.com"}
             size={100} 
             className="p-[6.5px] mt-2 w-full h-[39px] border border-gray-300 rounded-md bg-white"
-            value={websiteURL}
+            value={website}
             onChange={(e) => setWebsiteURL(e.target.value)}
             />
             <span className="text-xs text-gray-500 justify-end mt-2 ml-auto">
-                {websiteURL.length}/100
+                {website.length}/100
             </span>
         </div>
         <div className="flex flex-col col-span-1">
             <label>Location</label>
             <input type="text" 
-            placeholder="Halifax, Nova Scotia" 
+            placeholder={session?.user?.location ?? "Halifax, Nova Scotia"}
             size={100} 
             className="p-[6.5px] mt-2 w-full h-[39px] border border-gray-300 rounded-md bg-white"
             value={location}
@@ -227,8 +255,7 @@ export default function SettingsClient() {
         <div className="flex flex-col col-span-1 items-start">
             <label>Bio</label>
             <textarea
-            placeholder="A short bio..." 
-            // size={200} 
+            placeholder={session?.user?.bio || "A short bio..."}
             maxLength={200}
             className="p-[6.5px] mt-2 w-full h-[63px] border border-gray-300 rounded-md bg-white items-start break-words whitespace-pre-wrap"
             value={bio}
@@ -238,6 +265,32 @@ export default function SettingsClient() {
                 {bio.length}/200
             </span>
         </div>
+        {/* <button className="h-[40px] px-3 py-2 m-1 rounded-md bg-blue-500 text-white w-full" onClick={(e) => {
+          e.preventDefault();
+          handleSaveChanges.mutate({ website, location, bio })
+        }}
+        type="submit"
+        disabled={handleSaveChanges.isPending}
+        >{handleSaveChanges.isPending ? "Saving..." : "Save Changes"}</button> */}
+        </div>
+        <div className="flex flex-col col-span-1 m-1">
+
+        <button className="h-[40px] px-3 py-2 rounded-md bg-blue-500 text-white w-full" onClick={(e) => {
+          e.preventDefault();
+          const changes = {
+            // if entered name is empty, keep current name
+            ...(name ? { name: name as string } : {}),
+            ...(email  ? { email: email as string } : {}),
+            // ...(file ? { file: file as File} : {}),
+            ...(website ? { website: website as string } : {}),
+            ...(location ? { location: location as string } : {}),
+            ...(bio ? { bio: bio as string } : {}),
+          };
+          handleUserInfoChanges.mutate(changes as any)
+        }}
+        type="submit"
+        disabled={handleUserInfoChanges.isPending}
+        >{handleUserInfoChanges.isPending ? "Saving..." : "Save Changes"}</button>
         </div>
         </div>
       </div>

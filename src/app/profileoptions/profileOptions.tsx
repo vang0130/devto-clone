@@ -9,16 +9,16 @@ export default function PopupComponent() {
 
   const togglePopup = () => setIsPopupVisible(!isPopupVisible);
   return (
-    <div className="align-center flex items-centerjustify-center">
+    <div className="align-center flex items-center justify-center">
         <button onClick={togglePopup} className="align-center justify-center">
-            <img src="/images/winter.png" alt="avatar" className="h-8 w-8 rounded-full object-cover" />
+            <img src={session?.user?.image || "/images/avatar.png"} alt="avatar" className="h-8 w-8 rounded-full object-cover" />
         </button>
         {isPopupVisible && (
-        <div className="absolute left-0 right-0 top-[60px] mx-2 sm:right-0 sm:left-auto md:right-0 md:left-auto  md:w-[256px] md:top-[52px] lg:right-40 lg:left-auto lg:w-[256px] lg:top-[52px] bg-white border border-gray-300 rounded-md shadow-md p-2">
+        <div className="absolute left-0 right-0 top-[60px] mx-2 md:left-auto md:w-[256px] md:top-[52px] xl:right-40 lg:left-auto lg:w-[256px] lg:top-[52px] bg-white border border-gray-300 rounded-md shadow-md p-2">
             <ul className="flex flex-col">
                 <li className="pb-2 mb-2 border-b-[1px] border-gray-300">
 
-                    <a href="/profile" className="flex flex-col px-4 py-2">
+                    <a href={`/user/${session?.user?.id}`} className="flex flex-col px-4 py-2">
                         <span className="text-md">{session?.user?.name}</span>
                         <span className="text-gray-500 text-sm">
                             @{session?.user?.id}

@@ -40,7 +40,7 @@ export default async function Home() {
   // const hello = await api.post.hello({ text: "from tRPC" });
   const session = await getServerAuthSession();
   const allPosts = await api.post.findMany();
-  
+  // const allUsers = await api.user.findMany();
   // print posts to console
    console.table(allPosts)
   // void api.post.allPosts.prefetch();
@@ -48,7 +48,7 @@ export default async function Home() {
     <HydrateClient>
       {/* <AllPosts /> */}
       <header className="fixed left-0 right-0 top-0 h-[56px] border-b-[1.5px] bg-white">
-        <div className="mx-auto flex h-full w-full max-w-[1380px] items-center justify-start md:px-2 sm:px-1 lg:px-4">
+        <div className="mx-auto flex h-full w-full max-w-[1380px] items-center  justify-start md:px-2 sm:px-1 lg:px-4">
           <SideBar />
           {/* <button className="md:hidden mx-2 p-2">
             <RiMenuFill className="h-6 w-6" />
@@ -97,8 +97,7 @@ export default async function Home() {
                 <PiBellSimple className="h-6 w-6" />
               </a>
             </div>
-            <div className="p-2 mx-1">
-              <PopUpComponent />
+            {/* <div className="p-2 mx-1"> */}
               {/* <button onClick={() => setIsPopupVisible(true)}>
                 <img src="/images/winter.png" alt="avatar" className="h-8 w-8 rounded-full object-cover" />
               {isPopupVisible && (
@@ -109,7 +108,8 @@ export default async function Home() {
                 </div>
               )}
               </button> */}
-            </div>
+            {/* </div> */}
+            <PopUpComponent />
           </div>
           : null}
           {!session ?
@@ -537,12 +537,10 @@ export default async function Home() {
                 <h4 className="text-md mb-[10px] font-bold">
                   Thank you to our Diamond Sponsor Neon
                 </h4>
-                <Image
+                <img
                   src="/images/neon.png"
                   alt="neon"
-                  className="mb-[20px] h-full rounded-md"
-                  width={100}
-                  height={100}
+                  className="mb-[20px] h-full rounded-md w-full"
                 />
                 <p className="text-md mb-[20px] font-light">
                   <em className="">
@@ -568,12 +566,10 @@ export default async function Home() {
                     Share your first DEV post and join a vibrant community of
                     tech enthusiasts!
                   </p>
-                  <Image
+                  <img
                     src="/images/write.png"
                     alt="write-badge"
-                    className="mb-[20px] h-full rounded-md"
-                    width={100}
-                    height={100}
+                    className="mb-[20px] h-full rounded-md w-full"
                   />
                   <a className="mb-[4px] inline-flex w-full items-center justify-center rounded-md border-[1px] border-black px-[15px] py-[7px] text-sm">
                     Write Your First Post
@@ -640,15 +636,17 @@ export default async function Home() {
                 >
                   <div className="mb-2 mr-2 flex max-h-[35px] items-center">
                     <div className="mr-2 h-8 w-8 overflow-hidden rounded-full">
-                      <img
-                        src="/images/winter.png"
+                      <a href={`/user/${post.createdBy.id}`}>
+                        <img
+                          src={post.createdBy.image || '/images/avatar.png'}
                         alt="logo"
                         className="h-full w-full object-cover"
                       />
+                      </a>
                     </div>
                     <div className="flex flex-col">
                       <div className="flex max-h-[17.5px] items-center text-sm">
-                        {post.createdByName}
+                        {post.createdBy.name}
                       </div>
                       <div className="flex max-h-[15px] items-center text-xs">
                         {new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}

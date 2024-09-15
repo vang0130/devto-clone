@@ -11,10 +11,33 @@ import { LuScrollText } from "react-icons/lu";
 import { RiChat1Line } from "react-icons/ri";
 import { RiHashtag } from "react-icons/ri";
 import { TfiComment } from "react-icons/tfi";
+import { api } from 'src/trpc/react';
+import { User } from '@prisma/client';
+import { getSession } from 'next-auth/react';
 
 
-export default function ProfilePage() {
+
+// export const getServerSideProps = async () => {
+//   try {
+//     const session = await getSession({ req: ctx.req });
+//     if (session) {
+//       const userPosts = await api.post.getUserPosts.query();
+//       return { props: { userPosts } };
+//     }
+//     return { props: { userPosts: [] } };
+//   } catch (error) {
+//     console.error(error);
+//     return { props: { userPosts: [] } };
+//   }
+// }
+
+export default function ProfilePage({ user }: { user: User }) {
     const { data: session } = useSession();
+    // get all posts made by user
+    const { data: posts } = api.post.getUserPosts.useQuery();
+    // const { data: user } = api.post.getUser.useQuery();
+    // console.table(session?.user);
+    // console.table(session?.user?.posts);
     return (
       <div>
         <header className="z-50 fixed left-0 right-0 top-0 h-[56px] border-gray-300 border-b-[1px] bg-white">
@@ -84,7 +107,7 @@ export default function ProfilePage() {
         <div className="mt-[56px] h-[336px] sm:w-full sm:h-[319px] lg:h-[343px] md:px-2 lg:px-4 lg:pb-3 border-b-[1px] border-gray-300 sm:rounded-md sm:border-0 lg:w-[1024px] lg:mx-auto">
           <div className="h-[40px] sm:h-[128px] w-full relative">
             <div className="absolute w-full overflow-hidden px-3 py-2 z-10">
-              <img src="/images/winter.png" alt="profile" className="rounded-full h-[60px] w-[60px] sm:h-[128px] sm:w-[128px] sm:mx-auto object-cover border-[4px] sm:border-8 border-black" />
+              <img src={user?.image || "images/avatar.png"} alt="profile" className="rounded-full h-[60px] w-[60px] sm:h-[128px] sm:w-[128px] sm:mx-auto object-cover border-[4px] sm:border-8 border-black" />
             </div>
           </div>
           <div className="pt-4 pr-4 h-[52px] sm:mt-[-56px] sm:h-[56px] bg-white sm:mx-2 sm:rounded-t-lg sm:pb-5 relative sm:border-x-[1px] sm:border-gray-300 md:mx-auto">
@@ -94,20 +117,21 @@ export default function ProfilePage() {
           </div>
           <div className="flex flex-col pb-3 px-3 pt-3 h-[156px] sm:h-[186px] sm:p-4 sm:mx-2 sm:rounded-b-lg sm:border-x-[1px] sm:border-b-[1px] sm:border-gray-300 sm:pt-9 md:mx-auto bg-white lg:pt-11 lg:px-6 lg:pb-10 lg:h-[200px]">
             <div className="mb-2 flex justify-start sm:justify-center">
-              <h1 className="text-2xl sm:text-3xl font-bold">{session?.user?.name}</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold">{user?.name}</h1>
             </div>
             <div className="mb-4 flex justify-start sm:justify-center">
-              <p>404 bio not found</p>
+              {/* if user bio is EMPTY STRING, display "404 bio not found" */}
+              <p defaultValue="404 bio not found">{user?.bio || "404 bio not found"}</p>
             </div>
             <div className="flex flex-row justify-start sm:justify-center mb-2 p-2 text-xs text-gray-500 items-center h-[40px]">
               <BsCake className="mr-2 w-5 h-5" />
-              <p>Joined on DATE HERE</p>
+              <p>Joined on {new Date(user?.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
             </div>
           </div>
           <div className="flex p-3 sm:hidden bg-white">
             <button className="my-3 py-[6px] px-[14px] rounded-md border-[2px] border-gray-300 w-full">
-              <a href={`/profile/${session?.user?.id}`}>
-                More info about @{session?.user?.id}
+              <a href={`/profile/${user?.id}`}>
+                More info about @{user?.id}
               </a>
             </button>
           </div>
@@ -117,47 +141,44 @@ export default function ProfilePage() {
           <div className="hidden sm:block sm:col-start-1 sm:col-span-1 sm:h-[136px] sm:rounded-md sm:border-[1px] sm:border-gray-300 bg-white sm:ml-2 sm:mt-1 sm:py-4 sm:px-3 sm:flex sm:flex-col md:mt-0">
               <div className="flex flex-row mb-5">
                 <LuScrollText className="mr-3 w-5 h-5" />
-                <p className="text-sm">2 posts published</p>
+                <p className="text-sm">{posts?.length ?? 0}  posts published</p>
               </div>
               <div className="flex flex-row mb-5">
                 <RiChat1Line className="mr-3 w-5 h-5" />
-                <p className="text-sm">0 comments written</p>
+                <p className="text-sm">{session?.user?.comments?.length ?? 0} comments written</p>
               </div>
               <div className="flex flex-row mb-5">
                 <RiHashtag className="mr-3 w-5 h-5" />
                 <p className="text-sm">0 tags followed</p>
-              </div>
+            </div>
           </div>
         <div className="pt-4 sm:pt-0 sm:mx-2 lg:mt-0 flex flex-col sm:col-start-2">
           <div className="mb-2 flex flex-col">
-            {/* {allPosts?.map((post) => ( */}
+            {posts?.map((post) => (
               <div
-                // key={post.id}
-                className="border-gray-300 border-[1px] sm:rounded-md bg-white pt-4 px-4 pb-3 w-full"
+                key={post.id}
+                className="border-gray-300 border-[1px] sm:rounded-md bg-white pt-4 px-4 pb-3 w-full mb-2"
               >
                 <div className="mb-3 flex max-h-[35px] items-center">
                   <div className="mr-2 h-8 w-8 overflow-hidden rounded-full">
                     <img
-                      src="/images/winter.png"
+                      src={user.image ||"/images/avatar.png"}
                       alt="logo"
                       className="h-full w-full object-cover"
                     />
                   </div>
                   <div className="flex flex-col">
                     <div className="flex max-h-[17.5px] items-center text-sm">
-                      {session?.user?.name}
-                      {/* {post.createdByName} */}
+                      {post.createdBy.name}
                     </div>
                     <div className="flex max-h-[15px] items-center text-xs">
-                      {/* {new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} */}
-                      Sep 9
+                      {new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </div>
                   </div>
                 </div>
                 <div className="flex flex-col items-center lg:pl-[20px] lg:pl-[40px]">
                   <h2 className="mb-2 w-full justify-start text-xl font-bold">
-                    {/* <a>{post.name}</a> */}
-                    Hello
+                    <a>{post.name}</a>
                   </h2>
                   <div className="flex w-full flex-row items-center">
                     <div className="flex flex-row items-center">
@@ -176,12 +197,10 @@ export default function ProfilePage() {
                   </div>
                 </div>
               </div>
-            {/* ))} */}
+            ))}
           </div>
-          <div className="mb-2 flex flex-col">
-            {/* {allPosts?.map((post) => ( */}
+          {/* <div className="mb-2 flex flex-col">
               <div
-                // key={post.id}
                 className="border-gray-300 border-[1px] sm:rounded-md bg-white pt-4 px-4 pb-3 w-full"
               >
                 <div className="mb-3 flex max-h-[35px] items-center">
@@ -195,17 +214,14 @@ export default function ProfilePage() {
                   <div className="flex flex-col">
                     <div className="flex max-h-[17.5px] items-center text-sm">
                       {session?.user?.name}
-                      {/* {post.createdByName} */}
                     </div>
                     <div className="flex max-h-[15px] items-center text-xs">
-                      {/* {new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} */}
                       Sep 9
                     </div>
                   </div>
                 </div>
                 <div className="flex flex-col items-center lg:pl-[20px] lg:pl-[40px]">
                   <h2 className="mb-2 w-full justify-start text-xl font-bold">
-                    {/* <a>{post.name}</a> */}
                     Hello
                   </h2>
                   <div className="flex w-full flex-row items-center">
@@ -224,12 +240,10 @@ export default function ProfilePage() {
                     </div>
                   </div>
               </div>
-            {/* ))} */}
-          </div>
+            ))}
+          </div> */}
         </div>
       </div>
       </div>
-        </div>
-      // </div>
     );
 }
