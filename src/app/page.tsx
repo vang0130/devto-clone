@@ -1,4 +1,3 @@
-// import Link from "next/link";
 import Image from "next/image";
 import React from "react";
 
@@ -637,7 +636,7 @@ export default async function Home() {
               {allPosts?.map((post) => (
                 <div
                   key={post.id}
-                  className="rounded-md border-[1.5px] bg-white p-5 w-full"
+                  className="sm:rounded-md border-[1.5px] bg-white p-5 w-full"
                 >
                   <div className="mb-2 mr-2 flex max-h-[35px] items-center">
                     <div className="mr-2 h-8 w-8 overflow-hidden rounded-full">

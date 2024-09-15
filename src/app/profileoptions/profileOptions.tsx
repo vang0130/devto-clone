@@ -1,11 +1,9 @@
 'use client'
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
-// import { getServerAuthSession } from "t3/server/auth";
 
 export default function PopupComponent() {
   
-  // const session = await getServerAuthSession();
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const { data: session } = useSession();
 

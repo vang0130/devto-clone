@@ -1,9 +1,6 @@
 'use client'
 import "t3/styles/globals.css";
 
-import { GeistSans } from "geist/font/sans";
-import { type Metadata } from "next";
-
 import { TRPCReactProvider } from "t3/trpc/react";
 import Head from 'next/head';
 import { Inter } from 'next/font/google';

@@ -102,8 +102,8 @@ function SignOutButton() {
           : null}
         </div>
       </header>
-      <div className="w-full min-h-screen flex flex-col py-[56px] items-center justify-center">
-        <h1 className="text-2xl font-bold mb-2">
+      <div className="w-full min-h-screen flex flex-col py-[56px] items-center justify-center px-[7.5px] sm:px-[15px]">
+        <h1 className="text-2xl sm:text-2xl font-bold mb-2 text-center">
           Are you sure you want to sign out?
         </h1>
           <button type="submit" className="flex bg-purple-500 text-white rounded-md h-12 px-5 py-3 justify-center" onClick={

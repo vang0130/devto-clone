@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { api } from "src/trpc/react";
 import React from "react";
-// import { LatestPost } from "src/app/_components/post";
 import { IoIosClose } from "react-icons/io";
 import { RiListOrdered } from "react-icons/ri";
 import { RiBold } from "react-icons/ri";

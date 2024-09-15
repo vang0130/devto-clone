@@ -11,12 +11,10 @@ import { LuScrollText } from "react-icons/lu";
 import { RiChat1Line } from "react-icons/ri";
 import { RiHashtag } from "react-icons/ri";
 import { TfiComment } from "react-icons/tfi";
-import { HiOutlineBookmark } from "react-icons/hi";
 
 
 export default function ProfilePage() {
     const { data: session } = useSession();
-    // const allPosts = await api.post.findMany();
     return (
       <div>
         <header className="z-50 fixed left-0 right-0 top-0 h-[56px] border-gray-300 border-b-[1px] bg-white">

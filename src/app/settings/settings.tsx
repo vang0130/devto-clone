@@ -1,5 +1,4 @@
 'use client'
-// import Link from "next/link";
 import Image from "next/image";
 import { PiBellSimple } from "react-icons/pi";
 import PopUpComponent from '../profileoptions/profileOptions';
@@ -135,7 +134,7 @@ export default function SettingsClient() {
       <div className="py-1 sm:hidden"></div>
       <div className="sm:col-start-2 col-span-1 sm:row-span-1mx-auto p-3 h-[70px] w-full max-w-[1380px]">
         <div className="align-top flex flex-col items-start">
-          <h1 className="text-3xl font-bold text-blue-500 align-top">@{session?.user?.id}</h1>
+          <h1 className="text-xl sm:text-3xl font-bold text-blue-500 align-top">@{session?.user?.id}</h1>
         </div>
       </div>
       <div className="sm:col-start-2 sm:row-start-2 col-span-1 sm:rounded-md bg-white border border-gray-300 p-4 mb-4 sm:mb-2 grid grid-cols-1 items-center justify-center">
