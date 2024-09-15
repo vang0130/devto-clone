@@ -279,14 +279,14 @@ export default function SettingsClient() {
           e.preventDefault();
           const changes = {
             // if entered name is empty, keep current name
-            ...(name ? { name: name as string } : {}),
-            ...(email  ? { email: email as string } : {}),
+            ...(name ? { name: name } : {}),
+            ...(email  ? { email: email } : {}),
             // ...(file ? { file: file as File} : {}),
-            ...(website ? { website: website as string } : {}),
-            ...(location ? { location: location as string } : {}),
-            ...(bio ? { bio: bio as string } : {}),
+            ...(website ? { website: website } : {}),
+            ...(location ? { location: location } : {}),
+            ...(bio ? { bio: bio } : {}),
           };
-          handleUserInfoChanges.mutate(changes as any)
+          handleUserInfoChanges.mutate(changes)
         }}
         type="submit"
         disabled={handleUserInfoChanges.isPending}
