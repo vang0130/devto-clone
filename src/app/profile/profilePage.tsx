@@ -107,7 +107,7 @@ export default function ProfilePage({ user }: { user: User }) {
         <div className="mt-[56px] h-[336px] sm:w-full sm:h-[319px] lg:h-[343px] md:px-2 lg:px-4 lg:pb-3 border-b-[1px] border-gray-300 sm:rounded-md sm:border-0 lg:w-[1024px] lg:mx-auto">
           <div className="h-[40px] sm:h-[128px] w-full relative">
             <div className="absolute w-full overflow-hidden px-3 py-2 z-10">
-              <img src={user?.image || "images/avatar.png"} alt="profile" className="rounded-full h-[60px] w-[60px] sm:h-[128px] sm:w-[128px] sm:mx-auto object-cover border-[4px] sm:border-8 border-black" />
+              <img src={user?.image ?? "images/avatar.png"} alt="profile" className="rounded-full h-[60px] w-[60px] sm:h-[128px] sm:w-[128px] sm:mx-auto object-cover border-[4px] sm:border-8 border-black" />
             </div>
           </div>
           <div className="pt-4 pr-4 h-[52px] sm:mt-[-56px] sm:h-[56px] bg-white sm:mx-2 sm:rounded-t-lg sm:pb-5 relative sm:border-x-[1px] sm:border-gray-300 md:mx-auto">
@@ -121,7 +121,7 @@ export default function ProfilePage({ user }: { user: User }) {
             </div>
             <div className="mb-4 flex justify-start sm:justify-center">
               {/* if user bio is EMPTY STRING, display "404 bio not found" */}
-              <p defaultValue="404 bio not found">{user?.bio || "404 bio not found"}</p>
+              <p defaultValue="404 bio not found">{user?.bio ?? "404 bio not found"}</p>
             </div>
             <div className="flex flex-row justify-start sm:justify-center mb-2 p-2 text-xs text-gray-500 items-center h-[40px]">
               <BsCake className="mr-2 w-5 h-5" />
@@ -162,7 +162,7 @@ export default function ProfilePage({ user }: { user: User }) {
                 <div className="mb-3 flex max-h-[35px] items-center">
                   <div className="mr-2 h-8 w-8 overflow-hidden rounded-full">
                     <img
-                      src={user.image ||"/images/avatar.png"}
+                      src={user.image ?? "/images/avatar.png"}
                       alt="logo"
                       className="h-full w-full object-cover"
                     />

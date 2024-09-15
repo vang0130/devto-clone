@@ -22,7 +22,7 @@ async function uploadFileToS3(file: Buffer, fileName: string) {
     Bucket: process.env.AWS_BUCKET,
     Key: `${fileName}`,
     Body: fileBuffer,
-    ContentType: "image/jpg" || "image/png",
+    ContentType: "image/jpg" ?? "image/png",
   };
 
   const command = new PutObjectCommand(params);
