@@ -1,25 +1,17 @@
 'use client';
 
-import { signOut } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { Suspense } from 'react';
-import type { ClientSafeProvider } from "next-auth/react";
 import { PiBellSimple } from "react-icons/pi";
 import { useSession } from 'next-auth/react';
 import PopUpComponent from '../profileoptions/profileOptions';
 import SideBar from '../sidebar/sideBar';
 import { RiSearchLine } from "react-icons/ri";
-import Header from '../header/header'
 
-function SignOutButton() {
+export default function Header() {
   const { data: session } = useSession();
-  const searchParams = useSearchParams();
 
   return (
-    <div className="flex w-full h-full flex-col justify-center items-center">
-      <Header />
-      {/* <header className="fixed left-0 right-0 top-0 h-[56px] border-b-[1.5px] bg-white">
+      <header className="fixed left-0 right-0 top-0 h-[56px] border-b-[1.5px] bg-white">
         <div className="mx-auto flex h-full w-full max-w-[1380px] items-center justify-start md:px-2 sm:px-1 lg:px-4">
           <SideBar />
           <a className="flex items-center" href="/">
@@ -80,30 +72,6 @@ function SignOutButton() {
           </div>
           : null}
         </div>
-      </header> */}
-      <div className="w-full min-h-screen flex flex-col py-[56px] items-center justify-center px-[7.5px] sm:px-[15px]">
-        <h1 className="text-2xl sm:text-2xl font-bold mb-2 text-center">
-          Are you sure you want to sign out?
-        </h1>
-          <button type="submit" className="flex bg-purple-500 text-white rounded-md h-12 px-5 py-3 justify-center" onClick={
-            () => signOut({ 
-              callbackUrl: searchParams.get('callbackUrl') ?? "/"
-            })
-          }>Yes, sign out
-          </button>
-      </div>
-    </div>
-  );
-}
-
-export default function SignOutClient({ providers }: { providers: Record<string, ClientSafeProvider> | null }) {
-  if (!providers) return null;
-
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <div>
-        <SignOutButton />
-      </div>
-    </Suspense>
+      </header>
   );
 }
