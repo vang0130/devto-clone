@@ -638,7 +638,7 @@ export default async function Home() {
                     <div className="mr-2 h-8 w-8 overflow-hidden rounded-full">
                       <a href={`/user/${post.createdBy.id}`}>
                         <img
-                          src={post.createdBy.image ?? '/images/avatar.png'}
+                          src={post.createdBy.image || '/images/avatar.png'}
                         alt="logo"
                         className="h-full w-full object-cover"
                       />
