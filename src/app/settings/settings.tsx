@@ -13,7 +13,7 @@ import { BsMailbox } from "react-icons/bs";
 import { HiOutlineOfficeBuilding } from "react-icons/hi";
 import { BsLightningCharge } from "react-icons/bs";
 import { api } from "src/trpc/react";
-import { uploadFile } from "src/app/upload/(form)/action";
+import { uploadFile } from "src/app/upload/action";
 
 type UploadState = {
   status: "success" | "error";
