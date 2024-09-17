@@ -4,66 +4,81 @@ import { useState } from "react";
 import { api } from "src/trpc/react";
 import React from "react";
 import { IoIosClose } from "react-icons/io";
-import { RiListOrdered } from "react-icons/ri";
-import { RiBold } from "react-icons/ri";
-import { RiItalic } from "react-icons/ri";
-import { RiLink } from "react-icons/ri";
-import { RiListUnordered } from "react-icons/ri";
-import { RiHeading } from "react-icons/ri";
-import { RiDoubleQuotesL } from "react-icons/ri";
-import { RiCodeFill } from "react-icons/ri";
-import { RiCodeBlock } from "react-icons/ri";
+import { RiListOrdered, RiBold, RiItalic, RiLink, RiListUnordered, RiHeading, RiDoubleQuotesL, RiCodeFill, RiCodeBlock, RiImageFill } from "react-icons/ri";
 import { RxLightningBolt } from "react-icons/rx";
-import { RiImageFill } from "react-icons/ri";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
-// export const AllPosts = () => {
-//   const { data: allPosts } = api.post.findMany.useQuery(); // Destructure to get data
-//   // display all posts in div
-//   return (
-//     <div>
-//       {allPosts?.map((post) => (
-//         <div key={post.id}>
-//           <div>{post.name}</div>
-//           <div>{post.content}</div>
-//         </div>
-//       ))}
-//     </div>
-//   );
-//   // console.table(allPosts);
-//   // const countPosts = allPosts?.length;
-//   // console.log(countPosts);
-// }
+import { uploadFile } from "../upload/(form)/action";
 
+type UploadState = {
+  status: "success" | "error";
+  message: string;
+};
 
-const CreatePost = () => {
-  // const [latestPost] = api.post.getLatest.useSuspenseQuery();
+const initialState: UploadState = { status: "success", message: "" };
 
+export default function CreatePost() {
   const utils = api.useUtils();
   const [name, setName] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
-  const [id] = useState(0);
-  
-  // const savePost = api.post.create.useMutation({
-  //   onSuccess: async () => {
-  //     await utils.post.invalidate();
-  //   },
-  // });
+  const [file, setFile] = useState<File | null>(null);
+  const [image, setImageUrl] = useState("");
+  const [state, setState] = useState<UploadState>(initialState);
 
+  const { data: session, update } = useSession();
+
+  // Handle file input change in HTML
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0] || null;
+    setFile(selectedFile); // set file 
+
+    if (selectedFile) { // if file exists
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      // upload file to S3
+      const result = await uploadFile(formData, state);
+      if (typeof result === "string") { // if successful, we get URL
+        setImageUrl(result);
+        // setState({ status: "success", message: "Image uploaded successfully." });
+      } else {
+        // setState({ status: "error", message: result.message || "Failed to upload image." });
+      }
+    }
+  };
+
+  // create post, set create post page to empty after done
   const createPost = api.post.create.useMutation({
     onSuccess: async () => {
       await utils.post.invalidate();
       setName("");
       setContent("");
       setTags([]);
+      setImageUrl("");
+      // setState({ status: "success", message: "Post created successfully." });
+    },
+    onError: (error) => {
+      // setState({ status: "error", message: error.message || "Failed to create post." });
     },
   });
 
+  // create post with info
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!name || !content || tags.length == 0 ) {
+      // setState({ status: "error", message: "Post title and content are required." });
+      return;
+    }
+
+    createPost.mutate({ name, content, tags, image });
+  };
+
   return (
     <div>
-
       <div className="mx-auto grid h-screen max-w-[1380px] grid-cols-1 grid-rows-[min-content,1fr,min-content] flex-col sm:gap-x-2 sm:px-2 md:grid-cols-[64px,7fr,3fr] lg:gap-x-4 lg:px-4">
         <div className="col-span-1 col-start-1 row-start-1 flex h-[56px] flex-row items-center sm:col-span-2">
           <div className="hidden h-[56px] items-center md:flex">
@@ -90,12 +105,21 @@ const CreatePost = () => {
             <IoIosClose size={40} />
           </a>
         </div>
+
         <div className="col-span-1 col-start-1 row-start-2 flex flex-grow flex-col items-center bg-white sm:col-span-3 md:col-span-2 md:rounded-md md:border-[1.5px] lg:col-span-1 lg:col-start-2">
           <div className="flex w-full flex-col px-3 py-8 md:px-12 lg:px-16">
             <div className="mb-[20px] flex flex-col">
-              <button className="w-fit justify-start rounded-md border-[2px] border-gray-300 px-[14px] py-[6px]">
+              <label className="w-fit justify-start rounded-md border-[2px] border-gray-300 px-[14px] py-[6px]">
                 Add a cover image
-              </button>
+                <input
+                  type="file"
+                  id="file"
+                  name="file"
+                  accept="image/*" 
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+              </label>
             </div>
             <div className="flex items-center">
               <input
@@ -104,7 +128,7 @@ const CreatePost = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="h-[60px] w-full resize-none border-gray-300 text-3xl font-bold leading-[60px] focus:outline-none md:text-4xl lg:text-5xl"
-              ></input>
+              />
             </div>
             <div className="relative flex h-9 w-full">
               <ul>
@@ -122,15 +146,15 @@ const CreatePost = () => {
                         if (!tags.includes(newTag)) {
                           setTags([...tags, newTag]);
                         }
-                        setTags([...tags, ]);
+                        setTags([...tags]);
                       }
                     }}
-                  >
-                  </input>
+                  />
                 </li>
               </ul>
             </div>
           </div>
+
           <div className="flex w-full flex-col px-3 md:px-12 lg:px-16">
             <div className="relative mb-[24px] ml-[-64px] mr-[-12px] flex h-14 items-center bg-gray-100 py-2 pl-16 md:mr-[-64px] md:pr-16">
               <div className="flex w-full flex-row items-center">
@@ -173,6 +197,7 @@ const CreatePost = () => {
               </div>
             </div>
           </div>
+
           <div className="flex w-full flex-grow flex-col px-3 pb-3 md:px-12 md:pb-8 lg:px-16">
             <textarea
               placeholder="Write your post content here..."
@@ -182,33 +207,10 @@ const CreatePost = () => {
             ></textarea>
           </div>
         </div>
-        <div className="row-start-2 hidden h-full flex-col justify-between sm:col-span-1 sm:col-start-3 md:flex">
-          <div className="flex-grow"></div>
-          <div className="items-end">
-            <h4 className="mb-2 text-lg font-bold">Publishing Tips</h4>
-            <ul className="mb-2 list-disc items-end pl-6 text-sm text-gray-500">
-              <li>
-                Ensure your post has a cover image set to make the most of the
-                home feed and social media platforms.
-              </li>
-              <li>
-                Share your post on social media platforms or with your
-                co-workers or local communities.
-              </li>
-              <li>
-                Ask people to leave questions for you in the comments. It&apos;s
-                a great way to spark additional discussion describing personally
-                why you wrote it or why people might find it helpful.
-              </li>
-            </ul>
-          </div>
-        </div>
+
         <div className="col-start-1 flex h-[56px] flex-row items-center justify-start px-2 md:col-span-2 md:h-[72px] lg:h-[88px]">
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              createPost.mutate({ name, content, tags, id});
-            }}
+            onClick={handleSubmit}
             className="mr-2 flex h-[40px] min-w-min items-center justify-center whitespace-nowrap rounded-md bg-blue-500 px-4 py-2 text-white"
             type="submit"
             disabled={createPost.isPending}
@@ -216,10 +218,7 @@ const CreatePost = () => {
             {createPost.isPending ? "Publishing..." : "Publish"}
           </button>
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              createPost.mutate({ name, content, tags, id });
-            }}
+            onClick={handleSubmit}
             className="mr-2 flex h-[40px] items-center justify-center whitespace-nowrap rounded-md px-4 py-2"
             disabled={createPost.isPending}
           >
@@ -227,16 +226,6 @@ const CreatePost = () => {
           </button>
         </div>
       </div>
-      {/* {latestPost ? (
-        <p className="truncate">
-          Your most recent post: {latestPost.name}. Your content is{" "}
-          {latestPost.content}
-        </p>
-      ) : (
-        <p>You have no posts yet.</p>
-      )} */}
     </div>
   );
 };
-
-export default CreatePost;
