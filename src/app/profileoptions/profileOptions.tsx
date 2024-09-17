@@ -11,7 +11,7 @@ export default function PopupComponent() {
   return (
     <div className="align-center flex items-center justify-center">
         <button onClick={togglePopup} className="align-center justify-center">
-            <img src={session?.user?.image || "/images/avatar.png"} alt="avatar" className="h-8 w-8 rounded-full object-cover" />
+            <img src={session?.user?.image ?? "/images/avatar.png"} alt="avatar" className="h-8 w-8 rounded-full object-cover" />
         </button>
         {isPopupVisible && (
         <div className="absolute left-0 right-0 top-[60px] mx-2 md:left-auto md:w-[256px] md:top-[52px] xl:right-40 lg:left-auto lg:w-[256px] lg:top-[52px] bg-white border border-gray-300 rounded-md shadow-md p-2">

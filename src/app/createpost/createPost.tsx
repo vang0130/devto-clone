@@ -45,7 +45,7 @@ export default function CreatePost() {
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    const selectedFile = event.target.files?.[0] || null;
+    const selectedFile = event.target.files?.[0] ?? null;
     setFile(selectedFile); // set file
 
     if (selectedFile) {
@@ -60,7 +60,7 @@ export default function CreatePost() {
         setImageUrl(result);
         // setState({ status: "success", message: "Image uploaded successfully." });
       } else {
-        // setState({ status: "error", message: result.message || "Failed to upload image." });
+        // setState({ status: "error", message: result.message ?? "Failed to upload image." });
       }
     }
   };
@@ -76,7 +76,7 @@ export default function CreatePost() {
       // setState({ status: "success", message: "Post created successfully." });
     },
     onError: (error) => {
-      // setState({ status: "error", message: error.message || "Failed to create post." });
+      // setState({ status: "error", message: error.message ?? "Failed to create post." });
     },
   });
 

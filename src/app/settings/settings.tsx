@@ -31,7 +31,7 @@ export default function SettingsClient() {
   const [email, setEmail] = useState('');
   const [state, setState] = useState<UploadState>(initialState);
   const [file, setFile] = useState<File | null>(null);
-  const [image, setImageUrl] = useState(session?.user?.image || ''); // Use initial image from session
+  const [image, setImageUrl] = useState(session?.user?.image ?? ''); // Use initial image from session
 
   // Mutation to update user information
   const handleUserInfoChanges = api.user.updateUserInfo.useMutation({
@@ -46,7 +46,7 @@ export default function SettingsClient() {
 
   // Handle file input change
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files?.[0] || null;
+    const selectedFile = event.target.files?.[0] ?? null;
     setFile(selectedFile); // Update file state when user selects a file
 
     if (selectedFile) {
@@ -59,7 +59,7 @@ export default function SettingsClient() {
         setImageUrl(result); // Update the image URL state
         setState({ status: "success", message: "" });
       } else {
-        // setState({ status: "error", message: result.message || "Failed to upload image." });
+        // setState({ status: "error", message: result.message ?? "Failed to upload image." });
       }
     }
   };
@@ -258,7 +258,7 @@ export default function SettingsClient() {
               <div className="mt-2 flex items-center">
                 <div className="mr-2 h-16 items-center justify-center flex w-min-content">
                   <img
-                    src={session?.user?.image || "/images/avatar.png"}  // Use the updated image state
+                    src={session?.user?.image ?? "/images/avatar.png"}  // Use the updated image state
                     alt="logo"
                     className="h-12 w-12 flex items-center justify-start object-cover rounded-full overflow-hidden"
                   />
@@ -297,7 +297,7 @@ export default function SettingsClient() {
             <div className="flex flex-col col-span-1">
               <label>Website URL</label>
               <input type="url" 
-                placeholder={session?.user?.website || "https://yoursite.com"}
+                placeholder={session?.user?.website ?? "https://yoursite.com"}
                 size={100} 
                 className="p-[6.5px] mt-2 w-full h-[39px] border border-gray-300 rounded-md bg-white"
                 value={website}
@@ -323,7 +323,7 @@ export default function SettingsClient() {
             <div className="flex flex-col col-span-1 items-start">
               <label>Bio</label>
               <textarea
-                placeholder={session?.user?.bio || "A short bio..."}
+                placeholder={session?.user?.bio ?? "A short bio..."}
                 maxLength={200}
                 className="p-[6.5px] mt-2 w-full h-[63px] border border-gray-300 rounded-md bg-white items-start break-words whitespace-pre-wrap"
                 value={bio}
