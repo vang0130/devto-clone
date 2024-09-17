@@ -28,6 +28,7 @@ model Post {
     tags        String[]
     @@index([name])
     Comment Comment[]
+    image String?
     // @@index([createdByName, createdById])
 }
 
@@ -80,7 +81,7 @@ model Session {
 
 model User {
     id            String    @id @default(cuid())
-    name          String?   @unique @default("John Doe")
+    name          String?   @default("John Doe")
     // @@unique([name, id])
     email         String?   @unique
     emailVerified DateTime?

@@ -10,30 +10,65 @@ import {
 
 export const postRouter = createTRPCRouter({
   create: protectedProcedure
-    .input(z.object({ name: z.string().min(1), content: z.string().min(1), tags: z.array(z.string()).max(4), id: z.number().optional() }))
-    .mutation(async ({ ctx, input }) => {
-      return ctx.db.post.upsert({
-        where: { id: input.id },
-        update: {
-          // id: input.id,
-          name: input.name,
-          content: input.content,
-          tags: input.tags,
-          // createdBy: { connect: { id: ctx.session.user.id } },
-        },
-        create: {
-          // id: input.id,
-          name: input.name,
-          content: input.content,
-          tags: input.tags,
-          createdBy: { connect: { id: ctx.session.user.id } },
-        },
-      });
-    }),
+  .input(
+    z.object({
+      name: z.string().min(1),
+      content: z.string().min(1),
+      tags: z.array(z.string()).min(1).max(4),
+      image: z.string().optional(),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    return ctx.db.post.create({
+      data: {
+        name: input.name,
+        content: input.content,
+        tags: input.tags,
+        image: input.image,
+        createdBy: { connect: { id: ctx.session.user.id } },
+      },
+    });
+  }),
 
-  getUserPosts: protectedProcedure.query(async ({ ctx }) => {
+
+
+  // create: protectedProcedure
+  //   .input(z.object({ name: z.string().min(1), content: z.string().min(1), tags: z.array(z.string()).max(4), image: z.string().optional(), id: z.number().optional() }))
+  //   .mutation(async ({ ctx, input }) => {
+  //     return ctx.db.post.upsert({
+  //       where: { id: input.id },
+  //       update: {
+  //         // id: input.id,
+  //         name: input.name,
+  //         content: input.content,
+  //         tags: input.tags,
+  //         image: input.image,
+  //         // createdBy: { connect: { id: ctx.session.user.id } },
+  //       },
+  //       create: {
+  //         // id: input.id,
+  //         name: input.name,
+  //         content: input.content,
+  //         tags: input.tags,
+  //         image: input.image,
+  //         createdBy: { connect: { id: ctx.session.user.id } },
+  //       },
+  //     });
+  //   }),
+
+  // getUser: publicProcedure
+  //   .input(z.object({ userId: z.string() }))
+  //   .query(async ({ ctx, input }) => {
+  //     return ctx.db.user.findUnique({
+  //       where: { id: input.userId },
+  //       include: { posts: true, comments: true },
+  //     });
+  //   }),
+  getUserPosts: protectedProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
     return ctx.db.post.findMany({
-      where: { createdBy: { id: ctx.session.user.id } },
+      where: { createdById: input.userId },
       orderBy: { createdAt: "desc" },
       include: { createdBy: true },
     });

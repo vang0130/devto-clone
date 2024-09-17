@@ -29,11 +29,11 @@ import { SiMcdonalds } from "react-icons/si";
 import { BsThreeDots } from "react-icons/bs";
 import { TfiComment } from "react-icons/tfi";
 import { PiBellSimple } from "react-icons/pi";
-import PopUpComponent from './profileoptions/profileOptions';
+import PopUpComponent from "./profileoptions/profileOptions";
 import { HiOutlineBookmark } from "react-icons/hi2";
 import { api } from "t3/trpc/server";
 import { RiMenuFill } from "react-icons/ri";
-import SideBar from './sidebar/sideBar';
+import SideBar from "./sidebar/sideBar";
 import { RiSearchLine } from "react-icons/ri";
 
 export default async function Home() {
@@ -42,25 +42,18 @@ export default async function Home() {
   const allPosts = await api.post.findMany();
   // const allUsers = await api.user.findMany();
   // print posts to console
-   console.table(allPosts)
+  console.table(allPosts);
   // void api.post.allPosts.prefetch();
   return (
     <HydrateClient>
-      {/* <AllPosts /> */}
-      <header className="fixed left-0 right-0 top-0 h-[56px] border-b-[1.5px] bg-white">
-        <div className="mx-auto flex h-full w-full max-w-[1380px] items-center  justify-start md:px-2 sm:px-1 lg:px-4">
+      <header className="fixed left-0 right-0 top-0 z-50 h-[56px] border-b-[1px] border-gray-300 bg-white">
+        <div className="mx-auto flex h-full w-full max-w-[1380px] items-center justify-start sm:px-1 md:px-2 lg:px-4">
           <SideBar />
-          {/* <button className="md:hidden mx-2 p-2">
-            <RiMenuFill className="h-6 w-6" />
-          </button> */}
           <a className="flex items-center" href="/">
             <Image src="/images/logo.png" alt="logo" width={50} height={50} />
-            {/* <p className="text-center text-2xl text-white">
-                {session && <span>Logged in as {session.user?.name}</span>}
-              </p> */}
           </a>
-          <div className="mx-4 hidden flex-grow max-w-2xl sm:block lg:w-[680px]">
-            <form className="border-grey-900 flex h-[40px] items-center rounded-md border">
+          <div className="mx-4 hidden max-w-2xl flex-grow sm:block lg:w-[680px]">
+            <form className="flex h-[40px] items-center rounded-md border border-gray-300">
               <button className="pl-2 pr-1">
                 <RiSearchLine className="h-6 w-6" />
               </button>
@@ -71,89 +64,78 @@ export default async function Home() {
               />
             </form>
           </div>
-          {session ?
-          <div className="ml-auto flex items-center">
-            {/* <div className="hidden flex-col md:block">
-              <a href={session ? "/signout" : "/signin"}>
-                <div className="mr-2 min-w-[100px] rounded-md px-4 py-2 text-center text-sm sm:px-3 sm:py-1 sm:text-base lg:px-4">
-                  {session ? "Sign Out" : "Log In"}
-                </div>
-              </a>
-            </div> */}
-            <div className="">
-              <a href="/createpost">
-                <div className="hidden sm:flex w-[116.5px] mr-2 items-center justify-center rounded-md border border-black px-3 py-2 text-center text-sm">
-                  Create Post
-                </div>
-              </a>
+          {session ? (
+            <div className="ml-auto flex items-center">
+              <div className="">
+                <a href="/createpost">
+                  <div className="mr-2 hidden w-[116.5px] items-center justify-center rounded-md border border-black px-3 py-2 text-center text-sm sm:flex">
+                    Create Post
+                  </div>
+                </a>
+              </div>
+              <div className="p-2 sm:hidden">
+                <a href="/">
+                  <RiSearchLine className="h-6 w-6" />
+                </a>
+              </div>
+              <div className="mx-1 p-2">
+                <a href="">
+                  <PiBellSimple className="h-6 w-6" />
+                </a>
+              </div>
+              <div className="mx-1 p-2">
+                <PopUpComponent />
+              </div>
             </div>
-            <div className="p-2 sm:hidden">
-              <a href="/">  
-                <RiSearchLine className="h-6 w-6" />
-              </a>
+          ) : null}
+          {!session ? (
+            <div className="ml-auto flex items-center">
+              <div className="hidden flex-col lg:block">
+                <a href="/signin">
+                  <div className="mr-2 min-w-[100px] rounded-md px-4 py-2 text-center text-sm sm:px-3 sm:py-1 sm:text-base lg:px-4">
+                    Log In
+                  </div>
+                </a>
+              </div>
+              <div className="">
+                <a href="/signup">
+                  <div className="mr-2 flex w-[140px] items-center justify-center rounded-md border border-black px-3 py-2 text-center text-sm">
+                    Create Account
+                  </div>
+                </a>
+              </div>
             </div>
-            <div className="p-2 mx-1">
-              <a href="">
-                <PiBellSimple className="h-6 w-6" />
-              </a>
-            </div>
-            {/* <div className="p-2 mx-1"> */}
-              {/* <button onClick={() => setIsPopupVisible(true)}>
-                <img src="/images/winter.png" alt="avatar" className="h-8 w-8 rounded-full object-cover" />
-              {isPopupVisible && (
-                <div className="absolute top-10 right-0 bg-white border border-gray-300 rounded-md shadow-md p-2">
-                  <p>User Profile</p>
-                  <p>Settings</p>
-                  <p>Logout</p>
-                </div>
-              )}
-              </button> */}
-            {/* </div> */}
-            <PopUpComponent />
-          </div>
-          : null}
-          {!session ?
-          <div className="ml-auto flex items-center">
-            <div className="hidden flex-col md:block">
-              <a href="/signin">
-                <div className="mr-2 min-w-[100px] rounded-md px-4 py-2 text-center text-sm sm:px-3 sm:py-1 sm:text-base lg:px-4">
-                  Log In
-                </div>
-              </a>
-            </div>
-            <div className="">
-              <a href="/signup">
-                <div className="flex w-[140px] items-center justify-center rounded-md border border-black px-3 py-2 text-center text-sm mr-2">
-                  Create Account
-                </div>
-              </a>
-            </div>
-          </div>
-          : null}
+          ) : null}
         </div>
       </header>
-      <div className="mx-auto flex min-h-screen w-full sm:max-w-[86.25rem] flex-col sm:px-2 pt-[72px] lg:px-4">
-        <div className="grid flex-grow sm:gap-2 lg:gap-4 grid-cols-[1fr] sm:grid-cols-[15rem,1fr] lg:grid-cols-[15rem,1fr,1fr,1fr]">
+      <div className="mx-auto flex min-h-screen w-full flex-col pt-[72px] sm:max-w-[86.25rem] sm:px-2 lg:px-4">
+        <div className="grid flex-grow grid-cols-[1fr] sm:grid-cols-[15rem,1fr] sm:gap-2 lg:grid-cols-[15rem,1fr,1fr,1fr] lg:gap-4">
           <div className="hidden items-center sm:block lg:max-w-[15rem]">
-            {!session ?
-              <div className="flex flex-col rounded-md bg-white px-4 py-4 sm:px-2 sm:py-2 lg:px-4 lg:py-4 border-[1.5px] mb-4 items-center">
+            {!session ? (
+              <div className="mb-4 flex flex-col items-center rounded-md border-[1.5px] bg-white px-4 py-4 sm:px-2 sm:py-2 lg:px-4 lg:py-4">
                 <h2 className="mb-4 text-xl font-bold">
                   DEV Community is a community of 2,027,354 amazing developers
                 </h2>
                 <p className="mb-4 text-sm text-gray-500">
-                  We&apos;re a place where coders share, stay up-to-date and grow
-                  their careers.
+                  We&apos;re a place where coders share, stay up-to-date and
+                  grow their careers.
                 </p>
-                <div className="w-full mr-2 max-w-[208px] flex-col items-center justify-center rounded-md sm:max-w-[160px] md:max-w-[160px] lg:max-w-[208px]">
-                  <a className="mb-[4px] inline-flex w-full items-center justify-center rounded-md border-[1px] border-black px-[15px] py-[7px] text-sm" href="/signup">
+                <div className="mr-2 w-full max-w-[208px] flex-col items-center justify-center rounded-md sm:max-w-[160px] md:max-w-[160px] lg:max-w-[208px]">
+                  <a
+                    className="mb-[4px] inline-flex w-full items-center justify-center rounded-md border-[1px] border-black px-[15px] py-[7px] text-sm"
+                    href="/signup"
+                  >
                     Create account
                   </a>
-                  <a className="inline-flex w-full items-center justify-center px-[15px] py-[7px] text-sm" href="/signin">
+                  <a
+                    className="inline-flex w-full items-center justify-center px-[15px] py-[7px] text-sm"
+                    href="/signin"
+                  >
                     Log in
                   </a>
                 </div>
               </div>
-            : null}
+            ) : null}
             <nav className="mb-4 flex min-h-[600px] flex-col text-sm">
               <ul className="min-h-[40px]">
                 <li className="min-h-[40px]">
@@ -540,7 +522,7 @@ export default async function Home() {
                 <img
                   src="/images/neon.png"
                   alt="neon"
-                  className="mb-[20px] h-full rounded-md w-full"
+                  className="mb-[20px] h-full w-full rounded-md"
                 />
                 <p className="text-md mb-[20px] font-light">
                   <em className="">
@@ -569,7 +551,7 @@ export default async function Home() {
                   <img
                     src="/images/write.png"
                     alt="write-badge"
-                    className="mb-[20px] h-full rounded-md w-full"
+                    className="mb-[20px] h-full w-full rounded-md"
                   />
                   <a className="mb-[4px] inline-flex w-full items-center justify-center rounded-md border-[1px] border-black px-[15px] py-[7px] text-sm">
                     Write Your First Post
@@ -611,8 +593,8 @@ export default async function Home() {
             </footer>
           </div>
           <div className="md:col-span-1 lg:col-span-2">
-            <header className="md:p-0 md:mb-2 fs-l mb-2 h-[43px]">
-              <nav className="px-3 sm:px-0 md:mx-0 sm:flex items-center justify-between">
+            <header className="fs-l mb-2 h-[43px] md:mb-2 md:p-0">
+              <nav className="items-center justify-between px-3 sm:flex sm:px-0 md:mx-0">
                 <ul className="flex items-center">
                   <li>
                     <a className="flex items-center px-3 py-2 font-bold">
@@ -632,65 +614,85 @@ export default async function Home() {
               {allPosts?.map((post) => (
                 <div
                   key={post.id}
-                  className="sm:rounded-md border-[1.5px] bg-white p-5 w-full"
+                  className="w-full border-[1.5px] bg-white sm:rounded-md"
                 >
-                  <div className="mb-2 mr-2 flex max-h-[35px] items-center">
-                    <div className="mr-2 h-8 w-8 overflow-hidden rounded-full">
-                      <a href={`/user/${post.createdBy.id}`}>
-                        <img
-                          src={post.createdBy.image ?? '/images/avatar.png'}
-                        alt="logo"
-                        className="h-full w-full object-cover"
+                  {post.image && (
+                    <div className="aspect-[2/1] w-full sm:rounded-t-md">
+                      <img
+                        src={post.image}
+                        alt="Description of image"
+                        className="h-full w-full sm:rounded-t-md object-cover"
                       />
-                      </a>
                     </div>
-                    <div className="flex flex-col">
-                      <div className="flex max-h-[17.5px] items-center text-sm">
-                        {post.createdBy.name}
-                      </div>
-                      <div className="flex max-h-[15px] items-center text-xs">
-                        {new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-center pl-[10px] md:pl-[20px] lg:pl-[40px]">
-                    <h2 className="mb-1 w-full justify-start text-2xl font-bold">
-                      <a>{post.name}</a>
-                    </h2>
-                    <div className="mb-2 flex w-full text-gray-500">
-                      {post.tags.map((tag) => (
-                        <a key={tag} className="px-[7px] py-[4px] text-sm" href={`/t/${tag}`}>
-                          {tag}
-                        </a>
-                      ))}
-                    </div>
-                    <div className="flex w-full flex-row items-center">
-                      <div className="flex flex-row items-center">
-                        <a className="items-center py-1 pl-2 pr-3 text-sm">
-                          <span>💖🦄🤯👏🔥</span>
-                          <span className="hidden sm:inline-block ml-[14px] text-gray-500">
-                            190 reactions
-                          </span>
-                          <span className="inline-block sm:hidden ml-[14px] text-gray-500">
-                            190
-                          </span>
-                        </a>
-                        <a className="flex flex-row items-center py-1 pl-2 pr-3 text-sm">
-                          <div className="mr-1 flex h-6 w-6 flex-row items-center">
-                            <TfiComment className="h-4 w-4" />
-                          </div>
-                          <span className="hidden sm:inline-block text-gray-500">19 comments</span>
+                  )}
+                  <div className="p-5">
+                    <div className="mb-2 mr-2 flex max-h-[35px] items-center">
+                      <div className="mr-2 h-8 w-8 overflow-hidden rounded-full">
+                        <a href={`/user/${post.createdBy.id}`}>
+                          <img
+                            src={post.createdBy.image || "/images/avatar.png"}
+                            alt="logo"
+                            className="h-full w-full object-cover"
+                          />
                         </a>
                       </div>
-                      <div className="ml-auto flex flex-row items-center">
-                        <small className="mr-2 items-center text-gray-500">
-                          4 min read
-                        </small>
-                        <button className="p-2">
-                          <span className="flex h-6 w-6 items-center justify-center">
-                            <HiOutlineBookmark className="h-5 w-5" />
-                          </span>
-                        </button>
+                      <div className="flex flex-col">
+                        <div className="flex max-h-[17.5px] items-center text-sm">
+                          {post.createdBy.name}
+                        </div>
+                        <div className="flex max-h-[15px] items-center text-xs">
+                          {new Date(post.createdAt).toLocaleDateString(
+                            "en-US",
+                            { month: "short", day: "numeric" },
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center pl-[10px] md:pl-[20px] lg:pl-[40px]">
+                      <h2 className="mb-1 w-full justify-start text-2xl font-bold">
+                        <a>{post.name}</a>
+                      </h2>
+                      <div className="mb-2 flex w-full text-gray-500">
+                        {post.tags.map((tag) => (
+                          <a
+                            key={tag}
+                            className="px-[7px] py-[4px] text-sm"
+                            href={`/t/${tag}`}
+                          >
+                            {tag}
+                          </a>
+                        ))}
+                      </div>
+                      <div className="flex w-full flex-row items-center">
+                        <div className="flex flex-row items-center">
+                          <a className="items-center py-1 pl-2 pr-3 text-sm">
+                            <span>💖🦄🤯👏🔥</span>
+                            <span className="ml-[14px] hidden text-gray-500 sm:inline-block">
+                              190 reactions
+                            </span>
+                            <span className="ml-[14px] inline-block text-gray-500 sm:hidden">
+                              190
+                            </span>
+                          </a>
+                          <a className="flex flex-row items-center py-1 pl-2 pr-3 text-sm">
+                            <div className="mr-1 flex h-6 w-6 flex-row items-center">
+                              <TfiComment className="h-4 w-4" />
+                            </div>
+                            <span className="hidden text-gray-500 sm:inline-block">
+                              19 comments
+                            </span>
+                          </a>
+                        </div>
+                        <div className="ml-auto flex flex-row items-center">
+                          <small className="mr-2 items-center text-gray-500">
+                            4 min read
+                          </small>
+                          <button className="p-2">
+                            <span className="flex h-6 w-6 items-center justify-center">
+                              <HiOutlineBookmark className="h-5 w-5" />
+                            </span>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
