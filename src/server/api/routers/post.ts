@@ -98,6 +98,7 @@ export const postRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return ctx.db.post.findUnique({
         where: { id: input.id },
+        include: { createdBy: true },
       });
     }),
   // create: protectedProcedure

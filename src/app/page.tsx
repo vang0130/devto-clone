@@ -27,7 +27,7 @@ import { RiFacebookBoxFill } from "react-icons/ri";
 import { RiTwitchFill } from "react-icons/ri";
 import { SiMcdonalds } from "react-icons/si";
 import { BsThreeDots } from "react-icons/bs";
-import { TfiComment } from "react-icons/tfi";
+import { RiChat1Line } from "react-icons/ri";
 import { PiBellSimple } from "react-icons/pi";
 import PopUpComponent from "./profileoptions/profileOptions";
 import { HiOutlineBookmark } from "react-icons/hi2";
@@ -42,7 +42,7 @@ export default async function Home() {
   const allPosts = await api.post.findMany();
   // const allUsers = await api.user.findMany();
   // print posts to console
-  console.table(allPosts);
+  // console.table(allPosts);
   // void api.post.allPosts.prefetch();
   return (
     <HydrateClient>
@@ -149,7 +149,7 @@ export default async function Home() {
                 <li className="min-h-[40px]">
                   <a className="flex items-center px-4 py-2">
                     <span className="mr-2">
-                      <TfiComment className="h-5 w-5" />
+                      <RiChat1Line className="h-5 w-5" />
                     </span>
                     DEV++
                   </a>
@@ -611,93 +611,95 @@ export default async function Home() {
               </nav>
             </header>
             <div className="mb-2 flex flex-col space-y-4">
-              {allPosts?.filter((post) => !post.archived).map((post) => (
-                <div
-                  key={post.id}
-                  className="w-full border-[1.5px] bg-white sm:rounded-md"
-                >
-                  {post.image && (
-                    <div className="aspect-[2/1] w-full sm:rounded-t-md">
-                      <img
-                        src={post.image}
-                        alt="Description of image"
-                        className="h-full w-full sm:rounded-t-md object-cover"
-                      />
-                    </div>
-                  )}
-                  <div className="p-5">
-                    <div className="mb-2 mr-2 flex max-h-[35px] items-center">
-                      <div className="mr-2 h-8 w-8 overflow-hidden rounded-full">
-                        <a href={`/user/${post.createdBy.id}`}>
-                          <img
-                            src={post.createdBy.image ?? "/images/avatar.png"}
-                            alt="logo"
-                            className="h-full w-full object-cover"
-                          />
-                        </a>
+              {allPosts
+                ?.filter((post) => !post.archived)
+                .map((post) => (
+                  <div
+                    key={post.id}
+                    className="w-full border-[1.5px] bg-white sm:rounded-md"
+                  >
+                    {post.image && (
+                      <div className="aspect-[2/1] w-full sm:rounded-t-md">
+                        <img
+                          src={post.image}
+                          alt="Post image"
+                          className="h-full w-full object-cover sm:rounded-t-md"
+                        />
                       </div>
-                      <div className="flex flex-col">
-                        <div className="flex max-h-[17.5px] items-center text-sm">
-                          {post.createdBy.name}
-                        </div>
-                        <div className="flex max-h-[15px] items-center text-xs">
-                          {new Date(post.createdAt).toLocaleDateString(
-                            "en-US",
-                            { month: "short", day: "numeric" },
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-center pl-[10px] md:pl-[20px] lg:pl-[40px]">
-                      <h2 className="mb-1 w-full justify-start text-2xl font-bold">
-                        <a>{post.name}</a>
-                      </h2>
-                      <div className="mb-2 flex w-full text-gray-500">
-                        {post.tags.map((tag) => (
-                          <a
-                            key={tag}
-                            className="px-[7px] py-[4px] text-sm"
-                            href={`/t/${tag}`}
-                          >
-                            {tag}
-                          </a>
-                        ))}
-                      </div>
-                      <div className="flex w-full flex-row items-center">
-                        <div className="flex flex-row items-center">
-                          <a className="items-center py-1 pl-2 pr-3 text-sm">
-                            <span>💖🦄🤯👏🔥</span>
-                            <span className="ml-[14px] hidden text-gray-500 sm:inline-block">
-                              190 reactions
-                            </span>
-                            <span className="ml-[14px] inline-block text-gray-500 sm:hidden">
-                              190
-                            </span>
-                          </a>
-                          <a className="flex flex-row items-center py-1 pl-2 pr-3 text-sm">
-                            <div className="mr-1 flex h-6 w-6 flex-row items-center">
-                              <TfiComment className="h-4 w-4" />
-                            </div>
-                            <span className="hidden text-gray-500 sm:inline-block">
-                              19 comments
-                            </span>
+                    )}
+                    <div className="p-5">
+                      <div className="mb-2 mr-2 flex max-h-[35px] items-center">
+                        <div className="mr-2 h-8 w-8 overflow-hidden rounded-full">
+                          <a href={`/user/${post.createdBy.id}`}>
+                            <img
+                              src={post.createdBy.image ?? "/images/avatar.png"}
+                              alt="logo"
+                              className="h-full w-full object-cover"
+                            />
                           </a>
                         </div>
-                        <div className="ml-auto flex flex-row items-center">
-                          <small className="mr-2 items-center text-gray-500">
-                            4 min read
-                          </small>
-                          <button className="p-2">
-                            <span className="flex h-6 w-6 items-center justify-center">
-                              <HiOutlineBookmark className="h-5 w-5" />
-                            </span>
-                          </button>
+                        <div className="flex flex-col">
+                          <div className="flex max-h-[17.5px] items-center text-sm">
+                            {post.createdBy.name}
+                          </div>
+                          <div className="flex max-h-[15px] items-center text-xs">
+                            {new Date(post.createdAt).toLocaleDateString(
+                              "en-US",
+                              { month: "short", day: "numeric" },
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-center pl-[10px] md:pl-[20px] lg:pl-[40px]">
+                        <h2 className="mb-1 w-full justify-start text-2xl font-bold">
+                          <a href={`/post/${post.id}`}>{post.name}</a>
+                        </h2>
+                        <div className="mb-2 flex w-full text-gray-500">
+                          {post.tags.map((tag) => (
+                            <a
+                              key={tag}
+                              className="px-[7px] py-[4px] text-sm"
+                              href={`/t/${tag}`}
+                            >
+                              {tag}
+                            </a>
+                          ))}
+                        </div>
+                        <div className="flex w-full flex-row items-center">
+                          <div className="flex flex-row items-center">
+                            <a className="items-center py-1 pl-2 pr-3 text-sm">
+                              <span>💖🦄🤯👏🔥</span>
+                              <span className="ml-[14px] hidden text-gray-500 sm:inline-block">
+                                190 reactions
+                              </span>
+                              <span className="ml-[14px] inline-block text-gray-500 sm:hidden">
+                                190
+                              </span>
+                            </a>
+                            <a className="flex flex-row items-center py-1 pl-2 pr-3 text-sm">
+                              <div className="mr-1 flex h-6 w-6 flex-row items-center">
+                                <RiChat1Line className="h-4 w-4" />
+                              </div>
+                              <span className="hidden text-gray-500 sm:inline-block">
+                                19 comments
+                              </span>
+                            </a>
+                          </div>
+                          <div className="ml-auto flex flex-row items-center">
+                            <small className="mr-2 items-center text-gray-500">
+                              4 min read
+                            </small>
+                            <button className="p-2">
+                              <span className="flex h-6 w-6 items-center justify-center">
+                                <HiOutlineBookmark className="h-5 w-5" />
+                              </span>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
           <div className="hidden w-full space-y-4 lg:block">
