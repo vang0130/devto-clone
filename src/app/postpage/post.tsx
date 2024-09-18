@@ -80,7 +80,9 @@ export default function PostPage({ post }: { post: PostExport }) {
               </div>
               <div className="flex h-[32px] w-full flex-row items-center justify-start">
                 {post.tags.map((tag) => (
-                  <div className="px-2 py-1">{tag}</div>
+                  <div key={tag} className="px-2 py-1">
+                    {tag}
+                  </div>
                 ))}
               </div>
             </div>
