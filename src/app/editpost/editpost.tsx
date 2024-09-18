@@ -19,8 +19,9 @@ import {
 import { RxLightningBolt } from "react-icons/rx";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Image from "next/image";
-
 import { uploadFile } from "../upload/action";
+import { Post } from "@prisma/client";
+import { useEffect } from "react";
 
 type UploadState = {
   status: "success" | "error";
@@ -29,15 +30,30 @@ type UploadState = {
 
 const initialState: UploadState = { status: "success", message: "" };
 
-export default function CreatePost() {
+export default function EditPost({ post }: { post: Post }) {
   const utils = api.useUtils();
-  const [name, setName] = useState("");
-  const [content, setContent] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
   const [file, setFile] = useState<File | null>(null);
-  const [image, setImageUrl] = useState("");
+  const [image, setImageUrl] = useState(post.image ?? null);
   const [state, setState] = useState<UploadState>(initialState);
 
+  const [content, setContent] = useState(post.content);
+
+  useEffect(() => {
+    setContent(post.content);
+  }, [post.content]);
+
+  const [name, setName] = useState(post.name);
+
+  useEffect(() => {
+    setName(post.name);
+  }, [post.name]);
+
+  const [tags, setTags] = useState<string[]>(post.tags);
+  useEffect(() => {
+    setTags(post.tags);
+  }, [post.tags]);
+
+  // Handle file input change in HTML
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -52,32 +68,44 @@ export default function CreatePost() {
       // upload file to S3
       const result = await uploadFile(formData, state);
       if (typeof result === "string") {
+        // if successful, we get URL
         setImageUrl(result);
+        // setState({ status: "success", message: "Image uploaded successfully." });
       } else {
+        // setState({ status: "error", message: result.message ?? "Failed to upload image." });
       }
     }
   };
 
   // create post, set create post page to empty after done
-  const createPost = api.post.create.useMutation({
+  const editPost = api.post.edit.useMutation({
     onSuccess: async () => {
       await utils.post.invalidate();
-      setName("");
-      setContent("");
-      setTags([]);
-      setImageUrl("");
+      //   setName("");
+      //   setContent("");
+      //   setTags([]);
+      //   setImageUrl("");
+      // setState({ status: "success", message: "Post created successfully." });
     },
+    // onError: (error) => {
+    // setState({ status: "error", message: error.message ?? "Failed to create post." });
+    // },
   });
 
   // create post with info
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleEditPost = (postId: number) => {
+    // if (!name || !content || tags.length == 0) {
+    //   // setState({ status: "error", message: "Post title and content are required." });
+    //   return;
+    // }
 
-    if (!name || !content || tags.length == 0) {
-      return;
-    }
-
-    createPost.mutate({ name, content, tags, image });
+    editPost.mutate({
+      id: postId,
+      name,
+      content,
+      tags,
+      image: image ?? undefined,
+    });
   };
 
   return (
@@ -104,7 +132,7 @@ export default function CreatePost() {
           <button className="mx-1 flex h-[56px] flex-row items-center justify-end p-2">
             Preview
           </button>
-          <a className="h-[40px] w-[40px] items-center" href="/">
+          <a className="h-[40px] w-[40px] items-center" href="/dashboard">
             <IoIosClose size={40} />
           </a>
         </div>
@@ -127,18 +155,18 @@ export default function CreatePost() {
             <div className="flex items-center">
               <input
                 type="text"
-                placeholder="New post title here..."
+                // placeholder="New post title here..."
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="h-[60px] w-full resize-none border-gray-300 text-3xl font-bold leading-[60px] focus:outline-none md:text-4xl lg:text-5xl"
               />
             </div>
             <div className="relative flex h-9 w-full">
-              <ul className="w-full">
-                <li className="w-full">
+              <ul>
+                <li>
                   <input
                     className="h-9 w-full focus:outline-none"
-                    placeholder="Add up to 4 tags... (preface with '#', separate with ' ')"
+                    placeholder="Add up to 4 tags..."
                     type="text"
                     value={tags.join(" ")}
                     onChange={(e) => setTags(e.target.value.split(" "))}
@@ -146,7 +174,12 @@ export default function CreatePost() {
                       if (e.key === "Space") {
                         e.preventDefault();
                         const newTag = tags.join(" ").trim();
-                        setTags([...tags, newTag]);
+                        if (!tags.includes(newTag)) {
+                          const formattedTag = newTag.startsWith("#")
+                            ? newTag
+                            : `#${newTag}`;
+                          setTags([...tags, formattedTag]);
+                        }
                       }
                     }}
                   />
@@ -210,15 +243,12 @@ export default function CreatePost() {
 
         <div className="col-start-1 flex h-[56px] flex-row items-center justify-start px-2 md:col-span-2 md:h-[72px] lg:h-[88px]">
           <button
-            onClick={handleSubmit}
+            onClick={(e) => handleEditPost(post.id)}
             className="mr-2 flex h-[40px] min-w-min items-center justify-center whitespace-nowrap rounded-md bg-blue-500 px-4 py-2 text-white"
             type="submit"
-            disabled={createPost.isPending}
+            disabled={editPost.isPending}
           >
-            {createPost.isPending ? "Publishing..." : "Publish"}
-          </button>
-          <button className="mr-2 flex h-[40px] items-center justify-center whitespace-nowrap rounded-md px-4 py-2">
-            Save draft
+            {editPost.isPending ? "Saving..." : "Save changes"}
           </button>
         </div>
       </div>

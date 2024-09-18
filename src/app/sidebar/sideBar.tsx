@@ -35,13 +35,6 @@ import { IoIosClose } from "react-icons/io";
 
 
 export default function SideBarClient() {
-
-//   const { data: session } = useSession();
-//   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-//   const [isSidebarClosed, setIsSidebarClosed] = useState(true);
-//   const openSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-
-//   const closeSidebar = () => setIsSidebarClosed(isSidebarClosed);
   const { data: session } = useSession();
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
 

@@ -29,6 +29,7 @@ model Post {
     @@index([name])
     Comment Comment[]
     image String?
+    archived Boolean @default(false)
     // @@index([createdByName, createdById])
 }
 

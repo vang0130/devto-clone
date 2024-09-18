@@ -611,7 +611,7 @@ export default async function Home() {
               </nav>
             </header>
             <div className="mb-2 flex flex-col space-y-4">
-              {allPosts?.map((post) => (
+              {allPosts?.filter((post) => !post.archived).map((post) => (
                 <div
                   key={post.id}
                   className="w-full border-[1.5px] bg-white sm:rounded-md"

@@ -1,5 +1,5 @@
 import CreatePost from './createPost'; 
 
-export default async function SignInPage() {
+export default async function CreatePostPage() {
   return <CreatePost />; 
 }

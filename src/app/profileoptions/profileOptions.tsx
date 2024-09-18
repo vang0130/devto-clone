@@ -26,7 +26,7 @@ export default function PopupComponent() {
                     </a>
                 </li>
                 <li className="px-4 py-2">
-                    <a href="/">Dashboard</a>
+                    <a href="/dashboard">Dashboard</a>
                 </li>
                 <li className="px-4 py-2">
                     <a href="/createpost">Create Post</a>

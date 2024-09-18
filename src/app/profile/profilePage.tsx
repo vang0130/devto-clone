@@ -1,64 +1,40 @@
 'use client'
 
 import { useSession } from 'next-auth/react';
-import SideBar from '../sidebar/sideBar';
-import Image from 'next/image';
-import { RiSearchLine } from 'react-icons/ri';
-import { PiBellSimple } from 'react-icons/pi';
-import PopUpComponent from '../profileoptions/profileOptions';
 import { BsCake } from "react-icons/bs";
 import { LuScrollText } from "react-icons/lu";
 import { RiChat1Line } from "react-icons/ri";
 import { RiHashtag } from "react-icons/ri";
 import { TfiComment } from "react-icons/tfi";
 import { api } from 'src/trpc/react';
-// import { User } from '@prisma/client';
-// import { getSession } from 'next-auth/react';
 import { UserWithPostsAndComments } from 't3/type';
+// import Header from "../header/header"
 
 
+import Image from "next/image";
+import { PiBellSimple } from "react-icons/pi";
+// import { useSession } from 'next-auth/react';
+import PopUpComponent from '../profileoptions/profileOptions';
+import SideBar from '../sidebar/sideBar';
+import { RiSearchLine } from "react-icons/ri";
 
-// export const getServerSideProps = async () => {
-//   try {
-//     const session = await getSession({ req: ctx.req });
-//     if (session) {
-//       const userPosts = await api.post.getUserPosts.query();
-//       return { props: { userPosts } };
-//     }
-//     return { props: { userPosts: [] } };
-//   } catch (error) {
-//     console.error(error);
-//     return { props: { userPosts: [] } };
-//   }
-// }
 
-// type UserProfileProps = {
-//   user: {
-//     id: string;
-//     name?: string;
-//     posts: { id: string; name: string; content: string }[]; // Define posts correctly
-//     // other properties...
-//   };
-// };
-
-// const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
 export default function ProfilePage({ user }: { user: UserWithPostsAndComments }) {
     const { data: session } = useSession();
-    // get all posts made by user
     const { data: posts } = api.post.getUserPosts.useQuery({ userId: user?.id });
-    // const { data: user } = api.post.getUser.useQuery();
-    // console.table(session?.user);
-    // console.table(session?.user?.posts);
+    
     return (
       <div>
-        <header className="z-50 fixed left-0 right-0 top-0 h-[56px] border-gray-300 border-b-[1px] bg-white">
+        {/* <Header /> */}
+
+        <header className="fixed left-0 right-0 top-0 h-[56px] border-b-[1.5px] bg-white z-50">
           <div className="mx-auto flex h-full w-full max-w-[1380px] items-center justify-start md:px-2 sm:px-1 lg:px-4">
             <SideBar />
             <a className="flex items-center" href="/">
               <Image src="/images/logo.png" alt="logo" width={50} height={50} />
             </a>
             <div className="mx-4 hidden flex-grow max-w-2xl sm:block lg:w-[680px]">
-              <form className="border-gray-300 flex h-[40px] items-center rounded-md border">
+              <form className="border-grey-900 flex h-[40px] items-center rounded-md border">
                 <button className="pl-2 pr-1">
                   <RiSearchLine className="h-6 w-6" />
                 </button>
@@ -95,7 +71,7 @@ export default function ProfilePage({ user }: { user: UserWithPostsAndComments }
             : null}
             {!session ?
             <div className="ml-auto flex items-center">
-              <div className="hidden flex-col lg:block">
+              <div className="hidden flex-col md:block">
                 <a href="/signin">
                   <div className="mr-2 min-w-[100px] rounded-md px-4 py-2 text-center text-sm sm:px-3 sm:py-1 sm:text-base lg:px-4">
                     Log In
@@ -113,7 +89,7 @@ export default function ProfilePage({ user }: { user: UserWithPostsAndComments }
             : null}
           </div>
         </header>
-        <div className="absolute w-full h-[40px] sm:h-[128px] sm:border-0 lg:px-2 bg-black lg:h-[128px]">
+        <div className="absolute w-full h-[40px] sm:h-[128px] sm:border-0 lg:px-2 bg-black lg:h-[128px] z-0">
         </div>
         <div className="mt-[56px] h-[336px] sm:w-full sm:h-[319px] lg:h-[343px] md:px-2 lg:px-4 lg:pb-3 border-b-[1px] border-gray-300 sm:rounded-md sm:border-0 lg:w-[1024px] lg:mx-auto">
           <div className="h-[40px] sm:h-[128px] w-full relative">
@@ -164,7 +140,7 @@ export default function ProfilePage({ user }: { user: UserWithPostsAndComments }
           </div>
         <div className="pt-4 sm:pt-0 sm:mx-2 lg:mt-0 flex flex-col sm:col-start-2">
           <div className="mb-2 flex flex-col">
-            {posts?.map((post) => (
+            {posts?.filter((post) => !post.archived).map((post) => (
               <div
                 key={post.id}
                 className="border-gray-300 border-[1px] sm:rounded-md bg-white pt-4 px-4 pb-3 w-full mb-2"
@@ -209,49 +185,6 @@ export default function ProfilePage({ user }: { user: UserWithPostsAndComments }
               </div>
             ))}
           </div>
-          {/* <div className="mb-2 flex flex-col">
-              <div
-                className="border-gray-300 border-[1px] sm:rounded-md bg-white pt-4 px-4 pb-3 w-full"
-              >
-                <div className="mb-3 flex max-h-[35px] items-center">
-                  <div className="mr-2 h-8 w-8 overflow-hidden rounded-full">
-                    <img
-                      src="/images/winter.png"
-                      alt="logo"
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <div className="flex max-h-[17.5px] items-center text-sm">
-                      {session?.user?.name}
-                    </div>
-                    <div className="flex max-h-[15px] items-center text-xs">
-                      Sep 9
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-col items-center lg:pl-[20px] lg:pl-[40px]">
-                  <h2 className="mb-2 w-full justify-start text-xl font-bold">
-                    Hello
-                  </h2>
-                  <div className="flex w-full flex-row items-center">
-                    <div className="flex flex-row items-center">
-                      <a className="flex flex-row items-center py-1 pl-1 pr-3 text-sm">
-                        <div className="mr-1 flex h-6 w-6 flex-row items-center">
-                          <TfiComment className="h-4 w-4" />
-                        </div>
-                        <span className="hidden sm:inline-block text-gray-500">19 comments</span>
-                      </a>
-                    </div>
-                    <div className="ml-auto flex flex-row items-center">
-                      <small className="mr-2 items-center text-gray-500">
-                        4 min read
-                      </small>
-                    </div>
-                  </div>
-              </div>
-            ))}
-          </div> */}
         </div>
       </div>
       </div>
