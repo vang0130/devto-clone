@@ -7,7 +7,18 @@ export type UserWithPostsAndComments = User & {
 };
 
 export type PostExport = Post & {
-    name: string;
-    content: string;
-    image: string;
-}
+  name: string;
+  content: string;
+  image: string | null; // Allow image to be null
+  createdBy: {
+    id: string;
+    name: string | null;
+    email: string | null;
+    emailVerified: Date | null;
+    image: string | null;
+    bio: string | null;
+    location: string | null;
+    website: string | null;
+    createdAt: Date;
+  };
+};

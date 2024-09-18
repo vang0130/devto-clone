@@ -5,9 +5,9 @@ import Header from "../header/header";
 import { RiHeartAddLine } from "react-icons/ri";
 import { RiBookmarkLine } from "react-icons/ri";
 import { RiChat1Line } from "react-icons/ri";
-import { Post } from "@prisma/client";
+import { PostExport } from "src/type";
 
-export default function PostPage({ post }: { post: Post }) {
+export default function PostPage({ post }: { post: PostExport }) {
   return (
     <div className="">
       <Header />

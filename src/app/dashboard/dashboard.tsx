@@ -1,19 +1,10 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { FaRegSmile } from "react-icons/fa";
-import { IoSettingsOutline } from "react-icons/io5";
-import { PiPlant } from "react-icons/pi";
-import { BsMailbox } from "react-icons/bs";
-import { HiOutlineOfficeBuilding } from "react-icons/hi";
-import { BsLightningCharge } from "react-icons/bs";
 import { api } from "src/trpc/react";
-import { uploadFile } from "src/app/upload/action";
 import Header from "../header/header";
 import { RiHeart2Line } from "react-icons/ri";
-// import { FaRegComment } from "react-icons/fa";
 import { RiEyeLine } from "react-icons/ri";
-import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { RiChat1Line } from "react-icons/ri";
 
 export default function DashboardClient() {
