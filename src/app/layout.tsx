@@ -1,11 +1,11 @@
-'use client'
+"use client";
 import "t3/styles/globals.css";
 
 import { TRPCReactProvider } from "t3/trpc/react";
-import Head from 'next/head';
-import { Inter } from 'next/font/google';
-import { SessionProvider } from 'next-auth/react';
-const inter = Inter({ subsets: ['latin'] });
+import Head from "next/head";
+import { Inter } from "next/font/google";
+import { SessionProvider } from "next-auth/react";
+const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,
@@ -13,13 +13,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <SessionProvider>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </Head>
-      <body className={`${inter.className} bg-gray-100`}>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
-      </body>
-    </SessionProvider>
+        <Head>
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
+        </Head>
+        <body className={`${inter.className} bg-gray-100`}>
+          <TRPCReactProvider>{children}</TRPCReactProvider>
+        </body>
+      </SessionProvider>
     </html>
   );
 }

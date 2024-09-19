@@ -1,13 +1,18 @@
 "use client";
 
+import "t3/styles/globals.css";
 import Header from "../header/header";
 
 import { RiHeartAddLine } from "react-icons/ri";
 import { RiBookmarkLine } from "react-icons/ri";
 import { RiChat1Line } from "react-icons/ri";
 import { PostExport } from "src/type";
+import { useSession } from "next-auth/react";
+import ReactMarkdown from "react-markdown";
+import "github-markdown-css/github-markdown.css";
 
 export default function PostPage({ post }: { post: PostExport }) {
+  const { data: session } = useSession();
   return (
     <div className="">
       <Header />
@@ -50,7 +55,7 @@ export default function PostPage({ post }: { post: PostExport }) {
               />
             </div>
           )}
-          <div className="mb-5 p-3 sm:px-12 sm:pt-8">
+          <div className="mb-5 bg-white p-3 sm:px-12 sm:pt-8">
             <div className="flex flex-row items-center">
               <div className="mr-2 h-10 w-10 overflow-hidden rounded-full">
                 <a href="/">
@@ -86,23 +91,29 @@ export default function PostPage({ post }: { post: PostExport }) {
                 ))}
               </div>
             </div>
-            <div className="flex flex-col">
-              <div className="w-full p-3">{post.content}</div>
+            <div className="m-0 flex h-full flex-col bg-white text-black">
+              <div className="markdown-body markdown-content m-0 h-full bg-white">
+                <ReactMarkdown className="markdown-content">
+                  {post.content}
+                </ReactMarkdown>
+              </div>
+              {/* </div> */}
+
               <div className="w-full border-t-[1px] border-gray-300 p-3">
                 <div className="mb-6 flex w-full text-xl font-bold">
                   Top Comments (0)
                 </div>
-                <div className="mb-4 flex w-full flex-row">
-                  <div className="mr-2 h-6 w-6 overflow-hidden rounded-full">
+                <div className="mb-4 flex flex-row">
+                  <div className="h-6 w-6 overflow-hidden rounded-full">
                     <a href="/">
                       <img
-                        src="/images/avatar.png"
+                        src={session?.user?.image ?? "/images/avatar.png"}
                         alt="logo"
                         className="h-full w-full object-cover"
                       />
                     </a>
                   </div>
-                  <div className="h-[64px] w-[317px] rounded-md border-[1px] border-gray-300 bg-white p-2 sm:w-full">
+                  <div className="ml-2 h-[64px] w-full rounded-md border-[1px] border-gray-300 bg-white p-2">
                     <input className="h-full w-full"></input>
                   </div>
                 </div>
