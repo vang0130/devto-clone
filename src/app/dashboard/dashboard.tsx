@@ -57,7 +57,7 @@ export default function DashboardClient() {
   };
 
   return (
-    <div>
+    <div className="mx-auto max-w-[1380px]">
       <Header />
       <div className="mt-[56px] grid w-full">
         <div className="p-3 sm:row-start-1 sm:p-4">
