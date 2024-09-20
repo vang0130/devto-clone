@@ -3,9 +3,8 @@
 import { useSession } from "next-auth/react";
 import { BsCake } from "react-icons/bs";
 import { LuScrollText } from "react-icons/lu";
-import { RiChat1Line } from "react-icons/ri";
 import { RiHashtag } from "react-icons/ri";
-import { TfiComment } from "react-icons/tfi";
+import { RiChat1Line } from "react-icons/ri";
 import { api } from "src/trpc/react";
 import { UserWithPostsAndComments } from "t3/type";
 import Header from "../header/header";
@@ -121,7 +120,7 @@ export default function ProfilePage({
                       <div className="flex flex-row items-center">
                         <a className="flex flex-row items-center py-1 pl-1 pr-3 text-sm">
                           <div className="mr-1 flex h-6 w-6 flex-row items-center">
-                            <TfiComment className="h-4 w-4" />
+                            <RiChat1Line className="h-4 w-4" />
                           </div>
                           <span className="hidden text-gray-500 sm:inline-block">
                             19 comments
