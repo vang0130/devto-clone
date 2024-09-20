@@ -94,14 +94,8 @@ export default function EditPost({ post }: { post: Post }) {
     // },
   });
 
-  // create post with info
   const handleEditPost = (postId: number) => {
-    // if (!name || !content || tags.length == 0) {
-    //   // setState({ status: "error", message: "Post title and content are required." });
-    //   return;
-    // }
-
-    editPost.mutate(
+    void editPost.mutate(
       { id: postId, name, content, tags, image: image ?? undefined },
       {
         onSuccess: (data) => {

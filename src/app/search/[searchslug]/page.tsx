@@ -14,5 +14,5 @@ export default function Page({ params }: { params: { searchslug: string } }) {
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading posts.</div>;
 
-  return <SearchPage posts={posts || []} />;
+  return <SearchPage posts={posts ?? []} />;
 }
