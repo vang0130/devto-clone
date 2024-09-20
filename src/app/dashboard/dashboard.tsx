@@ -55,10 +55,6 @@ export default function DashboardClient() {
     setUnArchivingPostId(postId);
     unArchivePost.mutate({ id: postId });
   };
-  //display posts made by user
-  // display post count
-
-  // interactive delete, edit and hide buttons
 
   return (
     <div>
@@ -213,15 +209,15 @@ export default function DashboardClient() {
                 className="mt-3 w-full border-[1px] border-gray-300 bg-white sm:rounded-md"
               >
                 <div className="grid h-[118px] w-full grid-cols-2 grid-rows-1 p-4 md:h-[82px] md:grid-cols-[2fr,1fr,1fr]">
-                  <div className="h-full w-full">
-                    <div className="flex h-[28px] flex-row items-center">
+                  <div className="col-span-2 h-full w-full">
+                    <div className="col-span-2 flex h-[28px] flex-row items-center">
                       {post.archived ? (
-                        <span className="mr-2 rounded-md bg-red-500 p-1 text-xs text-white">
+                        <span className="mr-2 flex rounded-md bg-red-500 p-1 text-xs text-white">
                           Archived
                         </span>
                       ) : null}
-                      <a href={`/post/${post.id}`}>
-                        <h3 className="text-xl font-bold text-blue-700">
+                      <a href={`/post/${post.id}`} className="w-full">
+                        <h3 className="w-min whitespace-nowrap text-xl font-bold text-blue-700">
                           {post.name}
                         </h3>
                       </a>

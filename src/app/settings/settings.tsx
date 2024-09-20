@@ -83,9 +83,7 @@ export default function SettingsClient() {
   return (
     <div>
       <Header />
-      {/* Profile and Settings UI */}
       <div className="sm:px-2 grid mt-[68px] max-w-[1024px] mx-auto sm:grid-rows-[70px,240px,min-content,min-content] sm:grid-cols-[2fr,4fr] sm:gap-4 lg:grid-cols-[240px,736px]">
-        {/* Side Menu for Settings */}
         <div className="sm:hidden flex flex-col items-center justify-center p-2">
           <select className="p-2 w-full h-[39px] border border-gray-300 rounded-md bg-white">
             <option>Profile</option>
@@ -125,7 +123,6 @@ export default function SettingsClient() {
           </nav>
         </div>
 
-        {/* Profile Section */}
         <div className="py-1 sm:hidden"></div>
         <div className="sm:col-start-2 col-span-1 sm:row-span-1 mx-auto p-3 h-[70px] w-full max-w-[1380px]">
           <div className="align-top flex flex-col items-start">
@@ -133,7 +130,6 @@ export default function SettingsClient() {
           </div>
         </div>
         
-        {/* Connect Accounts Section */}
         <div className="sm:col-start-2 sm:row-start-2 col-span-1 sm:rounded-md bg-white border border-gray-300 p-4 mb-4 sm:mb-2 grid grid-cols-1 items-center justify-center">
           <button className="h-[40px] px-3 py-2 m-1 rounded-md bg-blue-500 text-white w-full">
             Connect Facebook Account
@@ -149,7 +145,6 @@ export default function SettingsClient() {
           </button>
         </div>
         
-        {/* User Information Form */}
         <div className="sm:col-start-2 col-span-1">
           <div className="p-4 mb-4 grid grid-cols-1 sm:rounded-md gap-4 bg-white border border-gray-300">
             <h2 className="text-2xl font-bold col-span-1">User</h2>
@@ -186,13 +181,12 @@ export default function SettingsClient() {
               />
             </div>
 
-            {/* Profile Image Section */}
             <div className="flex flex-col col-span-1">
               <label>Profile image</label>
               <div className="mt-2 flex items-center">
                 <div className="mr-2 h-16 items-center justify-center flex w-min-content">
                   <img
-                    src={session?.user?.image ?? "/images/avatar.png"}  // Use the updated image state
+                    src={session?.user?.image ?? "/images/avatar.png"} 
                     alt="logo"
                     className="h-12 w-12 flex items-center justify-start object-cover rounded-full overflow-hidden"
                   />
@@ -208,7 +202,7 @@ export default function SettingsClient() {
                           name="file"
                           accept="image/*" 
                           className="hidden"
-                          onChange={handleFileChange}  // Attach file change handler
+                          onChange={handleFileChange} 
                         />
                       </label>
                     </div>
@@ -225,7 +219,6 @@ export default function SettingsClient() {
             </div>
           </div>
 
-          {/* Basic Information Form */}
           <div className="p-4 mb-4 mt-2 grid grid-cols-1 sm:rounded-md sm:grid-start-2 gap-4 bg-white border border-gray-300">
             <h2 className="text-2xl font-bold col-span-1">Basic</h2>
             <div className="flex flex-col col-span-1">

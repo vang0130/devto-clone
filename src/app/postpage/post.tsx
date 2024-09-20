@@ -14,7 +14,7 @@ import "github-markdown-css/github-markdown.css";
 export default function PostPage({ post }: { post: PostExport }) {
   const { data: session } = useSession();
   return (
-    <div className="">
+    <div className="mx-auto max-w-[1380px]">
       <Header />
       <div className="mt-[56px] sm:grid sm:grid-cols-[64px,1fr] sm:gap-2 sm:px-3 sm:pt-3">
         <div className="hidden sm:col-start-1 sm:flex sm:flex-col">

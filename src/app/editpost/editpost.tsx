@@ -174,12 +174,7 @@ export default function EditPost({ post }: { post: Post }) {
                       if (e.key === "Space") {
                         e.preventDefault();
                         const newTag = tags.join(" ").trim();
-                        if (!tags.includes(newTag)) {
-                          const formattedTag = newTag.startsWith("#")
-                            ? newTag
-                            : `#${newTag}`;
-                          setTags([...tags, formattedTag]);
-                        }
+                        setTags([...tags, newTag]);
                       }
                     }}
                   />

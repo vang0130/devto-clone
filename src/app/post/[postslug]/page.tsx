@@ -1,7 +1,6 @@
 "use client";
 import PostPage from "../../postpage/post";
 import { api } from "src/trpc/react";
-// import PostExport from "src/type";
 
 export default function Page({ params }: { params: { postslug: string } }) {
   const postId = Number(params.postslug);
