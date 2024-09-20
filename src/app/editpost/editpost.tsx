@@ -22,6 +22,7 @@ import Image from "next/image";
 import { uploadFile } from "../upload/action";
 import { Post } from "@prisma/client";
 import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 type UploadState = {
   status: "success" | "error";
@@ -77,6 +78,7 @@ export default function EditPost({ post }: { post: Post }) {
     }
   };
 
+  const router = useRouter();
   // create post, set create post page to empty after done
   const editPost = api.post.edit.useMutation({
     onSuccess: async () => {
@@ -99,13 +101,15 @@ export default function EditPost({ post }: { post: Post }) {
     //   return;
     // }
 
-    editPost.mutate({
-      id: postId,
-      name,
-      content,
-      tags,
-      image: image ?? undefined,
-    });
+    editPost.mutate(
+      { id: postId, name, content, tags, image: image ?? undefined },
+      {
+        onSuccess: (data) => {
+          const postSlug = data.id;
+          router.push(`/post/${postSlug}`);
+        },
+      },
+    );
   };
 
   return (

@@ -19,7 +19,7 @@ import {
 import { RxLightningBolt } from "react-icons/rx";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Image from "next/image";
-
+import { useRouter } from "next/navigation";
 import { uploadFile } from "../upload/action";
 
 type UploadState = {
@@ -69,7 +69,8 @@ export default function CreatePost() {
     },
   });
 
-  // create post with info
+  const router = useRouter();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -77,7 +78,15 @@ export default function CreatePost() {
       return;
     }
 
-    createPost.mutate({ name, content, tags, image });
+    createPost.mutate(
+      { name, content, tags, image },
+      {
+        onSuccess: (data) => {
+          const postSlug = data.id;
+          router.push(`/post/${postSlug}`);
+        },
+      },
+    );
   };
 
   return (

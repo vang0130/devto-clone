@@ -125,38 +125,32 @@ export const postRouter = createTRPCRouter({
     });
   }),
 
-  searchPosts: publicProcedure
-    .input(
-      z.object({
-        searchslug: z.string().min(1),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      const { searchslug } = input;
+searchPosts: publicProcedure
+  .input(
+    z.object({
+      searchslug: z.string().min(1),
+    })
+  )
+  .query(async ({ ctx, input }) => {
+    const { searchslug } = input;
 
-      return ctx.db.post.findMany({
-        where: {
-          OR: [
-            { name: { contains: searchslug, mode: "insensitive" } },
-            { content: { contains: searchslug, mode: "insensitive" } },
-            { 
-              tags: {
-                some: {
-                  contains: searchslug, 
-                  mode: "insensitive", 
-                },
-              },
-            }, 
-          ],
-        },
-        include: {
-          createdBy: true,
-        },
-        orderBy: {
-          createdAt: "desc", 
-        },
-      });
-    }),
+    return ctx.db.post.findMany({
+      where: {
+        OR: [
+          { name: { contains: searchslug, mode: "insensitive" } },
+          { content: { contains: searchslug, mode: "insensitive" } },
+          { tags: { has: searchslug } },
+        ],
+      },
+      include: {
+        createdBy: true, 
+      },
+      orderBy: {
+        createdAt: "desc", 
+      },
+    });
+  }),
+
 
   getSecretMessage: protectedProcedure.query(() => {
     return "you can now see this secret message!";
