@@ -89,7 +89,7 @@ export default function EditPost({ post }: { post: Post }) {
       //   setImageUrl("");
       // setState({ status: "success", message: "Post created successfully." });
       const postSlug = data.id;
-      router.push(`/post/${postSlug}`);
+      await router.push(`/post/${postSlug}`);
     },
     // onError: (error) => {
     // setState({ status: "error", message: error.message ?? "Failed to create post." });
