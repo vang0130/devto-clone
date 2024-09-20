@@ -81,13 +81,15 @@ export default function EditPost({ post }: { post: Post }) {
   const router = useRouter();
   // create post, set create post page to empty after done
   const editPost = api.post.edit.useMutation({
-    onSuccess: async () => {
+    onSuccess: async (data) => {
       await utils.post.invalidate();
       //   setName("");
       //   setContent("");
       //   setTags([]);
       //   setImageUrl("");
       // setState({ status: "success", message: "Post created successfully." });
+      const postSlug = data.id;
+      router.push(`/post/${postSlug}`);
     },
     // onError: (error) => {
     // setState({ status: "error", message: error.message ?? "Failed to create post." });
@@ -95,15 +97,23 @@ export default function EditPost({ post }: { post: Post }) {
   });
 
   const handleEditPost = (postId: number) => {
-    void editPost.mutate(
-      { id: postId, name, content, tags, image: image ?? undefined },
-      {
-        onSuccess: (data) => {
-          const postSlug = data.id;
-          router.push(`/post/${postSlug}`);
-        },
-      },
-    );
+    editPost.mutate({
+      id: postId,
+      name,
+      content,
+      tags,
+      image: image ?? undefined,
+    });
+
+    // void editPost.mutate(
+    //   { id: postId, name, content, tags, image: image ?? undefined },
+    //   {
+    // onSuccess: (data) => {
+    //   const postSlug = data.id;
+    //   router.push(`/post/${postSlug}`);
+    // },
+    //   },
+    // );
   };
 
   return (
