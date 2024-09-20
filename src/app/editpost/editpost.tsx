@@ -22,7 +22,7 @@ import Image from "next/image";
 import { uploadFile } from "../upload/action";
 import { Post } from "@prisma/client";
 import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 type UploadState = {
   status: "success" | "error";

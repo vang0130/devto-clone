@@ -20,6 +20,7 @@ import { RxLightningBolt } from "react-icons/rx";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+// import { useEffect } from "react";
 import { uploadFile } from "../upload/action";
 
 type UploadState = {
@@ -70,6 +71,10 @@ export default function CreatePost() {
   });
 
   const router = useRouter();
+
+  // useEffect(() => {
+  //   console.log(router);
+  // }, [router]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
