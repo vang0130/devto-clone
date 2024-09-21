@@ -24,11 +24,13 @@ export default function ProfilePage({
       <div className="mt-[56px] h-[336px] border-b-[1px] border-gray-300 sm:h-[319px] sm:w-full sm:rounded-md sm:border-0 md:px-2 lg:mx-auto lg:h-[343px] lg:w-[1024px] lg:px-4 lg:pb-3">
         <div className="relative h-[40px] w-full sm:h-[128px]">
           <div className="absolute z-10 w-full overflow-hidden px-3 py-2">
-            <img
-              src={user?.image ?? "images/avatar.png"}
-              alt="profile"
-              className="h-[60px] w-[60px] rounded-full border-[4px] border-black object-cover sm:mx-auto sm:h-[128px] sm:w-[128px] sm:border-8"
-            />
+            <a href={`/user/${user?.id}`}>
+              <img
+                src={user?.image ?? "images/avatar.png"}
+                alt="profile"
+                className="h-[60px] w-[60px] rounded-full border-[4px] border-black object-cover sm:mx-auto sm:h-[128px] sm:w-[128px] sm:border-8"
+              />
+            </a>
           </div>
         </div>
         <div className="relative h-[52px] bg-white pr-4 pt-4 sm:mx-2 sm:mt-[-56px] sm:h-[56px] sm:rounded-t-lg sm:border-x-[1px] sm:border-gray-300 sm:pb-5 md:mx-auto">
@@ -42,7 +44,9 @@ export default function ProfilePage({
           </div>
           <div className="mb-4 flex justify-start sm:justify-center">
             <p defaultValue="404 bio not found">
-              {user?.bio ?? "404 bio not found"}
+              {user?.bio && user.bio.length > 0
+                ? user.bio
+                : "404 bio not found"}
             </p>
           </div>
           <div className="mb-2 flex h-[40px] flex-row items-center justify-start p-2 text-xs text-gray-500 sm:justify-center">
@@ -94,11 +98,13 @@ export default function ProfilePage({
                 >
                   <div className="mb-3 flex max-h-[35px] items-center">
                     <div className="mr-2 h-8 w-8 overflow-hidden rounded-full">
-                      <img
-                        src={user.image ?? "/images/avatar.png"}
-                        alt="logo"
-                        className="h-full w-full object-cover"
-                      />
+                      <a href={`/user/${user?.id}`}>
+                        <img
+                          src={user.image ?? "/images/avatar.png"}
+                          alt="logo"
+                          className="h-full w-full object-cover"
+                        />
+                      </a>
                     </div>
                     <div className="flex flex-col">
                       <div className="flex max-h-[17.5px] items-center text-sm">

@@ -3,8 +3,10 @@
 import "t3/styles/globals.css";
 import Header from "../header/header";
 
+import { BsCake } from "react-icons/bs";
 import { RiHeartAddLine } from "react-icons/ri";
 import { RiBookmarkLine } from "react-icons/ri";
+import { BsThreeDots } from "react-icons/bs";
 import { RiChat1Line } from "react-icons/ri";
 import { PostExport } from "src/type";
 import { useSession } from "next-auth/react";
@@ -13,12 +15,13 @@ import "github-markdown-css/github-markdown.css";
 
 export default function PostPage({ post }: { post: PostExport }) {
   const { data: session } = useSession();
+
   return (
     <div className="mx-auto max-w-[1380px]">
       <Header />
-      <div className="mt-[56px] sm:grid sm:grid-cols-[64px,1fr] sm:gap-2 sm:px-3 sm:pt-3">
+      <div className="mt-[56px] sm:grid sm:grid-cols-[64px,1fr] sm:gap-2 sm:px-2 sm:pt-2 lg:grid lg:grid-cols-[64px,7fr,3fr] lg:gap-4 lg:p-4">
         <div className="hidden sm:col-start-1 sm:flex sm:flex-col">
-          <div className="mt-20 h-[277px] w-full">
+          <div className="h-[277px] w-full text-sm sm:mt-12 lg:mt-8">
             <div className="h-[70px] w-full">
               <div className="flex items-center justify-center p-2 align-middle">
                 <RiHeartAddLine className="h-6 w-6" />
@@ -27,7 +30,7 @@ export default function PostPage({ post }: { post: PostExport }) {
                 <span className="text-s text-gray-500">67</span>
               </div>
             </div>
-            <div className="h-[70px] w-full">
+            <div className="mt-3 h-[70px] w-full">
               <div className="flex items-center justify-center p-2 align-middle">
                 <RiChat1Line className="h-6 w-6" />
               </div>
@@ -35,7 +38,7 @@ export default function PostPage({ post }: { post: PostExport }) {
                 <span className="text-s text-gray-500">6</span>
               </div>
             </div>
-            <div className="h-[70px] w-full">
+            <div className="mt-3 h-[70px] w-full">
               <div className="flex items-center justify-center p-2 align-middle">
                 <RiBookmarkLine className="h-6 w-6" />
               </div>
@@ -43,11 +46,16 @@ export default function PostPage({ post }: { post: PostExport }) {
                 <span className="text-s text-gray-500">100</span>
               </div>
             </div>
+            <div className="mt-3 h-[70px] w-full">
+              <div className="flex items-center justify-center p-2 align-middle">
+                <BsThreeDots className="h-6 w-6" />
+              </div>
+            </div>
           </div>
         </div>
         <div className="bg-white sm:col-start-2 sm:rounded-md">
           {post.image && (
-            <div className="h-[157.5px] w-full sm:h-[304px]">
+            <div className="h-[157.5px] sm:h-[304px]">
               <img
                 src={post.image}
                 alt="Post image"
@@ -55,10 +63,10 @@ export default function PostPage({ post }: { post: PostExport }) {
               />
             </div>
           )}
-          <div className="mb-5 bg-white p-3 sm:px-12 sm:pt-8">
+          <div className="mb-5 bg-white p-3 sm:rounded-md sm:px-12 sm:pt-8">
             <div className="flex flex-row items-center">
               <div className="mr-2 h-10 w-10 overflow-hidden rounded-full">
-                <a href="/">
+                <a href={`/user/${post.createdBy.id}`}>
                   <img
                     src={post.createdBy.image ?? "/images/avatar.png"}
                     alt="logo"
@@ -97,15 +105,13 @@ export default function PostPage({ post }: { post: PostExport }) {
                   {post.content}
                 </ReactMarkdown>
               </div>
-              {/* </div> */}
-
               <div className="w-full border-t-[1px] border-gray-300 p-3">
                 <div className="mb-6 flex w-full text-xl font-bold">
                   Top Comments (0)
                 </div>
                 <div className="mb-4 flex flex-row">
                   <div className="h-6 w-6 overflow-hidden rounded-full">
-                    <a href="/">
+                    <a href={`/user/${post.createdBy.id}`}>
                       <img
                         src={session?.user?.image ?? "/images/avatar.png"}
                         alt="logo"
@@ -116,6 +122,50 @@ export default function PostPage({ post }: { post: PostExport }) {
                   <div className="ml-2 h-[64px] w-full rounded-md border-[1px] border-gray-300 bg-white p-2">
                     <input className="h-full w-full"></input>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="hidden lg:col-start-3 lg:flex">
+          <div className="z-0 col-start-3 h-[32px] w-full rounded-t-md bg-black">
+            <div className="h-content mt-[32px] rounded-b-md border-gray-300 bg-white">
+              <div className="absolute z-10 mt-[-16px] flex flex-row overflow-hidden px-4">
+                <a href={`/user/${post.createdBy.id}`}>
+                  <img
+                    src={post.createdBy.image ?? "images/avatar.png"}
+                    alt="profile"
+                    className="h-[48px] w-[48px] rounded-full object-cover"
+                  />
+                </a>
+                <div className="ml-2 mt-[20px] text-xl font-bold">
+                  {post.createdBy.name}
+                </div>
+              </div>
+              <div className="h-[50px]"></div>
+              <div className="relative col-span-1 col-start-3 h-[40px] px-4">
+                <button className="h-full w-full rounded-md bg-blue-600 text-white">
+                  Follow
+                </button>
+              </div>
+              <div className="mt-4 px-4 text-gray-500">
+                {post.createdBy.bio && post.createdBy.bio.length > 0
+                  ? post.createdBy.bio
+                  : "404 bio not found"}
+              </div>
+              <div className="mt-4 flex w-full flex-col px-4 pb-4">
+                <div className="h-[18px] text-xs font-bold text-gray-500">
+                  JOINED
+                </div>
+                <div className="h-[24px] text-gray-500">
+                  {new Date(post.createdBy.createdAt).toLocaleDateString(
+                    "en-US",
+                    {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    },
+                  )}
                 </div>
               </div>
             </div>

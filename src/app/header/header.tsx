@@ -29,7 +29,7 @@ export default function Header() {
         <a className="flex items-center" href="/">
           <Image src="/images/logo.png" alt="logo" width={50} height={50} />
         </a>
-        <div className="mx-4 hidden max-w-2xl flex-grow sm:block lg:w-[680px]">
+        <div className="mx-4 hidden max-w-2xl flex-grow sm:block md:w-[680px]">
           <form className="flex h-[40px] items-center rounded-md border border-gray-300">
             <button className="pl-2 pr-1">
               <RiSearchLine className="h-6 w-6" />
@@ -70,9 +70,9 @@ export default function Header() {
         ) : null}
         {!session ? (
           <div className="ml-auto flex items-center">
-            <div className="hidden flex-col lg:block">
+            <div className="hidden flex-col md:block">
               <a href="/signin">
-                <div className="mr-2 min-w-[100px] rounded-md px-4 py-2 text-center text-sm sm:px-3 sm:py-1 sm:text-base lg:px-4">
+                <div className="mr-2 min-w-[100px] rounded-md px-4 py-2 text-center text-sm sm:px-3 sm:py-1 sm:text-base md:px-4">
                   Log In
                 </div>
               </a>
