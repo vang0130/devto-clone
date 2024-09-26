@@ -29,7 +29,7 @@ import { HiOutlineBookmark } from "react-icons/hi2";
 import { useSession } from "next-auth/react";
 import { api } from "src/trpc/react";
 import Header from "src/app/header/header";
-
+// import type { Post } from "@prisma/client";
 type Post = {
   id: number;
   name: string;
@@ -52,38 +52,41 @@ type Post = {
 
 export default function Home() {
   const { data: session, update } = useSession();
-  const { data: posts, isLoading, isError } = api.post.findMany.useQuery();
+  const { data: posts, isLoading } = api.post.findMany.useQuery();
   return (
     <div>
       <Header />
       <div className="mx-auto flex min-h-screen w-full flex-col pt-[72px] sm:max-w-[86.25rem] sm:px-2 lg:px-4">
         <div className="grid flex-grow grid-cols-[1fr] sm:grid-cols-[15rem,1fr] sm:gap-2 lg:grid-cols-[15rem,1fr,1fr,1fr] lg:gap-4">
           <div className="hidden items-center sm:block lg:max-w-[15rem]">
-            {!session ? (
-              <div className="mb-4 flex flex-col items-center rounded-md border-[1.5px] bg-white px-4 py-4 sm:px-2 sm:py-2 lg:px-4 lg:py-4">
-                <h2 className="mb-4 text-xl font-bold">
-                  DEV Community is a community of 2,027,354 amazing developers
-                </h2>
-                <p className="mb-4 text-sm text-gray-500">
-                  We&apos;re a place where coders share, stay up-to-date and
-                  grow their careers.
-                </p>
-                <div className="mr-2 w-full max-w-[208px] flex-col items-center justify-center rounded-md sm:max-w-[160px] md:max-w-[160px] lg:max-w-[208px]">
-                  <a
-                    className="mb-[4px] inline-flex w-full items-center justify-center rounded-md border-[1px] border-black px-[15px] py-[7px] text-sm"
-                    href="/signup"
-                  >
-                    Create account
-                  </a>
-                  <a
-                    className="inline-flex w-full items-center justify-center px-[15px] py-[7px] text-sm"
-                    href="/signin"
-                  >
-                    Log in
-                  </a>
-                </div>
-              </div>
-            ) : null}
+            {isLoading
+              ? null
+              : !session && (
+                  <div className="mb-4 flex flex-col items-center rounded-md border-[1.5px] bg-white px-4 py-4 sm:px-2 sm:py-2 lg:px-4 lg:py-4">
+                    <h2 className="mb-4 text-xl font-bold">
+                      DEV Community is a community of 2,027,354 amazing
+                      developers
+                    </h2>
+                    <p className="mb-4 text-sm text-gray-500">
+                      We&apos;re a place where coders share, stay up-to-date and
+                      grow their careers.
+                    </p>
+                    <div className="mr-2 w-full max-w-[208px] flex-col items-center justify-center rounded-md sm:max-w-[160px] md:max-w-[160px] lg:max-w-[208px]">
+                      <a
+                        className="mb-[4px] inline-flex w-full items-center justify-center rounded-md border-[1px] border-blue-700 px-[15px] py-[7px] text-sm"
+                        href="/signup"
+                      >
+                        Create account
+                      </a>
+                      <a
+                        className="inline-flex w-full items-center justify-center px-[15px] py-[7px] text-sm"
+                        href="/signin"
+                      >
+                        Log in
+                      </a>
+                    </div>
+                  </div>
+                )}
             <nav className="mb-4 flex min-h-[600px] flex-col text-sm">
               <ul className="min-h-[40px]">
                 <li className="min-h-[40px]">
@@ -559,93 +562,97 @@ export default function Home() {
               </nav>
             </header>
             <div className="mb-2 flex flex-col space-y-4">
-              {posts?.map((post: Post) => (
-                <div
-                  key={post.id}
-                  className="w-full border-[1.5px] bg-white sm:rounded-md"
-                >
-                  {post.image && (
-                    <div className="aspect-[2/1] w-full sm:rounded-t-md">
-                      <img
-                        src={post.image}
-                        alt="Post image"
-                        className="h-full w-full object-cover sm:rounded-t-md"
-                      />
-                    </div>
-                  )}
-                  <div className="p-5">
-                    <div className="mb-2 mr-2 flex max-h-[35px] items-center">
-                      <div className="mr-2 h-8 w-8 overflow-hidden rounded-full">
-                        <a href={`/user/${post.createdBy.id}`}>
-                          <img
-                            src={post.createdBy.image ?? "/images/avatar.png"}
-                            alt="logo"
-                            className="h-full w-full object-cover"
-                          />
-                        </a>
+              {isLoading ? (
+                <SkeletonLoader />
+              ) : (
+                posts?.map((post: Post) => (
+                  <div
+                    key={post.id}
+                    className="w-full border-[1.5px] bg-white sm:rounded-md"
+                  >
+                    {post.image && (
+                      <div className="aspect-[2/1] w-full sm:rounded-t-md">
+                        <img
+                          src={post.image}
+                          alt="Post image"
+                          className="h-full w-full object-cover sm:rounded-t-md"
+                        />
                       </div>
-                      <div className="flex flex-col">
-                        <div className="flex max-h-[17.5px] items-center text-sm">
-                          {post.createdBy.name}
-                        </div>
-                        <div className="flex max-h-[15px] items-center text-xs">
-                          {new Date(post.createdAt).toLocaleDateString(
-                            "en-US",
-                            { month: "short", day: "numeric" },
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-center pl-[10px] md:pl-[20px] lg:pl-[40px]">
-                      <h2 className="mb-1 w-full justify-start text-2xl font-bold">
-                        <a href={`/post/${post.id}`}>{post.name}</a>
-                      </h2>
-                      <div className="mb-2 flex w-full text-gray-500">
-                        {post.tags.map((tag) => (
-                          <a
-                            key={tag}
-                            className="px-[7px] py-[4px] text-sm"
-                            href={`/t/${tag}`}
-                          >
-                            {tag}
-                          </a>
-                        ))}
-                      </div>
-                      <div className="flex w-full flex-row items-center">
-                        <div className="flex flex-row items-center">
-                          <a className="items-center py-1 pl-2 pr-3 text-sm">
-                            <span>💖🦄🤯👏🔥</span>
-                            <span className="ml-[14px] hidden text-gray-500 sm:inline-block">
-                              190 reactions
-                            </span>
-                            <span className="ml-[14px] inline-block text-gray-500 sm:hidden">
-                              190
-                            </span>
-                          </a>
-                          <a className="flex flex-row items-center py-1 pl-2 pr-3 text-sm">
-                            <div className="mr-1 flex h-6 w-6 flex-row items-center">
-                              <RiChat1Line className="h-4 w-4" />
-                            </div>
-                            <span className="hidden text-gray-500 sm:inline-block">
-                              19 comments
-                            </span>
+                    )}
+                    <div className="p-5">
+                      <div className="mb-2 mr-2 flex max-h-[35px] items-center">
+                        <div className="mr-2 h-8 w-8 overflow-hidden rounded-full">
+                          <a href={`/user/${post.createdBy.id}`}>
+                            <img
+                              src={post.createdBy.image ?? "/images/avatar.png"}
+                              alt="logo"
+                              className="h-full w-full object-cover"
+                            />
                           </a>
                         </div>
-                        <div className="ml-auto flex flex-row items-center">
-                          <small className="mr-2 items-center text-gray-500">
-                            4 min read
-                          </small>
-                          <button className="p-2">
-                            <span className="flex h-6 w-6 items-center justify-center">
-                              <HiOutlineBookmark className="h-5 w-5" />
-                            </span>
-                          </button>
+                        <div className="flex flex-col">
+                          <div className="flex max-h-[17.5px] items-center text-sm">
+                            {post.createdBy.name}
+                          </div>
+                          <div className="flex max-h-[15px] items-center text-xs">
+                            {new Date(post.createdAt).toLocaleDateString(
+                              "en-US",
+                              { month: "short", day: "numeric" },
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-center pl-[10px] md:pl-[20px] lg:pl-[40px]">
+                        <h2 className="mb-1 w-full justify-start text-2xl font-bold">
+                          <a href={`/post/${post.id}`}>{post.name}</a>
+                        </h2>
+                        <div className="mb-2 flex w-full text-gray-500">
+                          {post.tags.map((tag) => (
+                            <a
+                              key={tag}
+                              className="px-[7px] py-[4px] text-sm"
+                              href={`/t/${tag}`}
+                            >
+                              {tag}
+                            </a>
+                          ))}
+                        </div>
+                        <div className="flex w-full flex-row items-center">
+                          <div className="flex flex-row items-center">
+                            <a className="items-center py-1 pl-2 pr-3 text-sm">
+                              <span>💖🦄🤯👏🔥</span>
+                              <span className="ml-[14px] hidden text-gray-500 sm:inline-block">
+                                190 reactions
+                              </span>
+                              <span className="ml-[14px] inline-block text-gray-500 sm:hidden">
+                                190
+                              </span>
+                            </a>
+                            <a className="flex flex-row items-center py-1 pl-2 pr-3 text-sm">
+                              <div className="mr-1 flex h-6 w-6 flex-row items-center">
+                                <RiChat1Line className="h-4 w-4" />
+                              </div>
+                              <span className="hidden text-gray-500 sm:inline-block">
+                                19 comments
+                              </span>
+                            </a>
+                          </div>
+                          <div className="ml-auto flex flex-row items-center">
+                            <small className="mr-2 items-center text-gray-500">
+                              4 min read
+                            </small>
+                            <button className="p-2">
+                              <span className="flex h-6 w-6 items-center justify-center">
+                                <HiOutlineBookmark className="h-5 w-5" />
+                              </span>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
           <div className="hidden w-full space-y-4 lg:block">
@@ -942,6 +949,51 @@ export default function Home() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function SkeletonLoader() {
+  return (
+    <div className="space-y-4">
+      {Array.from({ length: 3 }).map((_, index) => (
+        <div key={index} className="w-full bg-white sm:rounded-md">
+          <div className="aspect-[2/1] w-full animate-pulse bg-gray-300 sm:rounded-b-none sm:rounded-t-md" />
+          <div className="p-5">
+            <div className="mb-2 mr-2 flex max-h-[35px] items-center">
+              <div className="mr-2 h-8 w-8 animate-pulse overflow-hidden rounded-full bg-gray-200"></div>
+              <div className="flex flex-col">
+                <div className="mb-1 h-[15px] w-[80px] animate-pulse rounded-md bg-gray-200" />
+                <div className="flex h-[12px] w-[40px] animate-pulse items-center rounded-md bg-gray-200 text-xs" />
+              </div>
+            </div>
+            <div className="flex flex-col items-center pl-[10px] md:pl-[20px] lg:pl-[40px]">
+              <div className="mb-2 mr-auto h-[29.5px] w-[250px] animate-pulse justify-start rounded-md bg-gray-200" />
+              <div className="mb-2 mr-auto flex h-[27px] w-[200px] animate-pulse justify-start rounded-md bg-gray-200 text-gray-500"></div>
+              <div className="flex w-full flex-row items-center">
+                <div className="flex flex-row items-center">
+                  <div className="h-[24px] w-[120px] animate-pulse rounded-md bg-gray-200" />
+                  <a className="hidden flex-row items-center py-1 pl-2 pr-3 text-sm sm:flex">
+                    <div className="h-[24px] w-[120px] animate-pulse rounded-md bg-gray-200" />
+                  </a>
+                </div>
+                <div className="ml-auto flex flex-row items-center">
+                  <div className="h-[24px] w-[150px] animate-pulse rounded-md bg-gray-200" />
+                </div>
+              </div>
+            </div>{" "}
+            {/* <div className="mb-2 mr-2 flex max-h-[35px] items-center">
+              <div className="mr-2 h-8 w-8 animate-pulse overflow-hidden rounded-full bg-gray-300"></div>
+              <div className="flex flex-col">
+                <div className="h-4 w-24 animate-pulse rounded-md bg-gray-300"></div>
+                <div className="mt-1 h-3 w-16 animate-pulse rounded-md bg-gray-300"></div>
+              </div>
+            </div>
+            <div className="mt-3 h-6 w-3/4 animate-pulse rounded-md bg-gray-300"></div>
+            <div className="mt-2 h-4 w-1/2 animate-pulse rounded-md bg-gray-300"></div> */}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

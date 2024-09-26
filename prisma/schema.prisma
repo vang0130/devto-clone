@@ -46,10 +46,12 @@ model Comment {
     createdById String
     content     String
     // @@index([createdByName])
-    post        Post   @relation(fields: [id], references: [id])
+    post        Post   @relation(fields: [postId], references: [id])
     // postid Int?
 
-    @@index([name])
+    postId Int
+
+    @@index([id])
 }
 
 // Necessary for Next auth

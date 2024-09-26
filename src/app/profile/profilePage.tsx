@@ -8,6 +8,8 @@ import { RiChat1Line } from "react-icons/ri";
 import { api } from "src/trpc/react";
 import { UserWithPostsAndComments } from "t3/type";
 import Header from "../header/header";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 export default function ProfilePage({
   user,
@@ -15,7 +17,9 @@ export default function ProfilePage({
   user: UserWithPostsAndComments;
 }) {
   const { data: session } = useSession();
-  const { data: posts } = api.post.getUserPosts.useQuery({ userId: user?.id });
+  const { data: posts, isLoading: isLoading } = api.post.getUserPosts.useQuery({
+    userId: user?.id,
+  });
 
   return (
     <div>
@@ -34,7 +38,7 @@ export default function ProfilePage({
           </div>
         </div>
         <div className="relative h-[52px] bg-white pr-4 pt-4 sm:mx-2 sm:mt-[-56px] sm:h-[56px] sm:rounded-t-lg sm:border-x-[1px] sm:border-gray-300 sm:pb-5 md:mx-auto">
-          <button className="ml-auto flex items-center rounded-md bg-blue-500 px-4 py-2 text-white">
+          <button className="ml-auto flex w-[115px] items-center rounded-md bg-blue-500 px-4 py-2 text-white">
             Edit Profile
           </button>
         </div>
@@ -87,62 +91,111 @@ export default function ProfilePage({
             <p className="text-sm">0 tags followed</p>
           </div>
         </div>
-        <div className="flex flex-col pt-4 sm:col-start-2 sm:mx-2 sm:pt-0 lg:mt-0">
+        <div className="mt-6 flex flex-col pt-4 sm:col-start-2 sm:mx-2 sm:pt-0 lg:mt-0">
           <div className="mb-2 flex flex-col">
-            {posts
-              ?.filter((post) => !post.archived)
-              .map((post) => (
-                <div
-                  key={post.id}
-                  className="mb-2 w-full border-[1px] border-gray-300 bg-white px-4 pb-3 pt-4 sm:rounded-md"
-                >
-                  <div className="mb-3 flex max-h-[35px] items-center">
-                    <div className="mr-2 h-8 w-8 overflow-hidden rounded-full">
-                      <a href={`/user/${user?.id}`}>
-                        <img
-                          src={user.image ?? "/images/avatar.png"}
-                          alt="logo"
-                          className="h-full w-full object-cover"
-                        />
-                      </a>
-                    </div>
-                    <div className="flex flex-col">
-                      <div className="flex max-h-[17.5px] items-center text-sm">
-                        {post.createdBy.name}
-                      </div>
-                      <div className="flex max-h-[15px] items-center text-xs">
-                        {new Date(post.createdAt).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-center md:pl-[20px] lg:pl-[40px]">
-                    <h2 className="mb-2 w-full justify-start text-xl font-bold">
-                      <a href={`/post/${post.id}`}>{post.name}</a>
-                    </h2>
-                    <div className="flex w-full flex-row items-center">
-                      <div className="flex flex-row items-center">
-                        <a className="flex flex-row items-center py-1 pl-1 pr-3 text-sm">
-                          <div className="mr-1 flex h-6 w-6 flex-row items-center">
-                            <RiChat1Line className="h-4 w-4" />
-                          </div>
-                          <span className="hidden text-gray-500 sm:inline-block">
-                            19 comments
-                          </span>
+            {isLoading ? (
+              <SkeletonLoader />
+            ) : (
+              posts
+                ?.filter((post) => !post.archived)
+                .map((post) => (
+                  <div
+                    key={post.id}
+                    className="mb-2 w-full border-[1px] border-gray-300 bg-white px-4 pb-3 pt-4 sm:rounded-md"
+                  >
+                    <div className="mb-3 flex max-h-[35px] items-center">
+                      <div className="mr-2 h-8 w-8 overflow-hidden rounded-full">
+                        <a href={`/user/${user?.id}`}>
+                          <img
+                            src={user.image ?? "/images/avatar.png"}
+                            alt="logo"
+                            className="h-full w-full object-cover"
+                          />
                         </a>
                       </div>
-                      <div className="ml-auto flex flex-row items-center">
-                        <small className="mr-2 items-center text-gray-500">
-                          4 min read
-                        </small>
+                      <div className="flex flex-col">
+                        <div className="flex max-h-[17.5px] items-center text-sm">
+                          {post.createdBy.name}
+                        </div>
+                        <div className="flex max-h-[15px] items-center text-xs">
+                          {new Date(post.createdAt).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                            },
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center md:pl-[20px] lg:pl-[40px]">
+                      <h2 className="mb-2 w-full justify-start text-xl font-bold">
+                        <a href={`/post/${post.id}`}>{post.name}</a>
+                      </h2>
+                      <div className="flex w-full flex-row items-center">
+                        <div className="flex flex-row items-center">
+                          <a className="flex flex-row items-center py-1 pl-1 pr-3 text-sm">
+                            <div className="mr-1 flex h-6 w-6 flex-row items-center">
+                              <RiChat1Line className="h-4 w-4" />
+                            </div>
+                            <span className="hidden text-gray-500 sm:inline-block">
+                              19 comments
+                            </span>
+                          </a>
+                        </div>
+                        <div className="ml-auto flex flex-row items-center">
+                          <small className="mr-2 items-center text-gray-500">
+                            4 min read
+                          </small>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))
+            )}
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SkeletonLoader() {
+  return (
+    <div>
+      <div className="flex flex-col sm:col-start-2 sm:pt-0 lg:mt-0">
+        <div className="mb-2 flex flex-col">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div
+              key={index}
+              className="mb-2 w-full border-[1px] border-gray-300 bg-white px-4 pb-3 pt-4 sm:rounded-md"
+            >
+              <div className="mb-3 flex max-h-[35px] items-center">
+                <div className="mr-2 h-8 w-8 animate-pulse overflow-hidden rounded-full bg-gray-200"></div>
+
+                <div className="flex flex-col">
+                  <div className="mb-1 h-[15px] w-[80px] animate-pulse rounded-md bg-gray-200" />
+                  <div className="flex h-[12px] w-[40px] animate-pulse items-center rounded-md bg-gray-200 text-xs" />
+                </div>
+              </div>
+              <div className="flex flex-col items-center md:pl-[20px] lg:pl-[40px]">
+                <div className="mb-2 h-[28px] w-full justify-start">
+                  <div className="h-[28px] w-[250px] animate-pulse rounded-md bg-gray-200" />
+                </div>
+                <div className="flex w-full flex-row items-center">
+                  <div className="flex flex-row items-center">
+                    <a className="flex flex-row items-center py-1 pr-3 text-sm">
+                      <div className="mr-1 flex h-6 w-6 animate-pulse flex-row items-center rounded-md bg-gray-200 sm:w-[130px]"></div>
+                      <div className="hidden animate-pulse rounded-md bg-gray-200 sm:inline-block"></div>
+                    </a>
+                  </div>
+                  <div className="ml-auto flex flex-row items-center">
+                    <div className="mr-2 h-[24px] w-[65px] animate-pulse items-center rounded-md bg-gray-200"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

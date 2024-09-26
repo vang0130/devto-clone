@@ -6,13 +6,16 @@ import Header from "../header/header";
 import { RiHeart2Line } from "react-icons/ri";
 import { RiEyeLine } from "react-icons/ri";
 import { RiChat1Line } from "react-icons/ri";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 export default function DashboardClient() {
   const utils = api.useUtils();
   const { data: session, update } = useSession();
-  const { data: posts } = api.post.getUserPosts.useQuery({
-    userId: session?.user.id ?? "",
-  });
+  const { data: posts, isLoading: postsLoading } =
+    api.post.getUserPosts.useQuery({
+      userId: session?.user.id ?? "",
+    });
 
   const [deletingId, setDeletingPostId] = useState<number | null>();
 
@@ -60,7 +63,7 @@ export default function DashboardClient() {
     <div className="mx-auto max-w-[1380px]">
       <Header />
       <div className="mt-[56px] grid w-full">
-        <div className="p-3 sm:row-start-1 sm:p-4">
+        <div className="p-3 sm:row-start-1 sm:p-4 md:p-2">
           <header className="flex flex-col align-middle">
             <div className="flex h-[40px] w-full items-center sm:h-[45px]">
               <h1 className="align-middle text-2xl font-bold sm:text-3xl">
@@ -69,7 +72,7 @@ export default function DashboardClient() {
             </div>
             <div className="h-[52px] w-full pt-3 sm:hidden">
               <select className="h-full w-full rounded-md border-[1.5px] border-gray-300 bg-white py-[6.5px] pl-[6.5px] pr-8">
-                <option>Posts ({session?.user.posts.length})</option>
+                <option>Posts ({session?.user.posts.length} ?? 0)</option>
               </select>
             </div>
             <div className="grid w-full grid-cols-2 gap-2 pt-3 sm:grid-cols-3 sm:gap-4">
@@ -94,7 +97,7 @@ export default function DashboardClient() {
             </div>
           </header>
         </div>
-        <div className="sm:grid sm:grid-cols-[240px,1fr] sm:gap-2 sm:p-2 md:grid-cols-[2fr,5fr] md:gap-4 md:px-4 md:py-0">
+        <div className="sm:grid sm:grid-cols-[240px,1fr] sm:gap-0 sm:p-2 md:gap-2 md:px-2 md:py-0">
           <div className="hidden sm:block">
             <nav className="hidden sm:block">
               <ul>
@@ -103,7 +106,7 @@ export default function DashboardClient() {
                     <a className="flex flex-row">
                       <span>Posts</span>
                       <span className="ml-auto justify-end rounded-md bg-gray-300 px-1 text-right">
-                        {session?.user.posts.length}
+                        {postsLoading ? 0 : session?.user.posts.length}
                       </span>
                     </a>
                   </li>
@@ -172,7 +175,6 @@ export default function DashboardClient() {
                   <li className="w-full rounded-md p-2">
                     <a className="flex flex-row">
                       <span>Analytics</span>
-                      {/* <span className="justify-end text-right ml-auto bg-gray-300 px-1 rounded-md">2</span> */}
                     </a>
                   </li>
                 </div>
@@ -190,7 +192,7 @@ export default function DashboardClient() {
             </nav>
           </div>
           <div className="w-full sm:col-span-1 sm:col-start-2">
-            <div className="mt-3">
+            <div className="mb-3 mt-3">
               <div className="flex h-[40px] flex-row items-center px-3 sm:justify-end sm:pl-0">
                 <h2 className="hidden sm:mr-auto sm:block sm:text-xl sm:font-bold">
                   Posts
@@ -203,144 +205,76 @@ export default function DashboardClient() {
                 </select>
               </div>
             </div>
-            {posts?.map((post) => (
-              <div
-                key={post.id}
-                className="mt-3 w-full border-[1px] border-gray-300 bg-white p-4 sm:rounded-md"
-              >
-                <div className="flex h-full flex-col align-middle">
-                  <div className="flex h-[28px] flex-row items-center">
-                    {post.archived ? (
-                      <span className="mr-2 flex rounded-md bg-red-500 p-1 text-xs text-white">
-                        Archived
-                      </span>
-                    ) : null}
-                    <a href={`/post/${post.id}`} className="flex w-full">
-                      <h3 className="w-min whitespace-nowrap text-xl font-bold text-blue-700">
-                        {post.name}
-                      </h3>
-                    </a>
-                  </div>
-                  <div className="hidden h-full flex-row items-center pt-1 align-middle text-gray-500 sm:flex sm:h-full">
-                    <div className="flex h-[21px] w-full flex-row items-center">
-                      <p className="whitespace-nowrap pr-2 text-sm text-gray-500">
-                        Published:{" "}
-                        {new Date(post.createdAt).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </p>
-                      <p className="whitespace-nowrap text-sm text-gray-500">
-                        Language: English
-                      </p>
-                    </div>
-                    <div className="flex w-min justify-start">
-                      <div className="flex flex-row items-center p-1 text-gray-500">
-                        <RiHeart2Line className="mr-1 h-5 w-5" />
-                        <span className="flex text-sm">0</span>
-                      </div>
-                      <div className="ml-2 flex flex-row items-center p-1 text-gray-500">
-                        <RiChat1Line className="mr-1 h-4 w-4" />
-                        <span className="flex text-sm">0</span>
-                      </div>
-                      <div className="ml-2 flex flex-row items-center p-1 pr-4 text-gray-500">
-                        <RiEyeLine className="mr-1 h-5 w-5" />
-                        <span className="flex text-sm">&lt;25</span>
-                      </div>
-                    </div>
-                    <div className="ml-auto flex w-min justify-end">
-                      <div className="flex flex-row items-center text-gray-500">
-                        <button
-                          onClick={() => handleDeletePost(post.id)}
-                          disabled={deletePost.isPending}
-                        >
-                          <span className="flex px-1 py-1 text-sm">
-                            {deletingId === post.id && deletePost.isPending
-                              ? "Deleting"
-                              : "Delete"}
-                          </span>
-                        </button>
-                      </div>
-
-                      <div className="flex flex-row items-center text-gray-500">
-                        <a href={`/edit/${post.id}`}>
-                          <span className="flex px-1 py-1 text-sm">Edit</span>
-                        </a>
-                      </div>
+            {postsLoading ? (
+              <SkeletonLoaderPosts />
+            ) : (
+              posts?.map((post) => (
+                <div
+                  key={post.id}
+                  className="w-full border-[1px] border-gray-300 bg-white p-4 sm:mb-3 sm:rounded-md"
+                >
+                  <div className="flex h-full flex-col align-middle">
+                    <div className="flex h-[28px] flex-row items-center">
                       {post.archived ? (
-                        <button
-                          onClick={() => handleUnArchivePost(post.id)}
-                          disabled={unArchivePost.isPending}
-                        >
-                          <span className="px- flex py-1 text-sm">
-                            {unArchivingId === post.id &&
-                            unArchivePost.isPending
-                              ? "Unhiding"
-                              : "Unhide"}
-                          </span>
-                        </button>
+                        <span className="mr-2 flex rounded-md bg-red-500 p-1 text-xs text-white">
+                          Archived
+                        </span>
                       ) : null}
-                      {!post.archived ? (
-                        <button
-                          onClick={() => handleArchivePost(post.id)}
-                          disabled={archivePost.isPending}
-                        >
-                          <span className="flex px-3 py-1 text-sm">
-                            {archivingId === post.id && archivePost.isPending
-                              ? "Hiding"
-                              : "Hide"}
-                          </span>
-                        </button>
-                      ) : null}
-                      {/* <span className="text-sm flex px-3 py-1">Hide</span> */}
+                      <a href={`/post/${post.id}`} className="flex w-full">
+                        <h3 className="w-min whitespace-nowrap text-xl font-bold text-blue-700">
+                          {post.name}
+                        </h3>
+                      </a>
                     </div>
-                  </div>
-                  <div className="flex h-[21px] w-full flex-row items-center sm:hidden">
-                    <p className="whitespace-nowrap pr-2 text-sm text-gray-500">
-                      Published:{" "}
-                      {new Date(post.createdAt).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                      })}
-                    </p>
-                    <p className="whitespace-nowrap text-sm text-gray-500">
-                      Language: English
-                    </p>
-                  </div>
-                  <div className="flex h-full flex-row items-center pt-1 align-middle text-gray-500 sm:hidden">
-                    <div className="flex w-min justify-start">
-                      <div className="flex flex-row items-center p-1 text-gray-500">
-                        <RiHeart2Line className="mr-1 h-5 w-5" />
-                        <span className="flex text-sm">0</span>
+                    <div className="hidden h-full flex-row items-center pt-1 align-middle text-gray-500 sm:flex sm:h-full">
+                      <div className="flex h-[21px] flex-row items-center md:max-w-[200px] lg:max-w-none">
+                        <p className="pr-2 text-sm text-gray-500 lg:overflow-auto">
+                          Published:{" "}
+                          {new Date(post.createdAt).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                            },
+                          )}
+                          {/* </p> */}
+                          {/* <p className="text-sm text-gray-500"> */}
+                          <span className="pl-2">Language: English</span>{" "}
+                        </p>
                       </div>
-                      <div className="ml-2 flex flex-row items-center p-1 text-gray-500">
-                        <RiChat1Line className="mr-1 h-4 w-4" />
-                        <span className="flex text-sm">0</span>
+                      <div className="flex w-min justify-start">
+                        <div className="flex flex-row items-center p-1 text-gray-500">
+                          <RiHeart2Line className="mr-1 h-5 w-5" />
+                          <span className="flex text-sm">0</span>
+                        </div>
+                        <div className="ml-2 flex flex-row items-center p-1 text-gray-500">
+                          <RiChat1Line className="mr-1 h-4 w-4" />
+                          <span className="flex text-sm">0</span>
+                        </div>
+                        <div className="ml-2 flex flex-row items-center p-1 pr-4 text-gray-500">
+                          <RiEyeLine className="mr-1 h-5 w-5" />
+                          <span className="flex text-sm">&lt;25</span>
+                        </div>
                       </div>
-                      <div className="ml-2 flex flex-row items-center p-1 text-gray-500">
-                        <RiEyeLine className="mr-1 h-5 w-5" />
-                        <span className="flex text-sm">&lt;25</span>
-                      </div>
-                    </div>
-                    <div className="ml-auto flex w-min justify-end">
-                      <div className="flex flex-row items-center text-gray-500">
-                        <button
-                          onClick={() => handleDeletePost(post.id)}
-                          disabled={deletePost.isPending}
-                        >
-                          <span className="flex px-1 py-1 text-sm">
-                            {deletingId === post.id && deletePost.isPending
-                              ? "Deleting"
-                              : "Delete"}
-                          </span>
-                        </button>
-                      </div>
-                      <div className="flex flex-row items-center text-gray-500">
-                        <a href={`/edit/${post.id}`}>
-                          <span className="flex px-1 py-1 text-sm">Edit</span>
-                        </a>
-                      </div>
-                      <div className="flex flex-row items-center text-gray-500">
+                      <div className="ml-auto flex w-min justify-end">
+                        <div className="flex flex-row items-center text-gray-500">
+                          <button
+                            onClick={() => handleDeletePost(post.id)}
+                            disabled={deletePost.isPending}
+                          >
+                            <span className="flex px-1 py-1 text-sm">
+                              {deletingId === post.id && deletePost.isPending
+                                ? "Deleting"
+                                : "Delete"}
+                            </span>
+                          </button>
+                        </div>
+
+                        <div className="flex flex-row items-center text-gray-500">
+                          <a href={`/edit/${post.id}`}>
+                            <span className="flex px-1 py-1 text-sm">Edit</span>
+                          </a>
+                        </div>
                         {post.archived ? (
                           <button
                             onClick={() => handleUnArchivePost(post.id)}
@@ -369,17 +303,123 @@ export default function DashboardClient() {
                         {/* <span className="text-sm flex px-3 py-1">Hide</span> */}
                       </div>
                     </div>
+                    <div className="flex h-[21px] w-full flex-row items-center sm:hidden">
+                      <p className="whitespace-nowrap pr-2 text-sm text-gray-500">
+                        Published:{" "}
+                        {new Date(post.createdAt).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </p>
+                      <p className="whitespace-nowrap text-sm text-gray-500">
+                        Language: English
+                      </p>
+                    </div>
+                    <div className="flex h-full flex-row items-center pt-1 align-middle text-gray-500 sm:hidden">
+                      <div className="flex w-min justify-start">
+                        <div className="flex flex-row items-center p-1 text-gray-500">
+                          <RiHeart2Line className="mr-1 h-5 w-5" />
+                          <span className="flex text-sm">0</span>
+                        </div>
+                        <div className="ml-2 flex flex-row items-center p-1 text-gray-500">
+                          <RiChat1Line className="mr-1 h-4 w-4" />
+                          <span className="flex text-sm">0</span>
+                        </div>
+                        <div className="ml-2 flex flex-row items-center p-1 text-gray-500">
+                          <RiEyeLine className="mr-1 h-5 w-5" />
+                          <span className="flex text-sm">&lt;25</span>
+                        </div>
+                      </div>
+                      <div className="ml-auto flex w-min justify-end">
+                        <div className="flex flex-row items-center text-gray-500">
+                          <button
+                            onClick={() => handleDeletePost(post.id)}
+                            disabled={deletePost.isPending}
+                          >
+                            <span className="flex px-1 py-1 text-sm">
+                              {deletingId === post.id && deletePost.isPending
+                                ? "Deleting"
+                                : "Delete"}
+                            </span>
+                          </button>
+                        </div>
+                        <div className="flex flex-row items-center text-gray-500">
+                          <a href={`/edit/${post.id}`}>
+                            <span className="flex px-1 py-1 text-sm">Edit</span>
+                          </a>
+                        </div>
+                        <div className="flex flex-row items-center text-gray-500">
+                          {post.archived ? (
+                            <button
+                              onClick={() => handleUnArchivePost(post.id)}
+                              disabled={unArchivePost.isPending}
+                            >
+                              <span className="px- flex py-1 text-sm">
+                                {unArchivingId === post.id &&
+                                unArchivePost.isPending
+                                  ? "Unhiding"
+                                  : "Unhide"}
+                              </span>
+                            </button>
+                          ) : null}
+                          {!post.archived ? (
+                            <button
+                              onClick={() => handleArchivePost(post.id)}
+                              disabled={archivePost.isPending}
+                            >
+                              <span className="flex px-3 py-1 text-sm">
+                                {archivingId === post.id &&
+                                archivePost.isPending
+                                  ? "Hiding"
+                                  : "Hide"}
+                              </span>
+                            </button>
+                          ) : null}
+                          {/* <span className="text-sm flex px-3 py-1">Hide</span> */}
+                        </div>
+                      </div>
+                    </div>
                   </div>
+                  {/* </div> */}
+                  {/* <div className="grid h-[118px] w-full grid-cols-2 p-4 sm:h-[82px] sm:grid-cols-[2fr,1fr,1fr]"> */}
+                  {/* <div className="flex h-[32px] flex-row items-center justify-end pt-1 text-gray-500 sm:col-start-3 sm:row-start-1 sm:h-full"></div> */}
+                  {/* </div> */}
                 </div>
-                {/* </div> */}
-                {/* <div className="grid h-[118px] w-full grid-cols-2 p-4 sm:h-[82px] sm:grid-cols-[2fr,1fr,1fr]"> */}
-                <div className="flex h-[32px] flex-row items-center justify-end pt-1 text-gray-500 sm:col-start-3 sm:row-start-1 sm:h-full"></div>
-                {/* </div> */}
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function SkeletonLoaderPosts() {
+  return (
+    <div className="mt-3 w-full">
+      {Array.from({ length: 3 }).map((_, index) => (
+        <div
+          key={index}
+          className="w-full border-[1px] border-gray-300 bg-white p-4 sm:mb-3 sm:rounded-md"
+        >
+          <div className="flex h-full flex-col align-middle">
+            <div className="flex h-[24px] w-[100px] animate-pulse flex-row items-center rounded-md bg-gray-200"></div>
+            <div className="h-full flex-row items-center pt-1 align-middle text-gray-500 sm:hidden">
+              <div className="mt-1 flex h-[21px] w-full flex-row items-center">
+                <div className="h-[21px] w-[250px] animate-pulse rounded-md bg-gray-200" />
+              </div>
+            </div>
+            <div className="flex flex-row">
+              <div className="flex w-full justify-start">
+                <div className="mt-2 flex h-[20px] w-[150px] animate-pulse flex-row items-center rounded-md bg-gray-200 text-gray-500 sm:h-[28px] sm:w-full"></div>
+              </div>
+              <div className="ml-auto flex w-min justify-end sm:hidden">
+                <div className="mt-2 flex h-[20px] w-[120px] animate-pulse flex-row items-center rounded-md bg-gray-200 text-gray-500 sm:h-[28px]"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

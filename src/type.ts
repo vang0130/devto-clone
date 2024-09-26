@@ -8,6 +8,7 @@ export type UserWithPostsAndComments = User & {
 
 export type PostExport = Post & {
   name: string;
+  id: number;
   content: string;
   image: string | null; // Allow image to be null
   createdBy: {

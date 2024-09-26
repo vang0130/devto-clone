@@ -3,18 +3,45 @@
 import "t3/styles/globals.css";
 import Header from "../header/header";
 
-import { BsCake } from "react-icons/bs";
 import { RiHeartAddLine } from "react-icons/ri";
 import { RiBookmarkLine } from "react-icons/ri";
 import { BsThreeDots } from "react-icons/bs";
 import { RiChat1Line } from "react-icons/ri";
-import { PostExport } from "src/type";
+import type { PostExport } from "src/type";
 import { useSession } from "next-auth/react";
 import ReactMarkdown from "react-markdown";
 import "github-markdown-css/github-markdown.css";
+import { api } from "src/trpc/react";
+import { useState } from "react";
 
 export default function PostPage({ post }: { post: PostExport }) {
   const { data: session } = useSession();
+
+  const utils = api.useUtils();
+
+  const [content, setContent] = useState("");
+
+  const createComment = api.comment.create.useMutation({
+    onSuccess: async () => {
+      await utils.comment.invalidate();
+      setContent("");
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!content) return;
+
+    createComment.mutate(
+      { content, name: content, postId: post.id },
+      // {
+      //   onSuccess: (data) => {
+      //     const postSlug = data.id;
+      //     router.push(`/post/${postSlug}`);
+      // },
+      // },
+    );
+  };
 
   return (
     <div className="mx-auto max-w-[1380px]">
@@ -119,8 +146,22 @@ export default function PostPage({ post }: { post: PostExport }) {
                       />
                     </a>
                   </div>
-                  <div className="ml-2 h-[64px] w-full rounded-md border-[1px] border-gray-300 bg-white p-2">
-                    <input className="h-full w-full"></input>
+                  <div className="flex w-full flex-col">
+                    <div className="ml-2 h-[64px] w-full rounded-md border-[1px] border-gray-300 bg-white p-2">
+                      <input
+                        className="h-full w-full"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                      ></input>
+                    </div>
+                    <button
+                      type="submit"
+                      onClick={handleSubmit}
+                      className="ml-auto mr-[-8px] mt-2 items-center justify-center rounded-md bg-blue-700 px-6 py-2 text-center text-sm text-white"
+                      disabled={createComment.isPending}
+                    >
+                      {createComment.isPending ? "Submitting..." : "Submit"}
+                    </button>
                   </div>
                 </div>
               </div>

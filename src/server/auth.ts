@@ -185,9 +185,12 @@ declare module "next-auth" {
   interface Comment {
     id: string;
     content: string;
-    createdAt: string;
-    name: string;
+    createdAt: Date;
     updatedAt: Date;
+    createdBy: User;
+    createdById: string;
+    name: string;
+    // updatedAt: Date;
   }
 }
 
@@ -207,10 +210,9 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     session: async ({ session, user }) => {
-      // Fetch the full user data including related posts and comments
       const dbUser = await db.user.findUnique({
         where: { id: user.id },
-        include: { posts: true, comments: true },  // Include posts and comments
+        include: { posts: true, comments: true }, 
       });
 
       if (!dbUser) {
