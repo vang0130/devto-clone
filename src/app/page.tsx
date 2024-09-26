@@ -53,6 +53,7 @@ type Post = {
 export default function Home() {
   const { data: session, update } = useSession();
   const { data: posts, isLoading } = api.post.findMany.useQuery();
+
   return (
     <div>
       <Header />

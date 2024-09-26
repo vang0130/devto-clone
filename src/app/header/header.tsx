@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import PopUpComponent from "../profileoptions/profileOptions";
 import SideBar from "../sidebar/sideBar";
 import { RiSearchLine } from "react-icons/ri";
-import { useRouter, usePathname } from "next/navigation"; // Using usePathname
+import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function Header() {
@@ -25,22 +25,25 @@ export default function Header() {
 
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
+  // set debounced search term when user types something, with 200ms timeout
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
     }, 200);
-
+    // cleanup if user types again before 200ms passes
     return () => {
       clearTimeout(handler);
     };
   }, [searchTerm]);
 
+  // conduct search otherwise (happens whenever debouncedSearchTerm is updated)
   useEffect(() => {
     if (debouncedSearchTerm.trim()) {
       router.push(`/search/${encodeURIComponent(debouncedSearchTerm)}`);
     }
   }, [debouncedSearchTerm, router]);
 
+  // conduct search if user click enter
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -68,7 +71,7 @@ export default function Header() {
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Search..."
-              className="h-full w-full rounded-md pl-2 pr-4"
+              className="h-full w-full rounded-md pl-2 pr-4 focus:outline-none"
             />
           </form>
         </div>

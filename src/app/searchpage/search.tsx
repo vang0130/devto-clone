@@ -59,7 +59,7 @@ export default function SearchPage({ searchslug }: { searchslug: string }) {
                 <input
                   type="text"
                   placeholder="Search"
-                  className="h-full rounded-md pl-2 pr-4"
+                  className="h-full rounded-md pl-2 pr-4 focus:outline-none"
                 />
               </form>
             </div>

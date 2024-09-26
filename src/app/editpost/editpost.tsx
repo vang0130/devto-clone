@@ -194,7 +194,7 @@ export default function EditPost({ post }: { post: Post }) {
                     id="file"
                     name="file"
                     accept="image/*"
-                    className="hidden"
+                    className="hidden focus:outline-none"
                     onChange={handleFileChange}
                   />
                 </label>

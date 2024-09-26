@@ -170,7 +170,7 @@ function SignInButtons({
               </label>
               <input
                 type="email"
-                className="mt-2 w-full rounded-md border-[1px] border-gray-300 px-2 py-[6.5px]"
+                className="mt-2 w-full rounded-md border-[1px] border-gray-300 px-2 py-[6.5px] focus:outline-none"
               />
             </div>
             <div className="mb-3 flex w-full flex-col items-center justify-center">
@@ -182,7 +182,7 @@ function SignInButtons({
               </label>
               <input
                 type="password"
-                className="mt-2 w-full rounded-md border-[1px] border-gray-300 px-2 py-[6.5px]"
+                className="mt-2 w-full rounded-md border-[1px] border-gray-300 px-2 py-[6.5px] focus:outline-none"
               />
             </div>
             {/* remember me and forgot password */}
@@ -190,7 +190,7 @@ function SignInButtons({
               <div className="flex flex-row items-center justify-center">
                 <input
                   type="checkbox"
-                  className="h-4 w-4 rounded-md border border-gray-300"
+                  className="h-4 w-4 rounded-md border border-gray-300 focus:outline-none"
                 />
                 <label htmlFor="remember" className="text-md ml-2">
                   Remember me

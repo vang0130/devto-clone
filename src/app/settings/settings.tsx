@@ -157,7 +157,7 @@ export default function SettingsClient() {
               <input
                 type="text"
                 placeholder={session?.user?.name ?? ""}
-                className="mt-2 h-[39px] w-full rounded-md border border-gray-300 bg-white p-[6.5px]"
+                className="mt-2 h-[39px] w-full rounded-md border border-gray-300 bg-white p-[6.5px] focus:outline-none"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
@@ -175,7 +175,7 @@ export default function SettingsClient() {
             <div className="grid grid-cols-[min-content,1fr] items-center gap-1">
               <input
                 type="checkbox"
-                className="m-[3px] h-[14px] w-[14px] rounded-md border border-gray-300 bg-white"
+                className="m-[3px] h-[14px] w-[14px] rounded-md border border-gray-300 bg-white focus:outline-none"
               />
               <label className="justify-start">Display email on profile</label>
             </div>
@@ -208,7 +208,7 @@ export default function SettingsClient() {
                           id="file"
                           name="file"
                           accept="image/*"
-                          className="hidden"
+                          className="hidden focus:outline-none"
                           onChange={handleFileChange}
                         />
                       </label>
@@ -234,7 +234,7 @@ export default function SettingsClient() {
                 type="url"
                 placeholder={session?.user?.website ?? "https://yoursite.com"}
                 size={100}
-                className="mt-2 h-[39px] w-full rounded-md border border-gray-300 bg-white p-[6.5px]"
+                className="mt-2 h-[39px] w-full rounded-md border border-gray-300 bg-white p-[6.5px] focus:outline-none"
                 value={website}
                 onChange={(e) => setWebsiteURL(e.target.value)}
               />
@@ -248,7 +248,7 @@ export default function SettingsClient() {
                 type="text"
                 placeholder={session?.user?.location ?? "Halifax, Nova Scotia"}
                 size={100}
-                className="mt-2 h-[39px] w-full rounded-md border border-gray-300 bg-white p-[6.5px]"
+                className="mt-2 h-[39px] w-full rounded-md border border-gray-300 bg-white p-[6.5px] focus:outline-none"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
               />

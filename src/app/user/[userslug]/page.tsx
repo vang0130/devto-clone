@@ -24,7 +24,7 @@ function SkeletonLoader() {
       <div className="mt-[56px] h-[336px] border-b-[1px] border-gray-300 sm:h-[319px] sm:w-full sm:rounded-md sm:border-0 md:px-2 lg:mx-auto lg:h-[343px] lg:w-[1024px] lg:px-4 lg:pb-3">
         <div className="relative h-[40px] w-full sm:h-[128px]">
           <div className="absolute z-10 w-full overflow-hidden px-3 py-2">
-            <div className="h-[60px] w-[60px] rounded-full border-[4px] border-black bg-gray-200 object-cover sm:mx-auto sm:h-[128px] sm:w-[128px] sm:border-8" />
+            <div className="h-[60px] w-[60px] animate-pulse rounded-full border-[4px] border-black bg-gray-200 object-cover sm:mx-auto sm:h-[128px] sm:w-[128px] sm:border-8" />
           </div>
         </div>
         <div className="relative h-[52px] justify-center bg-white pr-4 pt-4 sm:mx-2 sm:mt-[-56px] sm:h-[56px] sm:rounded-t-lg sm:border-x-[1px] sm:border-gray-300 sm:pb-5 md:mx-auto">

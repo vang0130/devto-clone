@@ -22,15 +22,15 @@ function SkeletonLoader() {
   return (
     <div>
       <Header />
-      <div className="mx-auto max-w-[1380px]">
-        <div className="mt-[56px] sm:grid sm:grid-cols-[64px,1fr] sm:gap-2 sm:px-2 lg:grid lg:grid-cols-[64px,7fr,3fr] lg:gap-4 lg:p-4">
+      <div className="mx-auto max-w-[1380px] p-2">
+        <div className="mt-[56px] sm:grid sm:grid-cols-[64px,1fr] sm:gap-2 lg:grid lg:grid-cols-[64px,7fr,3fr] lg:gap-4 lg:p-4">
           <div className="hidden sm:col-start-1 sm:flex sm:flex-col">
             <div className="h-[277px] w-full animate-pulse rounded-md bg-gray-200 text-sm sm:mt-12 lg:mt-8"></div>
           </div>
           <div className="sm:col-start-2 sm:rounded-md">
             <div className="h-[300px] animate-pulse bg-gray-200 sm:rounded-t-md" />
 
-            <div className="mb-5 bg-white p-3 sm:rounded-md sm:px-12 sm:pt-8">
+            <div className="mb-5 bg-white p-3 sm:rounded-b-md sm:px-12 sm:pt-8">
               <div className="flex flex-row items-center">
                 <div className="mr-3 h-8 w-8 animate-pulse rounded-full bg-gray-200" />
                 <div className="flex flex-col"></div>

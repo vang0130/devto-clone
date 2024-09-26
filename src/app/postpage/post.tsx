@@ -13,6 +13,7 @@ import ReactMarkdown from "react-markdown";
 import "github-markdown-css/github-markdown.css";
 import { api } from "src/trpc/react";
 import { useState } from "react";
+import { RiHeart2Line } from "react-icons/ri";
 
 export default function PostPage({ post }: { post: PostExport }) {
   const { data: session } = useSession();
@@ -30,7 +31,7 @@ export default function PostPage({ post }: { post: PostExport }) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!content) return;
+    if (!content.trim()) return;
 
     createComment.mutate(
       { content, name: content, postId: post.id },
@@ -42,6 +43,11 @@ export default function PostPage({ post }: { post: PostExport }) {
       // },
     );
   };
+
+  const { data: comments, isLoading: isLoadingComments } =
+    api.comment.getPostComments.useQuery({
+      postId: post.id,
+    });
 
   return (
     <div className="mx-auto max-w-[1380px]">
@@ -132,9 +138,11 @@ export default function PostPage({ post }: { post: PostExport }) {
                   {post.content}
                 </ReactMarkdown>
               </div>
-              <div className="w-full border-t-[1px] border-gray-300 p-3">
-                <div className="mb-6 flex w-full text-xl font-bold">
-                  Top Comments (0)
+              <div className="w-full border-t-[1px] border-gray-300">
+                <div className="mb-6 flex h-[54px] w-full flex-row text-center align-middle">
+                  <div className="my-auto flex text-xl font-bold">
+                    Top Comments (0)
+                  </div>
                 </div>
                 <div className="mb-4 flex flex-row">
                   <div className="h-6 w-6 overflow-hidden rounded-full">
@@ -146,18 +154,20 @@ export default function PostPage({ post }: { post: PostExport }) {
                       />
                     </a>
                   </div>
-                  <div className="flex w-full flex-col">
-                    <div className="ml-2 h-[64px] w-full rounded-md border-[1px] border-gray-300 bg-white p-2">
-                      <input
-                        className="h-full w-full"
+                  {/* COMMENTS HERE */}
+                  <div className="flex flex-grow flex-col">
+                    <div className="ml-2 h-[64px] rounded-md border-[1px] border-gray-300 bg-white p-2">
+                      <textarea
+                        className="h-full w-full resize-none text-start align-top focus:outline-none" // Added textarea
                         value={content}
+                        placeholder="Add to the discussion"
                         onChange={(e) => setContent(e.target.value)}
-                      ></input>
+                      />
                     </div>
                     <button
                       type="submit"
                       onClick={handleSubmit}
-                      className="ml-auto mr-[-8px] mt-2 items-center justify-center rounded-md bg-blue-700 px-6 py-2 text-center text-sm text-white"
+                      className="ml-auto mt-2 items-center justify-center rounded-md bg-blue-700 px-6 py-2 text-center text-sm text-white"
                       disabled={createComment.isPending}
                     >
                       {createComment.isPending ? "Submitting..." : "Submit"}
@@ -166,6 +176,63 @@ export default function PostPage({ post }: { post: PostExport }) {
                 </div>
               </div>
             </div>
+            {isLoadingComments ? (
+              <SkeletonLoader />
+            ) : (
+              comments?.map((comment) => (
+                <div key={comment.id} className="mb-4 flex flex-row">
+                  <div className="mt-4 h-6 w-6 overflow-hidden rounded-full">
+                    <a href={`/user/${post.createdBy.id}`}>
+                      <img
+                        src={session?.user?.image ?? "/images/avatar.png"}
+                        alt="logo"
+                        className="h-full w-full object-cover"
+                      />
+                    </a>
+                  </div>
+                  <div className="flex flex-grow flex-col">
+                    <div className="ml-2 flex flex-grow flex-col rounded-md border-[1px] border-gray-300 p-1">
+                      <div className="flex h-[40px] flex-row items-center px-3 pt-2 text-center align-middle">
+                        <div className="h-[21px] text-sm text-gray-500">
+                          {comment.createdBy.name}
+                        </div>
+                        <div className="flex h-[21px] justify-center px-2 text-center align-middle text-base text-gray-500">
+                          ·
+                        </div>
+                        <div className="h-[21px] text-sm text-gray-500">
+                          {new Date(comment.createdAt).toLocaleDateString(
+                            "en-US",
+                            { month: "short", day: "numeric" },
+                          )}
+                        </div>
+                      </div>
+                      <div className="mb-4 mt-2 bg-white px-3">
+                        <p className="min-h-[24px] w-full resize-none text-start align-top focus:outline-none">
+                          {comment.content}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="ml-1 flex flex-row items-center pt-1 text-center">
+                      <div className="mr-1 flex h-[24px] flex-row items-center justify-center py-1 pl-2 pr-3 align-middle">
+                        <RiHeart2Line className="my-auto mr-1 flex h-5 w-5 justify-center text-center align-middle" />
+                        <div className="my-auto flex h-[24px] justify-center text-center align-middle text-sm md:hidden">
+                          1
+                        </div>
+                        <div className="my-auto hidden h-[24px] justify-center text-center align-middle text-sm md:flex">
+                          1 like(s)
+                        </div>
+                      </div>
+                      <div className="mr-1 flex h-[24px] flex-row items-center justify-center py-1 pl-2 pr-3 align-middle">
+                        <RiChat1Line className="my-auto mr-1 flex h-5 w-5 justify-center text-center align-middle" />
+                        <div className="my-auto hidden h-[24px] justify-center text-center align-middle text-sm md:flex">
+                          Reply
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
         <div className="hidden lg:col-start-3 lg:flex">
@@ -213,6 +280,44 @@ export default function PostPage({ post }: { post: PostExport }) {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+function SkeletonLoader() {
+  return (
+    <div className="">
+      {Array.from({ length: 3 }).map((_, index) => (
+        <div key={index} className="mb-4 flex flex-row">
+          <div className="mt-4 h-6 w-6 animate-pulse overflow-hidden rounded-full bg-gray-200"></div>
+          <div className="flex flex-grow flex-col">
+            <div className="ml-2 flex flex-grow flex-col rounded-md border-[1px] border-gray-300 p-1">
+              <div className="flex h-[40px] flex-row items-center px-3 pt-2 text-center align-middle">
+                <div className="h-[21px] w-[80px] animate-pulse rounded-md bg-gray-200 text-sm text-gray-500">
+                  {/* {comment.createdBy.name} */}
+                </div>
+                <div className="flex h-[21px] justify-center px-2 text-center align-middle text-base text-gray-500">
+                  ·
+                </div>
+                <div className="h-[21px] w-[80px] animate-pulse rounded-md bg-gray-200 text-sm text-gray-500">
+                  {/* {new Date(comment.createdAt).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })} */}
+                </div>
+              </div>
+              <div className="mb-4 mt-2 bg-white px-3">
+                <p className="min-h-[24px] w-full animate-pulse resize-none rounded-md bg-gray-200 text-start align-top focus:outline-none">
+                  {/* {comment.content} */}
+                </p>
+              </div>
+            </div>
+            <div className="ml-1 flex flex-row items-center pt-1 text-center">
+              <div className="mr-4 flex h-[24px] w-[60px] animate-pulse flex-row items-center justify-center rounded-md bg-gray-200 py-1 pl-2 pr-3 align-middle"></div>
+              <div className="mr-1 flex h-[24px] w-[60px] animate-pulse flex-row items-center justify-center rounded-md bg-gray-200 py-1 pl-2 pr-3 align-middle"></div>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
