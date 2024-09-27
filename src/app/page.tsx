@@ -134,8 +134,8 @@ export default function Home() {
     <div>
       <Header />
       <div className="mx-auto flex min-h-screen w-full flex-col pt-[72px] sm:max-w-[86.25rem] sm:px-2 lg:px-4">
-        <div className="grid flex-grow grid-cols-[1fr] sm:grid-cols-[15rem,1fr] sm:gap-2 lg:grid-cols-[15rem,1fr,1fr,1fr] lg:gap-4">
-          <div className="hidden items-center sm:block lg:max-w-[15rem]">
+        <div className="grid flex-grow grid-cols-[1fr] sm:gap-2 md:grid-cols-[15rem,1fr] lg:grid-cols-[15rem,1fr,1fr,1fr] lg:gap-4">
+          <div className="hidden items-center md:block lg:max-w-[15rem]">
             {isLoading
               ? null
               : !session && (
