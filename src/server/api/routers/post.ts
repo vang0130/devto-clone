@@ -113,12 +113,36 @@ export const postRouter = createTRPCRouter({
   findMany: publicProcedure.query(async ({ ctx }) => {
     return ctx.db.post.findMany({
       orderBy: { createdAt: "desc" },
-      include: { createdBy: true, Comment: true }, 
-
+      include: { 
+        createdBy: true, 
+        comments: {
+          include: {
+            createdBy: true,
+          }
+        },
+        reactions: true, 
+      }, 
       where: { archived: false },
     });
   }),
-  
+
+  findRecent: publicProcedure.query(async ({ ctx }) => {
+    return ctx.db.post.findMany({
+      take: 8,
+      orderBy: { createdAt: "desc" },
+      include: { 
+        createdBy: true, 
+        comments: {
+          include: {
+            createdBy: true,
+          }
+        } 
+      }, 
+      where: { archived: false },
+    });
+  }),
+
+
 
   count: publicProcedure.query(async ({ ctx }) => {
     return ctx.db.post.count({

@@ -33,7 +33,10 @@ function SkeletonLoader() {
             <div className="mb-5 bg-white p-3 sm:rounded-b-md sm:px-12 sm:pt-8">
               <div className="flex flex-row items-center">
                 <div className="mr-3 h-8 w-8 animate-pulse rounded-full bg-gray-200" />
-                <div className="flex flex-col"></div>
+                <div className="flex flex-col pl-3">
+                  <div className="mb-1 h-[16px] w-[80px] animate-pulse rounded-md bg-gray-200"></div>
+                  <div className="h-[12px] w-[100px] animate-pulse rounded-md bg-gray-200"></div>
+                </div>
               </div>
 
               <div className="mt-5 flex flex-col">

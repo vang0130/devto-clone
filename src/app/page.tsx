@@ -30,29 +30,105 @@ import { useSession } from "next-auth/react";
 import { api } from "src/trpc/react";
 import Header from "src/app/header/header";
 // import type { Post } from "@prisma/client";
-type Post = {
-  id: number;
-  name: string;
-  content: string;
-  image: string | null;
-  createdAt: Date;
-  tags: string[];
-  createdBy: {
-    id: string;
-    name: string | null;
-    email: string | null;
-    emailVerified: Date | null;
-    image: string | null;
-    bio: string | null;
-    location: string | null;
-    website: string | null;
-    createdAt: Date;
-  };
-};
+// type Post = {
+//   id: number;
+//   name: string;
+//   content: string;
+//   image: string | null;
+//   createdAt: Date;
+//   tags: string[];
+//   createdBy: {
+//     id: string;
+//     name: string | null;
+//     email: string | null;
+//     emailVerified: Date | null;
+//     image: string | null;
+//     bio: string | null;
+//     location: string | null;
+//     website: string | null;
+//     createdAt: Date;
+//   };
+//   Comment: {
+//     id: number;
+//     content: string;
+//     createdAt: Date;
+//     createdBy: {
+//       id: string;
+//       name: string | null;
+//       email: string | null;
+//       image: string | null;
+//     };
+//   }[];
+// };
+
+// type Post = {
+//   id: number;
+//   name: string;
+//   content: string;
+//   image: string | null;
+//   createdAt: Date;
+//   tags: string[];
+//   createdBy: {
+//     id: string;
+//     name: string | null;
+//     email: string | null;
+//     emailVerified: Date | null;
+//     image: string | null;
+//     bio: string | null;
+//     location: string | null;
+//     website: string | null;
+//     createdAt: Date;
+//   };
+//   comments: {
+//     id: number;
+//     content: string;
+//     createdAt: Date;
+//     createdBy: {
+//       id: string;
+//       name: string | null;
+//       email: string | null;
+//       image: string | null;
+//     };
+//   }[];
+// };
+
+// type PostWithComments = {
+//   id: number;
+//   name: string;
+//   content: string;
+//   image: string | null;
+//   createdAt: Date;
+//   tags: string[];
+//   createdBy: {
+//     id: string;
+//     name: string | null;
+//     email: string | null;
+//     emailVerified: Date | null;
+//     image: string | null;
+//     bio: string | null;
+//     location: string | null;
+//     website: string | null;
+//     createdAt: Date;
+//   };
+//   Comment: {
+//     id: number;
+//     content: string;
+//     createdAt: Date;
+//     createdBy: {
+//       id: string;
+//       name: string | null;
+//       email: string | null;
+//       image: string | null;
+//     };
+//   }[];
+// };
 
 export default function Home() {
   const { data: session, update } = useSession();
   const { data: posts, isLoading } = api.post.findMany.useQuery();
+
+  const { data: recentPosts, isLoading: isLoadingRecentPosts } =
+    api.post.findRecent.useQuery();
 
   return (
     <div>
@@ -566,7 +642,7 @@ export default function Home() {
               {isLoading ? (
                 <SkeletonLoader />
               ) : (
-                posts?.map((post: Post) => (
+                posts?.map((post) => (
                   <div
                     key={post.id}
                     className="w-full border-[1.5px] bg-white sm:rounded-md"
@@ -603,7 +679,7 @@ export default function Home() {
                           </div>
                         </div>
                       </div>
-                      <div className="flex flex-col items-center pl-[10px] md:pl-[20px] lg:pl-[40px]">
+                      <div className="flex flex-col items-center md:pl-[20px] lg:pl-[40px]">
                         <h2 className="mb-1 w-full justify-start text-2xl font-bold">
                           <a href={`/post/${post.id}`}>{post.name}</a>
                         </h2>
@@ -611,7 +687,7 @@ export default function Home() {
                           {post.tags.map((tag) => (
                             <a
                               key={tag}
-                              className="px-[7px] py-[4px] text-sm"
+                              className="ml-[-7px] px-[7px] py-[4px] text-sm"
                               href={`/t/${tag}`}
                             >
                               {tag}
@@ -620,21 +696,67 @@ export default function Home() {
                         </div>
                         <div className="flex w-full flex-row items-center">
                           <div className="flex flex-row items-center">
-                            <a className="items-center py-1 pl-2 pr-3 text-sm">
-                              <span>💖🦄🤯👏🔥</span>
+                            <a className="flex h-[36px] flex-row items-center py-1 pr-3 text-sm">
+                              <div className="flex flex-row items-center">
+                                <div className="relative z-50 h-[28px] w-[28px] items-center rounded-full border-[2px] border-white bg-gray-100">
+                                  <span
+                                    role="img"
+                                    aria-label="heart"
+                                    className="flex cursor-pointer items-center justify-center text-center align-middle text-lg"
+                                  >
+                                    💖️
+                                  </span>
+                                </div>
+                                <div className="relative z-40 ml-[-10.5px] h-[28px] w-[28px] items-center rounded-full border-[2px] border-white bg-gray-100">
+                                  <span
+                                    role="img"
+                                    aria-label="heart"
+                                    className="flex cursor-pointer items-center justify-center text-center align-middle text-lg"
+                                  >
+                                    🦄
+                                  </span>
+                                </div>
+                                <div className="relative z-30 ml-[-10.5px] h-[28px] w-[28px] items-center rounded-full border-[2px] border-white bg-gray-100">
+                                  <span
+                                    role="img"
+                                    aria-label="heart"
+                                    className="flex cursor-pointer items-center justify-center text-center align-middle text-lg"
+                                  >
+                                    🔥
+                                  </span>
+                                </div>
+                                <div className="relative z-20 ml-[-10.5px] h-[28px] w-[28px] items-center rounded-full border-[2px] border-white bg-gray-100">
+                                  <span
+                                    role="img"
+                                    aria-label="heart"
+                                    className="flex cursor-pointer items-center justify-center text-center align-middle text-lg"
+                                  >
+                                    👏
+                                  </span>
+                                </div>
+                                <div className="relative ml-[-10.5px] h-[28px] w-[28px] items-center rounded-full border-[2px] border-white bg-gray-100">
+                                  <span
+                                    role="img"
+                                    aria-label="heart"
+                                    className="flex cursor-pointer items-center justify-center text-center align-middle text-lg"
+                                  >
+                                    🤯
+                                  </span>
+                                </div>
+                              </div>
                               <span className="ml-[14px] hidden text-gray-500 sm:inline-block">
-                                190 reactions
+                                {post.reactions.length} reactions
                               </span>
-                              <span className="ml-[14px] inline-block text-gray-500 sm:hidden">
-                                190
-                              </span>
+                              {/* <span className="ml-[14px] inline-block text-gray-500 sm:hidden">
+                                {post.reactions.length}
+                              </span> */}
                             </a>
                             <a className="flex flex-row items-center py-1 pl-2 pr-3 text-sm">
                               <div className="mr-1 flex h-6 w-6 flex-row items-center">
-                                <RiChat1Line className="h-4 w-4" />
+                                <RiChat1Line className="h-5 w-5" />
                               </div>
                               <span className="hidden text-gray-500 sm:inline-block">
-                                19 comments
+                                {post.comments.length} comments
                               </span>
                             </a>
                           </div>
@@ -643,8 +765,8 @@ export default function Home() {
                               4 min read
                             </small>
                             <button className="p-2">
-                              <span className="flex h-6 w-6 items-center justify-center">
-                                <HiOutlineBookmark className="h-5 w-5" />
+                              <span className="flex h-6 w-6 items-center justify-center text-center align-middle">
+                                <HiOutlineBookmark className="h-[18px] w-[18px]" />
                               </span>
                             </button>
                           </div>
@@ -657,6 +779,30 @@ export default function Home() {
             </div>
           </div>
           <div className="hidden w-full space-y-4 lg:block">
+            <section className="rounded-md border-[1.5px] bg-white">
+              <header className="border-b-[1px] border-gray-100 px-4 py-3">
+                <h3 className="text-xl font-bold text-gray-700">
+                  <a href="/t/discuss">Active discussions</a>
+                </h3>
+              </header>
+              {isLoadingRecentPosts ? (
+                <RecentSkeletonLoader />
+              ) : (
+                recentPosts?.map((post) => (
+                  <div key={post.id} className="border-b-[1px] border-gray-100">
+                    <a className="flex flex-col p-4">
+                      {post.name}
+                      <div className="pt-1 text-xs text-gray-500">
+                        {Array.isArray(post.comments)
+                          ? post.comments.length
+                          : 0}{" "}
+                        comments
+                      </div>
+                    </a>
+                  </div>
+                ))
+              )}
+            </section>
             <section className="rounded-md border-[1.5px] bg-white">
               <header className="px-4 py-3">
                 <h3 className="text-xl font-bold text-gray-700">
@@ -992,6 +1138,21 @@ function SkeletonLoader() {
             </div>
             <div className="mt-3 h-6 w-3/4 animate-pulse rounded-md bg-gray-300"></div>
             <div className="mt-2 h-4 w-1/2 animate-pulse rounded-md bg-gray-300"></div> */}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function RecentSkeletonLoader() {
+  return (
+    <div className="space-y-4">
+      {Array.from({ length: 8 }).map((_, index) => (
+        <div key={index} className="border-b-[1px] border-gray-100">
+          <div className="flex flex-col p-4">
+            <div className="h-5 w-3/4 animate-pulse rounded-md bg-gray-200" />
+            <div className="mt-2 h-4 w-1/4 animate-pulse rounded-md bg-gray-200 text-xs" />
           </div>
         </div>
       ))}

@@ -32,22 +32,56 @@ export default function PostPage({ post }: { post: PostExport }) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim()) return;
-
-    createComment.mutate(
-      { content, name: content, postId: post.id },
-      // {
-      //   onSuccess: (data) => {
-      //     const postSlug = data.id;
-      //     router.push(`/post/${postSlug}`);
-      // },
-      // },
-    );
+    createComment.mutate({ content, name: content, postId: post.id });
   };
 
   const { data: comments, isLoading: isLoadingComments } =
     api.comment.getPostComments.useQuery({
       postId: post.id,
     });
+
+  const { data: reactions } = api.reaction.getPostReactions.useQuery({
+    postId: post.id,
+  });
+
+  const [isDrawerVisible, setIsDrawerVisible] = useState(false);
+
+  const createReaction = api.reaction.create.useMutation({
+    onSuccess: async () => {
+      await utils.reaction.invalidate();
+    },
+  });
+
+  const deleteReaction = api.reaction.delete.useMutation({
+    onSuccess: async () => {
+      await utils.reaction.invalidate();
+    },
+  });
+  const { data: existingReactions, isLoading } =
+    api.reaction.getUserReactions.useQuery({
+      postId: post.id,
+    });
+
+  // console.log(existingReactions);
+  // const existingReactions = api.reaction.getUserReactions.useQuery({
+  //   postId: post.id,
+  // });
+
+  const handleToggleReaction = (
+    emoji: "HEART" | "UNICORN" | "SURPRISE" | "CLAP" | "FIRE",
+  ) => {
+    if (isLoading) return;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    const reactionExists = existingReactions?.length
+      ? existingReactions.some((reaction) => reaction.emoji === emoji)
+      : false;
+    if (reactionExists) {
+      deleteReaction.mutate({ postId: post.id, emoji });
+    } else {
+      // console.log(emoji);
+      createReaction.mutate({ postId: post.id, emoji });
+    }
+  };
 
   return (
     <div className="mx-auto max-w-[1380px]">
@@ -56,11 +90,132 @@ export default function PostPage({ post }: { post: PostExport }) {
         <div className="hidden sm:col-start-1 sm:flex sm:flex-col">
           <div className="h-[277px] w-full text-sm sm:mt-12 lg:mt-8">
             <div className="h-[70px] w-full">
-              <div className="flex items-center justify-center p-2 align-middle">
-                <RiHeartAddLine className="h-6 w-6" />
+              <div className="relative inline-block w-full items-center justify-center align-middle">
+                <div
+                  className="flex items-center justify-center p-2 align-middle"
+                  onMouseEnter={() => setIsDrawerVisible(true)}
+                  onMouseLeave={() => setIsDrawerVisible(false)}
+                >
+                  <RiHeartAddLine className="h-6 w-6" />
+                </div>
+                {isDrawerVisible && (
+                  <div
+                    className="absolute left-[55px] top-[-5px] z-10 flex h-[97px] w-[322px] items-center justify-around rounded-[32px] bg-white p-3 shadow-md"
+                    onMouseEnter={() => setIsDrawerVisible(true)}
+                    onMouseLeave={() => setIsDrawerVisible(false)}
+                  >
+                    <button
+                      type="submit"
+                      onClick={() => handleToggleReaction("HEART")}
+                    >
+                      <div className="h-[73px] w-[50px] cursor-pointer rounded-[20px] px-2 pb-1 pt-2 hover:bg-gray-100">
+                        <span
+                          role="img"
+                          aria-label="heart"
+                          className="flex cursor-pointer items-center justify-center text-center align-middle text-3xl"
+                        >
+                          💖️
+                        </span>
+                        <p className="flex items-center justify-center text-center align-middle text-base">
+                          {
+                            reactions?.filter(
+                              (reaction) => reaction.emoji === "HEART",
+                            ).length
+                          }
+                        </p>
+                      </div>
+                    </button>
+                    <button
+                      type="submit"
+                      onClick={() => handleToggleReaction("UNICORN")}
+                    >
+                      <div className="h-[73px] w-[50px] cursor-pointer rounded-[20px] px-2 pb-1 pt-2 hover:bg-gray-100">
+                        <span
+                          role="img"
+                          aria-label="heart"
+                          className="flex cursor-pointer items-center justify-center text-center align-middle text-3xl"
+                        >
+                          🦄
+                        </span>
+                        <p className="flex items-center justify-center text-center align-middle text-base">
+                          {
+                            reactions?.filter(
+                              (reaction) => reaction.emoji === "UNICORN",
+                            ).length
+                          }
+                        </p>
+                      </div>
+                    </button>
+                    <button
+                      type="submit"
+                      onClick={() => handleToggleReaction("FIRE")}
+                    >
+                      <div className="h-[73px] w-[50px] cursor-pointer rounded-[20px] px-2 pb-1 pt-2 hover:bg-gray-100">
+                        <span
+                          role="img"
+                          aria-label="heart"
+                          className="flex cursor-pointer items-center justify-center text-center align-middle text-3xl"
+                        >
+                          🔥
+                        </span>
+                        <p className="flex items-center justify-center text-center align-middle text-base">
+                          {
+                            reactions?.filter(
+                              (reaction) => reaction.emoji === "FIRE",
+                            ).length
+                          }
+                        </p>
+                      </div>
+                    </button>
+                    <button
+                      type="submit"
+                      onClick={() => handleToggleReaction("CLAP")}
+                    >
+                      <div className="h-[73px] w-[50px] cursor-pointer rounded-[20px] px-2 pb-1 pt-2 hover:bg-gray-100">
+                        <span
+                          role="img"
+                          aria-label="heart"
+                          className="flex cursor-pointer items-center justify-center text-center align-middle text-3xl"
+                        >
+                          👏
+                        </span>
+                        <p className="flex items-center justify-center text-center align-middle text-base">
+                          {
+                            reactions?.filter(
+                              (reaction) => reaction.emoji === "CLAP",
+                            ).length
+                          }
+                        </p>
+                      </div>
+                    </button>
+                    <button
+                      type="submit"
+                      onClick={() => handleToggleReaction("SURPRISE")}
+                    >
+                      <div className="h-[73px] w-[50px] cursor-pointer rounded-[20px] px-2 pb-1 pt-2 hover:bg-gray-100">
+                        <span
+                          role="img"
+                          aria-label="heart"
+                          className="flex cursor-pointer items-center justify-center text-center align-middle text-3xl"
+                        >
+                          🤯
+                        </span>
+                        <p className="flex items-center justify-center text-center align-middle text-base">
+                          {
+                            reactions?.filter(
+                              (reaction) => reaction.emoji === "SURPRISE",
+                            ).length
+                          }
+                        </p>
+                      </div>
+                    </button>
+                  </div>
+                )}
               </div>
               <div className="flex items-center justify-center align-middle">
-                <span className="text-s text-gray-500">67</span>
+                <span className="text-s text-gray-500">
+                  {reactions?.length ?? 0}
+                </span>
               </div>
             </div>
             <div className="mt-3 h-[70px] w-full">
@@ -68,7 +223,9 @@ export default function PostPage({ post }: { post: PostExport }) {
                 <RiChat1Line className="h-6 w-6" />
               </div>
               <div className="flex items-center justify-center align-middle">
-                <span className="text-s text-gray-500">6</span>
+                <span className="text-s text-gray-500">
+                  {comments?.length ?? 0}
+                </span>
               </div>
             </div>
             <div className="mt-3 h-[70px] w-full">
@@ -76,7 +233,7 @@ export default function PostPage({ post }: { post: PostExport }) {
                 <RiBookmarkLine className="h-6 w-6" />
               </div>
               <div className="flex items-center justify-center align-middle">
-                <span className="text-s text-gray-500">100</span>
+                <span className="text-s text-gray-500">0</span>
               </div>
             </div>
             <div className="mt-3 h-[70px] w-full">
@@ -97,7 +254,7 @@ export default function PostPage({ post }: { post: PostExport }) {
             </div>
           )}
           <div className="mb-5 bg-white p-3 sm:rounded-md sm:px-12 sm:pt-8">
-            <div className="flex flex-row items-center">
+            <div className="flex h-[62px] flex-row">
               <div className="mr-2 h-10 w-10 overflow-hidden rounded-full">
                 <a href={`/user/${post.createdBy.id}`}>
                   <img
@@ -107,6 +264,7 @@ export default function PostPage({ post }: { post: PostExport }) {
                   />
                 </a>
               </div>
+              {/* <div className="h-[62px]"> */}
               <div className="flex h-[42px] flex-col justify-start pl-3 align-middle">
                 <div className="mb-1 h-[19px] text-base font-bold">
                   {post.createdBy.name}
@@ -118,10 +276,90 @@ export default function PostPage({ post }: { post: PostExport }) {
                     day: "numeric",
                   })}
                 </div>
+                {/* </div> */}
+              </div>
+            </div>
+            <div className="flex h-[40px] w-full max-w-[375px] flex-row justify-between py-2">
+              <div className="flex h-[24px] items-center pr-4 text-start align-middle">
+                <span
+                  role="img"
+                  aria-label="heart"
+                  className="flex cursor-pointer items-center justify-center pr-[6px] text-center align-middle text-2xl"
+                >
+                  💖️
+                </span>
+                <p className="flex items-center justify-center text-center align-middle text-lg">
+                  {
+                    reactions?.filter((reaction) => reaction.emoji === "HEART")
+                      .length
+                  }
+                </p>
+              </div>
+              <div className="flex h-[24px] items-center pr-4 text-center align-middle">
+                <span
+                  role="img"
+                  aria-label="heart"
+                  className="flex cursor-pointer items-center justify-center pr-[6px] text-center align-middle text-2xl"
+                >
+                  🦄
+                </span>
+                <p className="flex items-center justify-center text-center align-middle text-lg">
+                  {
+                    reactions?.filter(
+                      (reaction) => reaction.emoji === "UNICORN",
+                    ).length
+                  }
+                </p>
+              </div>
+              <div className="flex h-[24px] items-center pr-4 text-center align-middle">
+                <span
+                  role="img"
+                  aria-label="heart"
+                  className="flex cursor-pointer items-center justify-center pr-[6px] text-center align-middle text-2xl"
+                >
+                  🔥
+                </span>
+                <p className="flex items-center justify-center text-center align-middle text-lg">
+                  {
+                    reactions?.filter((reaction) => reaction.emoji === "FIRE")
+                      .length
+                  }
+                </p>
+              </div>
+              <div className="flex h-[24px] items-center pr-4 text-center align-middle">
+                <span
+                  role="img"
+                  aria-label="heart"
+                  className="flex cursor-pointer items-center justify-center pr-[6px] text-center align-middle text-2xl"
+                >
+                  👏
+                </span>
+                <p className="flex items-center justify-center text-center align-middle text-lg">
+                  {
+                    reactions?.filter((reaction) => reaction.emoji === "CLAP")
+                      .length
+                  }
+                </p>
+              </div>
+              <div className="flex h-[24px] items-center justify-center pr-4 text-center align-middle">
+                <span
+                  role="img"
+                  aria-label="heart"
+                  className="flex cursor-pointer items-center justify-center pr-[6px] text-center align-middle text-2xl"
+                >
+                  🤯
+                </span>
+                <p className="flex items-center justify-center text-center align-middle text-lg">
+                  {
+                    reactions?.filter(
+                      (reaction) => reaction.emoji === "SURPRISE",
+                    ).length
+                  }
+                </p>
               </div>
             </div>
             <div className="flex flex-col">
-              <div className="mb-2 items-center text-3xl font-bold sm:mt-3">
+              <div className="mb-2 items-center text-3xl font-bold">
                 {post.name}
               </div>
               <div className="flex h-[32px] w-full flex-row items-center justify-start">
@@ -154,11 +392,10 @@ export default function PostPage({ post }: { post: PostExport }) {
                       />
                     </a>
                   </div>
-                  {/* COMMENTS HERE */}
                   <div className="flex flex-grow flex-col">
                     <div className="ml-2 h-[64px] rounded-md border-[1px] border-gray-300 bg-white p-2">
                       <textarea
-                        className="h-full w-full resize-none text-start align-top focus:outline-none" // Added textarea
+                        className="h-full w-full resize-none text-start align-top focus:outline-none"
                         value={content}
                         placeholder="Add to the discussion"
                         onChange={(e) => setContent(e.target.value)}
@@ -184,7 +421,7 @@ export default function PostPage({ post }: { post: PostExport }) {
                   <div className="mt-4 h-6 w-6 overflow-hidden rounded-full">
                     <a href={`/user/${post.createdBy.id}`}>
                       <img
-                        src={session?.user?.image ?? "/images/avatar.png"}
+                        src={comment.createdBy.image ?? "/images/avatar.png"}
                         alt="logo"
                         className="h-full w-full object-cover"
                       />
@@ -219,7 +456,7 @@ export default function PostPage({ post }: { post: PostExport }) {
                           1
                         </div>
                         <div className="my-auto hidden h-[24px] justify-center text-center align-middle text-sm md:flex">
-                          1 like(s)
+                          0 likes
                         </div>
                       </div>
                       <div className="mr-1 flex h-[24px] flex-row items-center justify-center py-1 pl-2 pr-3 align-middle">
@@ -283,6 +520,7 @@ export default function PostPage({ post }: { post: PostExport }) {
     </div>
   );
 }
+
 function SkeletonLoader() {
   return (
     <div className="">

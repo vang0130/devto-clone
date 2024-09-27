@@ -150,9 +150,10 @@ declare module "next-auth" {
       bio: string;
       location: string;
       website: string;
-      createdAt: string;
+      createdAt: Date;
       posts: Post[];
       comments: Comment[];
+      reactions: Reaction[];
     } & DefaultSession["user"];
   }
 
@@ -166,31 +167,51 @@ declare module "next-auth" {
     location: string | null;
     website: string | null;
     createdAt: Date;
-    posts: Post[]; // Ensure 'posts' is included
+    posts: Post[];
     comments: Comment[];
+    reactions: Reaction[];
   }
 
   interface Post {
-    id: string;
+    id: number;
     name: string;
-    content: string;
-    createdAt: string;
-    createdBy: User;
-    createdById: string;
-    tags: string[];
-    Comment: Comment[];
-    image: string;
-  }
-
-  interface Comment {
-    id: string;
     content: string;
     createdAt: Date;
     updatedAt: Date;
     createdBy: User;
     createdById: string;
+    tags: string[];
+    comments: Comment[];
+    reactions: Reaction[];
+    image?: string;
+    archived: boolean;
+  }
+  interface Comment {
+     id: number;
+    content: string;
+    createdAt: Date;
+    updatedAt: Date;
+    createdBy: User;
+    createdById: string;
+    post: Post;
+    postId: number;
     name: string;
-    // updatedAt: Date;
+ }
+
+  interface Reaction {
+    id: string;
+    post: Post;
+    user: User;
+    userId: string;
+    postId: number;
+    emoji: Emoji;
+  }
+  enum Emoji {
+    HEART = "HEART",
+    UNICORN = "UNICORN",
+    SURPRISE = "SURPRISE",
+    CLAP = "CLAP",
+    FIRE = "FIRE",
   }
 }
 

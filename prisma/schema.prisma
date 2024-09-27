@@ -16,22 +16,40 @@ datasource db {
 }
 
 model Post {
-    id          Int       @id @default(autoincrement())
+    id          Int        @id @default(autoincrement())
     name        String
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
-    // user name and id in createdBy
-    createdBy   User      @relation(fields: [createdById], references: [id])
-    // createdByName String
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @updatedAt
+    createdBy   User       @relation(fields: [createdById], references: [id])
     createdById String
     content     String
     tags        String[]
-    Comment     Comment[]
+    // Comment     Comment[]
+    comments    Comment[]
     image       String?
-    archived    Boolean   @default(false)
-    // @@index([createdByName, createdById])
+    archived    Boolean    @default(false)
+    reactions   Reaction[]
 
     @@index([name])
+}
+
+model Reaction {
+    id     Int    @id @default(autoincrement())
+    post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId Int
+    user   User   @relation(fields: [userId], references: [id])
+    userId String
+    emoji  Emoji
+
+    @@unique([postId, userId, emoji]) // user can only react with one type of emoji per post
+}
+
+enum Emoji {
+    HEART
+    UNICORN
+    SURPRISE
+    CLAP
+    FIRE
 }
 
 model Comment {
@@ -86,20 +104,21 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?   @default("John Doe")
+    id            String     @id @default(cuid())
+    name          String?    @default("John Doe")
     // @@unique([name, id])
-    email         String?   @unique
+    email         String?    @unique
     emailVerified DateTime?
     image         String?
-    bio           String?   @default("404 bio not found")
-    location      String?   @default("")
-    website       String?   @default("")
+    bio           String?    @default("404 bio not found")
+    location      String?    @default("")
+    website       String?    @default("")
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
-    createdAt     DateTime  @default(now())
+    createdAt     DateTime   @default(now())
     comments      Comment[]
+    reactions     Reaction[]
 }
 
 model VerificationToken {
