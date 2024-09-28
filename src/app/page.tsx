@@ -662,7 +662,6 @@ export default function Home() {
                           <a href={`/user/${post.createdBy.id}`}>
                             <img
                               src={post.createdBy.image ?? "/images/avatar.png"}
-                              alt="logo"
                               className="h-full w-full object-cover"
                             />
                           </a>
@@ -698,7 +697,7 @@ export default function Home() {
                           <div className="flex flex-row items-center">
                             <a className="flex h-[36px] flex-row items-center py-1 pr-3 text-sm">
                               <div className="flex flex-row items-center">
-                                <div className="relative z-50 h-[28px] w-[28px] items-center rounded-full border-[2px] border-white bg-gray-100">
+                                <div className="relative z-40 h-[28px] w-[28px] items-center rounded-full border-[2px] border-white bg-gray-100">
                                   <span
                                     role="img"
                                     aria-label="heart"
@@ -707,7 +706,7 @@ export default function Home() {
                                     💖️
                                   </span>
                                 </div>
-                                <div className="relative z-40 ml-[-10.5px] h-[28px] w-[28px] items-center rounded-full border-[2px] border-white bg-gray-100">
+                                <div className="relative z-30 ml-[-10.5px] h-[28px] w-[28px] items-center rounded-full border-[2px] border-white bg-gray-100">
                                   <span
                                     role="img"
                                     aria-label="heart"
@@ -716,7 +715,7 @@ export default function Home() {
                                     🦄
                                   </span>
                                 </div>
-                                <div className="relative z-30 ml-[-10.5px] h-[28px] w-[28px] items-center rounded-full border-[2px] border-white bg-gray-100">
+                                <div className="relative z-20 ml-[-10.5px] h-[28px] w-[28px] items-center rounded-full border-[2px] border-white bg-gray-100">
                                   <span
                                     role="img"
                                     aria-label="heart"
@@ -725,7 +724,7 @@ export default function Home() {
                                     🔥
                                   </span>
                                 </div>
-                                <div className="relative z-20 ml-[-10.5px] h-[28px] w-[28px] items-center rounded-full border-[2px] border-white bg-gray-100">
+                                <div className="relative z-10 ml-[-10.5px] h-[28px] w-[28px] items-center rounded-full border-[2px] border-white bg-gray-100">
                                   <span
                                     role="img"
                                     aria-label="heart"

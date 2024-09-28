@@ -14,6 +14,7 @@ export const commentRouter = createTRPCRouter({
       name: z.string().min(1),
       postId: z.number(),
       content: z.string().min(1),
+      parentId: z.number().optional(),
     })
   )
   .mutation(async ({ ctx, input }) => {
@@ -23,6 +24,7 @@ export const commentRouter = createTRPCRouter({
         content: input.content,
         post: { connect: { id: input.postId } },
         createdBy: { connect: { id: ctx.session.user.id } },
+        parent: input.parentId ? { connect: { id: input.parentId } } : undefined,
       },
     });
   }),
@@ -33,11 +35,25 @@ export const commentRouter = createTRPCRouter({
       postId: z.number(), // Expect postId to be passed as input
     })
   )
+  // get two levels only, user must click to load more levels
   .query(async ({ ctx, input }) => {
     return ctx.db.comment.findMany({
       where: { postId : input.postId },
       orderBy: { createdAt: "desc"},
-      include: { createdBy: true}
+      include: {
+        post: true, 
+        createdBy: true,
+        children: {
+          include: {
+            createdBy: true,
+            children: {
+              include: {
+                createdBy: true,
+              }
+            }
+          },
+        },
+      },
     });
   }),
   });

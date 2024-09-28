@@ -187,15 +187,22 @@ declare module "next-auth" {
     archived: boolean;
   }
   interface Comment {
-     id: number;
+    id: number;
+    name: string;
     content: string;
+    
     createdAt: Date;
     updatedAt: Date;
+    
+    children?: Comment[];
+    parent?: Comment;
+    parentId?: number;
+
     createdBy: User;
     createdById: string;
+    
     post: Post;
     postId: number;
-    name: string;
  }
 
   interface Reaction {

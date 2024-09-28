@@ -24,7 +24,6 @@ model Post {
     createdById String
     content     String
     tags        String[]
-    // Comment     Comment[]
     comments    Comment[]
     image       String?
     archived    Boolean    @default(false)
@@ -34,12 +33,12 @@ model Post {
 }
 
 model Reaction {
-    id     Int    @id @default(autoincrement())
-    post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
-    postId Int
-    user   User   @relation(fields: [userId], references: [id])
-    userId String
-    emoji  Emoji
+    id        Int    @id @default(autoincrement())
+    post      Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId    Int
+    createdBy User   @relation(fields: [userId], references: [id])
+    userId    String
+    emoji     Emoji
 
     @@unique([postId, userId, emoji]) // user can only react with one type of emoji per post
 }
@@ -53,21 +52,22 @@ enum Emoji {
 }
 
 model Comment {
-    id        Int      @id @default(autoincrement())
-    name      String
+    id      Int    @id @default(autoincrement())
+    name    String
+    content String
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    // createdByName String
-    // set id to user id
-    createdById String
-    content     String
-    // @@index([createdByName])
-    post        Post   @relation(fields: [postId], references: [id])
-    // postid Int?
+    children Comment[] @relation("comment_children")
+    parent   Comment?  @relation("comment_children", fields: [parentId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+    parentId Int?
 
-    postId Int
+    createdBy   User   @relation(fields: [createdById], references: [id])
+    createdById String
+
+    post   Post? @relation(fields: [postId], references: [id])
+    postId Int?
 
     @@index([id])
 }
@@ -106,7 +106,6 @@ model Session {
 model User {
     id            String     @id @default(cuid())
     name          String?    @default("John Doe")
-    // @@unique([name, id])
     email         String?    @unique
     emailVerified DateTime?
     image         String?

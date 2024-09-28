@@ -39,7 +39,7 @@ export default function SideBarClient() {
 
   return (
     <div className="overflow-scroll">
-      <button className="mx-2 p-2 sm:hidden" onClick={toggleSidebar}>
+      <button className="mx-2 p-2 md:hidden" onClick={toggleSidebar}>
         <RiMenuFill className="h-6 w-6" />
       </button>
       {isSidebarVisible && (

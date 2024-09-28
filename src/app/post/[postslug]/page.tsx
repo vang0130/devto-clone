@@ -2,7 +2,7 @@
 import PostPage from "../../postpage/post";
 import { api } from "src/trpc/react";
 import Header from "src/app/header/header";
-
+// import type { Post } from "next-auth";
 export default function Page({ params }: { params: { postslug: string } }) {
   const postId = Number(params.postslug);
   const { data: post, isLoading } = api.post.getPost.useQuery({ id: postId });
@@ -23,8 +23,8 @@ function SkeletonLoader() {
     <div>
       <Header />
       <div className="mx-auto max-w-[1380px] p-2">
-        <div className="mt-[56px] sm:grid sm:grid-cols-[64px,1fr] sm:gap-2 lg:grid lg:grid-cols-[64px,7fr,3fr] lg:gap-4 lg:p-4">
-          <div className="hidden sm:col-start-1 sm:flex sm:flex-col">
+        <div className="mt-[56px] md:grid md:grid-cols-[64px,1fr] md:gap-2 lg:grid lg:grid-cols-[64px,7fr,3fr] lg:gap-4 lg:p-4">
+          <div className="hidden md:col-start-1 md:flex md:flex-col">
             <div className="h-[277px] w-full animate-pulse rounded-md bg-gray-200 text-sm sm:mt-12 lg:mt-8"></div>
           </div>
           <div className="sm:col-start-2 sm:rounded-md">

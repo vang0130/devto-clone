@@ -15,13 +15,13 @@ export const reactionRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      console.log(ctx.session.user.id);
-      console.log(input.emoji);
-      console.log(input.postId);
+      // console.log(ctx.session.user.id);
+      // console.log(input.emoji);
+      // console.log(input.postId);
       return await ctx.db.reaction.create({
         data: {
           post: { connect: { id: input.postId } },
-          user: { connect: { id: ctx.session.user.id } },
+          createdBy: { connect: { id: ctx.session.user.id } },
           emoji: input.emoji,
         },
       });
@@ -52,8 +52,8 @@ export const reactionRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      console.log(input.postId);
-      console.log(ctx.session.user.id);
+      // console.log(input.postId);
+      // console.log(ctx.session.user.id);
       return ctx.db.reaction.findMany({
         where: {
           postId: input.postId,

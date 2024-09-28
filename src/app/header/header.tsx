@@ -60,7 +60,10 @@ export default function Header() {
         <a className="flex items-center" href="/">
           <Image src="/images/logo.png" alt="logo" width={50} height={50} />
         </a>
-        <div className="mx-4 hidden max-w-2xl flex-grow sm:block md:w-[680px]">
+        <button className="mr-1 flex flex-grow justify-end p-2 md:hidden">
+          <RiSearchLine className="h-6 w-6" />
+        </button>
+        <div className="mx-4 hidden max-w-2xl flex-grow md:block md:w-[680px]">
           <form className="flex h-[40px] items-center rounded-md border border-gray-300">
             <button className="pl-2 pr-1">
               <RiSearchLine className="h-6 w-6" />
