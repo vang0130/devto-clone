@@ -22,6 +22,8 @@ export type PostExport = Post & {
     website: string | null;
     createdAt: Date;
   };
+  comments: Comment[];
+  reactions: Reaction[];
 };
 
 export type CommentExport = Comment & {

@@ -91,14 +91,51 @@ export const postRouter = createTRPCRouter({
     }),
 
 
+  // getPost: publicProcedure
+  //   .input(z.object({ id : z.number().int() }))
+  //   .query(async ({ ctx, input }) => {
+  //     return ctx.db.post.findUnique({
+  //       where: { id: input.id },
+  //       include: { 
+  //         createdBy: {
+  //           include: {
+  //             comments: true, 
+  //             reactions: true
+  //           },
+  //         }, 
+  //         comments: true, 
+  //         reactions: true 
+  //       },
+  //     });
+  //   }),
+
   getPost: publicProcedure
-    .input(z.object({ id : z.number().int() }))
-    .query(async ({ ctx, input }) => {
-      return ctx.db.post.findUnique({
-        where: { id: input.id },
-        include: { createdBy: true },
-      });
-    }),
+  .input(z.object({ id: z.number().int() }))
+  .query(async ({ ctx, input }) => {
+    return ctx.db.post.findUnique({
+      where: { id: input.id },
+      // include: {
+      //   createdBy: true,
+      //   comments: true,
+      //   reactions: true,
+      // }
+      include: { 
+        createdBy: {
+          include: {
+            posts: true,
+            comments: true,
+            reactions: true,
+          }
+        },  
+        comments: {      
+          include: {
+            createdBy: true,
+          },
+        },
+        reactions: true, 
+      },
+    });
+  }),
 
   getUserPosts: protectedProcedure
     .input(z.object({ userId: z.string() }))
@@ -106,7 +143,7 @@ export const postRouter = createTRPCRouter({
     return ctx.db.post.findMany({
       where: { createdById: input.userId },
       orderBy: { createdAt: "desc" },
-      include: { createdBy: true },
+      include: { createdBy: true, comments: true, reactions: true },
     });
   }),
 

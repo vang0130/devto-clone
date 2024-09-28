@@ -2,10 +2,17 @@
 import PostPage from "../../postpage/post";
 import { api } from "src/trpc/react";
 import Header from "src/app/header/header";
-// import type { Post } from "next-auth";
+// import type { Post } from "@prisma/client";
+// import type { PostExport } from "src/type";
+import type { Post, Comment, Reaction, User } from "@prisma/client";
+
 export default function Page({ params }: { params: { postslug: string } }) {
   const postId = Number(params.postslug);
-  const { data: post, isLoading } = api.post.getPost.useQuery({ id: postId });
+  const { data: post, isLoading } = api.post.getPost.useQuery<{
+    createdBy: User;
+    comments: (Comment & { createdBy: User })[];
+    reactions: Reaction[];
+  }>({ id: postId });
 
   if (isLoading || !post) {
     return (
