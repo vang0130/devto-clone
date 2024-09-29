@@ -618,7 +618,6 @@ c32 20 52 41 67 72 21 43 22 54 19 374 l-3 330 -31 39 c-61 76 -30 73 -669 73
                     Guides
                   </a>
                 </li>
-
                 <li className="min-h-[40px]">
                   <a className="flex items-center py-2 pl-2 pr-4 text-base">
                     <span className="mr-2">
