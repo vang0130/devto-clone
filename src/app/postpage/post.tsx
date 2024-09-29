@@ -564,7 +564,13 @@ export default function PostPage({ post }: { post: Post }) {
                           aria-label="heart"
                           className="flex cursor-pointer items-center justify-center text-center align-middle text-3xl"
                         >
-                          💖️
+                          {/* 💖 */}
+                          <img
+                            src="https://dev.to/assets/sparkle-heart-5f9bee3767e18deb1bb725290cb151c25234768a0e9a2bd39370c382d02920cf.svg"
+                            width="32"
+                            height="32"
+                          ></img>{" "}
+                          ️
                         </span>
                         <p className="flex items-center justify-center text-center align-middle text-base">
                           {reactions?.filter(
@@ -583,7 +589,12 @@ export default function PostPage({ post }: { post: Post }) {
                           aria-label="heart"
                           className="flex cursor-pointer items-center justify-center text-center align-middle text-3xl"
                         >
-                          🦄
+                          {/* 🦄 */}
+                          <img
+                            height="32"
+                            width="32"
+                            src="https://dev.to/assets/multi-unicorn-b44d6f8c23cdd00964192bedc38af3e82463978aa611b4365bd33a0f1f4f3e97.svg"
+                          ></img>
                         </span>
                         <p className="flex items-center justify-center text-center align-middle text-base">
                           {reactions?.filter(
@@ -602,11 +613,15 @@ export default function PostPage({ post }: { post: Post }) {
                           aria-label="heart"
                           className="flex cursor-pointer items-center justify-center text-center align-middle text-3xl"
                         >
-                          🔥
+                          <img
+                            height="32"
+                            width="32"
+                            src="https://dev.to/assets/exploding-head-daceb38d627e6ae9b730f36a1e390fca556a4289d5a41abb2c35068ad3e2c4b5.svg"
+                          ></img>
                         </span>
                         <p className="flex items-center justify-center text-center align-middle text-base">
                           {reactions?.filter(
-                            (reaction) => reaction.emoji === "FIRE",
+                            (reaction) => reaction.emoji === "SURPRISE",
                           ).length ?? 0}
                         </p>
                       </div>
@@ -621,7 +636,11 @@ export default function PostPage({ post }: { post: Post }) {
                           aria-label="heart"
                           className="flex cursor-pointer items-center justify-center text-center align-middle text-3xl"
                         >
-                          👏
+                          <img
+                            height="32"
+                            width="32"
+                            src="https://dev.to/assets/raised-hands-74b2099fd66a39f2d7eed9305ee0f4553df0eb7b4f11b01b6b1b499973048fe5.svg"
+                          ></img>
                         </span>
                         <p className="flex items-center justify-center text-center align-middle text-base">
                           {reactions?.filter(
@@ -640,11 +659,15 @@ export default function PostPage({ post }: { post: Post }) {
                           aria-label="heart"
                           className="flex cursor-pointer items-center justify-center text-center align-middle text-3xl"
                         >
-                          🤯
+                          <img
+                            height="32"
+                            width="32"
+                            src="https://dev.to/assets/fire-f60e7a582391810302117f987b22a8ef04a2fe0df7e3258a5f49332df1cec71e.svg"
+                          ></img>
                         </span>
                         <p className="flex items-center justify-center text-center align-middle text-base">
                           {reactions?.filter(
-                            (reaction) => reaction.emoji === "SURPRISE",
+                            (reaction) => reaction.emoji === "FIRE",
                           ).length ?? 0}
                         </p>
                       </div>
@@ -693,7 +716,7 @@ export default function PostPage({ post }: { post: Post }) {
               />
             </div>
           )}
-          <div className="mb-5 bg-white p-3 sm:rounded-md sm:px-12 sm:pt-8">
+          <div className="mb-5 bg-white p-3 sm:rounded-md sm:px-12 sm:pt-8 md:px-16">
             <div className="flex h-[62px] flex-row">
               <div className="mr-2 h-10 w-10 overflow-hidden rounded-full">
                 <a href={`/user/${post.createdBy.id}`}>
@@ -724,7 +747,12 @@ export default function PostPage({ post }: { post: Post }) {
                   aria-label="heart"
                   className="flex cursor-pointer items-center justify-center pr-[6px] text-center align-middle text-2xl"
                 >
-                  💖️
+                  {/* 💖️ */}
+                  <img
+                    src="https://dev.to/assets/sparkle-heart-5f9bee3767e18deb1bb725290cb151c25234768a0e9a2bd39370c382d02920cf.svg"
+                    width="24"
+                    height="24"
+                  ></img>
                 </span>
                 <p className="flex items-center justify-center text-center align-middle text-lg">
                   {
@@ -739,7 +767,12 @@ export default function PostPage({ post }: { post: Post }) {
                   aria-label="heart"
                   className="flex cursor-pointer items-center justify-center pr-[6px] text-center align-middle text-2xl"
                 >
-                  🦄
+                  {/* 🦄 */}
+                  <img
+                    src="https://dev.to/assets/multi-unicorn-b44d6f8c23cdd00964192bedc38af3e82463978aa611b4365bd33a0f1f4f3e97.svg"
+                    width="24"
+                    height="24"
+                  ></img>
                 </span>
                 <p className="flex items-center justify-center text-center align-middle text-lg">
                   {
@@ -755,12 +788,18 @@ export default function PostPage({ post }: { post: Post }) {
                   aria-label="heart"
                   className="flex cursor-pointer items-center justify-center pr-[6px] text-center align-middle text-2xl"
                 >
-                  🔥
+                  <img
+                    src="https://dev.to/assets/exploding-head-daceb38d627e6ae9b730f36a1e390fca556a4289d5a41abb2c35068ad3e2c4b5.svg"
+                    width="24"
+                    height="24"
+                  ></img>{" "}
+                  {/* 🔥 */}
                 </span>
                 <p className="flex items-center justify-center text-center align-middle text-lg">
                   {
-                    reactions?.filter((reaction) => reaction.emoji === "FIRE")
-                      .length
+                    reactions?.filter(
+                      (reaction) => reaction.emoji === "SURPRISE",
+                    ).length
                   }
                 </p>
               </div>
@@ -770,7 +809,12 @@ export default function PostPage({ post }: { post: Post }) {
                   aria-label="heart"
                   className="flex cursor-pointer items-center justify-center pr-[6px] text-center align-middle text-2xl"
                 >
-                  👏
+                  <img
+                    src="https://dev.to/assets/raised-hands-74b2099fd66a39f2d7eed9305ee0f4553df0eb7b4f11b01b6b1b499973048fe5.svg"
+                    width="24"
+                    height="24"
+                  ></img>{" "}
+                  {/* 👏 */}
                 </span>
                 <p className="flex items-center justify-center text-center align-middle text-lg">
                   {
@@ -785,19 +829,23 @@ export default function PostPage({ post }: { post: Post }) {
                   aria-label="heart"
                   className="flex cursor-pointer items-center justify-center pr-[6px] text-center align-middle text-2xl"
                 >
-                  🤯
+                  <img
+                    src="https://dev.to/assets/fire-f60e7a582391810302117f987b22a8ef04a2fe0df7e3258a5f49332df1cec71e.svg"
+                    width="24"
+                    height="24"
+                  ></img>{" "}
+                  {/* 🤯 */}
                 </span>
                 <p className="flex items-center justify-center text-center align-middle text-lg">
                   {
-                    reactions?.filter(
-                      (reaction) => reaction.emoji === "SURPRISE",
-                    ).length
+                    reactions?.filter((reaction) => reaction.emoji === "FIRE")
+                      .length
                   }
                 </p>
               </div>
             </div>
             <div className="flex flex-col">
-              <div className="mb-2 items-center text-3xl font-bold">
+              <div className="mb-2 items-center text-3xl font-bold md:text-5xl">
                 {post.name}
               </div>
               <div className="flex h-[32px] w-full flex-row items-center justify-start">

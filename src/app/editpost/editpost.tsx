@@ -329,7 +329,7 @@ export default function EditPost({ post }: { post: Post }) {
                 ref={textareaRef}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="w-full resize-none items-start whitespace-pre-wrap break-words font-mono focus:outline-none md:min-h-[189px]"
+                className="w-full flex-grow resize-none items-start whitespace-pre-wrap break-words font-mono focus:outline-none md:min-h-[189px]"
               ></textarea>
             </div>
           </div>

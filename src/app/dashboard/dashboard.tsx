@@ -72,7 +72,7 @@ export default function DashboardClient() {
             </div>
             <div className="h-[52px] w-full pt-3 sm:hidden">
               <select className="h-full w-full rounded-md border-[1.5px] border-gray-300 bg-white py-[6.5px] pl-[6.5px] pr-8">
-                <option>Posts ({session?.user.posts.length} ?? 0)</option>
+                <option>Posts ({session?.user.posts.length ?? 0})</option>
               </select>
             </div>
             <div className="grid w-full grid-cols-2 gap-2 pt-3 sm:grid-cols-3 sm:gap-4">
