@@ -7,12 +7,11 @@ import { RiHeartAddLine } from "react-icons/ri";
 import { RiBookmarkLine } from "react-icons/ri";
 import { BsThreeDots } from "react-icons/bs";
 import { RiChat1Line } from "react-icons/ri";
-// import type { PostExport } from "src/type";
 import { useSession } from "next-auth/react";
 import ReactMarkdown from "react-markdown";
 import "github-markdown-css/github-markdown.css";
 import { api } from "src/trpc/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { RiHeart2Line } from "react-icons/ri";
 import {
   RiListOrdered,
@@ -28,36 +27,56 @@ import {
 } from "react-icons/ri";
 import { RxLightningBolt } from "react-icons/rx";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import type { Comment, Post, User } from "next-auth";
+import type { Comment, Post } from "src/server/auth";
 
 export default function PostPage({ post }: { post: Post }) {
   const { data: session } = useSession();
-
   const utils = api.useUtils();
 
+  // content of comment (NOT reply)
   const [content, setContent] = useState("");
 
+  // if user clicks on textbox, change view
   const [isFocused, setFocused] = useState(false);
-
   const handleFocus = () => {
     setFocused(true);
   };
 
+  // deal with replies
   const [replyFocus, setReplyFocus] = useState(false);
+  // content of reply
+  const [replyContent, setReplyContent] = useState("");
+  // track the specific parent id of the reply
   const [activeReplyParentId, setActiveReplyParentId] = useState<number | null>(
     null,
   );
 
-  const handleReplyFocus = (parentId: number) => {
-    setActiveReplyParentId(parentId);
-    setReplyFocus(replyFocus ? false : true);
-  };
+  // reaction options
+  const [isDrawerVisible, setIsDrawerVisible] = useState(false);
 
+  // fetch comments for current post
+  const { data: comments, isLoading: isLoadingComments } =
+    api.comment.getPostComments.useQuery({
+      postId: post.id,
+    });
+
+  // fetch reactions
+  const { data: reactions } = api.reaction.getPostReactions.useQuery({
+    postId: post.id,
+  });
+
+  // submit and create comment
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim()) return;
-    createComment.mutate({ content, name: content, postId: post.id });
+
+    createComment.mutate({
+      content,
+      name: content,
+      postId: post.id,
+    });
   };
+
   const createComment = api.comment.create.useMutation({
     onSuccess: async () => {
       await utils.comment.invalidate();
@@ -66,13 +85,24 @@ export default function PostPage({ post }: { post: Post }) {
     },
   });
 
-  const [replyContent, setReplyContent] = useState("");
+  // expand div box for reply for a specific parentId
+  const handleReplyFocus = (parentId: number) => {
+    if (activeReplyParentId === parentId) {
+      // close if already focused
+      setReplyFocus(false);
+      setActiveReplyParentId(null);
+    } else {
+      // open if not set yet
+      setActiveReplyParentId(parentId);
+      setReplyFocus(true);
+    }
+  };
 
   const createReply = api.comment.create.useMutation({
     onSuccess: async () => {
       await utils.comment.invalidate();
-      setReplyContent("");
-      setReplyFocus(false);
+      setReplyContent(""); // clear content
+      setReplyFocus(false); // collapse form again
     },
   });
 
@@ -87,35 +117,25 @@ export default function PostPage({ post }: { post: Post }) {
     });
   };
 
-  const { data: comments, isLoading: isLoadingComments } =
-    api.comment.getPostComments.useQuery({
-      postId: post.id,
-    });
-
-  // console.table(comments);
-
-  const { data: reactions } = api.reaction.getPostReactions.useQuery({
-    postId: post.id,
-  });
-
-  const [isDrawerVisible, setIsDrawerVisible] = useState(false);
-
+  // creating a new reply
+  // useMutation() - need to be explicitly called
   const createReaction = api.reaction.create.useMutation({
     onSuccess: async () => {
-      await utils.reaction.invalidate();
+      await utils.reaction.invalidate(); // clears cache and forces a refetch
     },
   });
-
   const deleteReaction = api.reaction.delete.useMutation({
     onSuccess: async () => {
       await utils.reaction.invalidate();
     },
   });
+  // useQuery() - called automatically upon rendering
   const { data: existingReactions, isLoading } =
     api.reaction.getUserReactions.useQuery({
       postId: post.id,
     });
 
+  // showing reaction drawer
   const handleToggleReaction = (
     emoji: "HEART" | "UNICORN" | "SURPRISE" | "CLAP" | "FIRE",
   ) => {
@@ -123,7 +143,7 @@ export default function PostPage({ post }: { post: Post }) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     const reactionExists = existingReactions?.length
       ? existingReactions.some((reaction) => reaction.emoji === emoji)
-      : false;
+      : false; // fetch existing reactions
     if (reactionExists) {
       deleteReaction.mutate({ postId: post.id, emoji });
     } else {
@@ -131,11 +151,69 @@ export default function PostPage({ post }: { post: Post }) {
     }
   };
 
+  // dictionary for comments that have been loaded
+  const [loadedChildren, setLoadedChildren] = useState<Record<number, boolean>>(
+    {},
+  );
+
+  // tracking if children of a parent are currently being fetched (avoid multiple requests for same info)
+  const [loadingChildren, setLoadingChildren] = useState<
+    Record<number, boolean>
+  >({});
+
+  const [activeChildrenParentId, setActiveChildrenParentId] = useState<
+    number | null
+  >(null);
+
+  // fetching children whenever activeChildrenParentId changes and is valid
+  const { data: childrenCommentsData } = api.comment.getChildren.useQuery(
+    { parentId: activeChildrenParentId ?? -1 }, // set to -1 if null
+    {
+      enabled: activeChildrenParentId !== -1, // only query if parentId is valid
+    },
+  );
+
+  // when childrenCommentsData changes (i.e. new children are fetched)
+  useEffect(() => {
+    if (childrenCommentsData && activeChildrenParentId) {
+      // mark children as loaded
+      setLoadedChildren((prev) => ({
+        ...prev,
+        [activeChildrenParentId]: true,
+      }));
+
+      // set loading state to false
+      setLoadingChildren((prev) => ({
+        ...prev,
+        [activeChildrenParentId]: false,
+      }));
+    }
+  }, [childrenCommentsData, activeChildrenParentId]);
+
+  const fetchChildren = (parentId: number) => {
+    // if children have already been loaded or are currently being fetched, exit early
+    if (loadedChildren[parentId] || loadingChildren[parentId]) {
+      return;
+    }
+
+    // set loading state to true
+    setLoadingChildren((prev) => ({
+      ...prev,
+      [parentId]: true,
+    }));
+
+    // set the parent ID for which children need to be fetched
+    setActiveChildrenParentId(parentId);
+  };
+
   const renderComments = (commentsRendered: Comment[]) => {
+    console.table(commentsRendered);
     return commentsRendered.map((comment) => (
+      // display a single comment
       <div key={comment.id} className="flex flex-col">
         <div className="mb-4 flex flex-row">
           <div className="mt-4 h-6 w-6 overflow-hidden rounded-full">
+            {/* user who created comment */}
             <a href={`/user/${comment.createdBy?.id}`}>
               <img
                 src={comment.createdBy?.image ?? "/images/avatar.png"}
@@ -165,6 +243,7 @@ export default function PostPage({ post }: { post: Post }) {
                 </p>
               </div>
             </div>
+            {/* create a reply to only the current parent */}
             {replyFocus && activeReplyParentId === comment.id ? (
               <div className="mb-4 flex flex-grow flex-col pt-4">
                 <div className="h-[171.5px]">
@@ -260,9 +339,28 @@ export default function PostPage({ post }: { post: Post }) {
             )}
           </div>
         </div>
-        {comment.children && comment.children.length > 0 && (
-          <div className="ml-10 mt-2">{renderComments(comment.children)}</div>
-        )}
+        {/* if children exist and they are NOT loaded */}
+        {comment.children &&
+          comment.children.length > 0 &&
+          !loadedChildren[comment.id] && (
+            <div className="ml-8">
+              <button
+                className="mb-3 items-center justify-start rounded-md bg-gray-300 px-4 py-2 text-center text-base text-gray-600"
+                // FETCH CHILDREN ON CLICK
+                onClick={() => fetchChildren(comment.id)}
+                disabled={loadingChildren[comment.id]}
+              >
+                {loadingChildren[comment.id] ? "Loading..." : "Show Replies"}
+              </button>
+            </div>
+          )}
+
+        {/* If children ARE loaded, render them */}
+        {comment.children &&
+          comment.children.length > 0 &&
+          loadedChildren[comment.id] && (
+            <div className="ml-10 mt-2">{renderComments(comment.children)}</div>
+          )}
       </div>
     ));
   };

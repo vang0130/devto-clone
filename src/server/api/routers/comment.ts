@@ -35,6 +35,7 @@ export const commentRouter = createTRPCRouter({
       postId: z.number(), // Expect postId to be passed as input
     })
   )
+
   // get two levels only, user must click to load more levels
   .query(async ({ ctx, input }) => {
     return ctx.db.comment.findMany({
@@ -51,11 +52,34 @@ export const commentRouter = createTRPCRouter({
                 createdBy: true,
               }
             }
-          },
-        },
+          }
+        } 
       },
     });
   }),
+
+  getChildren: publicProcedure
+    .input(z.object({ parentId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      return ctx.db.comment.findMany({
+        where: { parentId: input.parentId },
+        orderBy: { createdAt: "desc"},
+        include: {
+          createdBy: true,
+          children: {
+            include: {
+              createdBy: true,
+              children: {
+                include: {
+                  createdBy: true,
+                }
+              }
+            }
+          } 
+        },
+      });
+    }),
+
   });
 
 
