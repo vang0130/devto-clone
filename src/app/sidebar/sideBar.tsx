@@ -2,31 +2,6 @@
 import React, { useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { RiMenuFill } from "react-icons/ri";
-
-import { HiOutlineHome } from "react-icons/hi2";
-import { HiOutlineMicrophone } from "react-icons/hi2";
-import { IoPricetagsOutline } from "react-icons/io5";
-import { BsCameraReels } from "react-icons/bs";
-import { HiOutlineLightBulb } from "react-icons/hi2";
-import { HiOutlineShoppingBag } from "react-icons/hi2";
-import { HiOutlineHeart } from "react-icons/hi2";
-import { HiOutlineTrophy } from "react-icons/hi2";
-import { HiOutlineSparkles } from "react-icons/hi2";
-import { FaDev } from "react-icons/fa";
-import { HiOutlineMegaphone } from "react-icons/hi2";
-import { SiPostgresql } from "react-icons/si";
-import { HiOutlineBookOpen } from "react-icons/hi2";
-import { HiOutlineFaceSmile } from "react-icons/hi2";
-import { PiEyesFill } from "react-icons/pi";
-import { PiEyeglasses } from "react-icons/pi";
-import { HiOutlineHandThumbUp } from "react-icons/hi2";
-import { RiTwitterXFill } from "react-icons/ri";
-import { RiInstagramLine } from "react-icons/ri";
-import { RiGithubFill } from "react-icons/ri";
-import { RiFacebookBoxFill } from "react-icons/ri";
-import { RiTwitchFill } from "react-icons/ri";
-import { SiMcdonalds } from "react-icons/si";
-import { TfiComment } from "react-icons/tfi";
 import { IoIosClose } from "react-icons/io";
 
 export default function SideBarClient() {
