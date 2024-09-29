@@ -25,7 +25,7 @@ function SkeletonLoader() {
   return (
     <div>
       <Header />
-      <div className="mx-auto max-w-[1380px] p-2">
+      <div className="mx-auto max-w-[1380px] md:p-2">
         <div className="mt-[56px] md:grid md:grid-cols-[64px,1fr] md:gap-2 lg:grid lg:grid-cols-[64px,7fr,3fr] lg:gap-4 lg:p-4">
           <div className="hidden md:col-start-1 md:flex md:flex-col">
             <div className="h-[277px] w-full animate-pulse rounded-md bg-gray-200 text-sm sm:mt-12 lg:mt-8"></div>

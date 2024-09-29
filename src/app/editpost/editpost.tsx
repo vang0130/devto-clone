@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { api } from "src/trpc/react";
 import React from "react";
 import { IoIosClose } from "react-icons/io";
@@ -35,33 +35,34 @@ const initialState: UploadState = { status: "success", message: "" };
 
 export default function EditPost({ post }: { post: Post }) {
   const utils = api.useUtils();
-  const [file, setFile] = useState<File | null>(null);
+  const [content, setContent] = useState(post.content);
+  const [name, setName] = useState(post.name);
+  const [tags, setTags] = useState<string[]>(post.tags);
+
+  // image upload
   const [image, setImageUrl] = useState(post.image ?? null);
   const [state, setState] = useState<UploadState>(initialState);
-  const [isPreview, setPreview] = useState(false);
-  const [content, setContent] = useState(post.content);
 
+  // handle preview mode
+  const [isPreview, setPreview] = useState(false);
+
+  // set new value of content whenever user types
   useEffect(() => {
     setContent(post.content);
   }, [post.content]);
-
-  const [name, setName] = useState(post.name);
 
   useEffect(() => {
     setName(post.name);
   }, [post.name]);
 
-  const [tags, setTags] = useState<string[]>(post.tags);
   useEffect(() => {
     setTags(post.tags);
   }, [post.tags]);
 
-  // Handle file input change in HTML
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const selectedFile = event.target.files?.[0] ?? null;
-    setFile(selectedFile); // set file
 
     if (selectedFile) {
       // if file exists
@@ -73,9 +74,7 @@ export default function EditPost({ post }: { post: Post }) {
       if (typeof result === "string") {
         // if successful, we get URL
         setImageUrl(result);
-        // setState({ status: "success", message: "Image uploaded successfully." });
       } else {
-        // setState({ status: "error", message: result.message ?? "Failed to upload image." });
       }
     }
   };
@@ -85,17 +84,9 @@ export default function EditPost({ post }: { post: Post }) {
   const editPost = api.post.edit.useMutation({
     onSuccess: async (data) => {
       await utils.post.invalidate();
-      //   setName("");
-      //   setContent("");
-      //   setTags([]);
-      //   setImageUrl("");
-      // setState({ status: "success", message: "Post created successfully." });
       const postSlug = data.id;
       router.push(`/post/${postSlug}`);
     },
-    // onError: (error) => {
-    // setState({ status: "error", message: error.message ?? "Failed to create post." });
-    // },
   });
 
   const handleEditPost = (postId: number) => {
@@ -106,16 +97,43 @@ export default function EditPost({ post }: { post: Post }) {
       tags,
       image: image ?? undefined,
     });
+  };
 
-    // void editPost.mutate(
-    //   { id: postId, name, content, tags, image: image ?? undefined },
-    //   {
-    // onSuccess: (data) => {
-    //   const postSlug = data.id;
-    //   router.push(`/post/${postSlug}`);
-    // },
-    //   },
-    // );
+  // useRef - persists across re-renders
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // instead markdown at cursor
+  const insertMarkdown = (syntax: string, surroundSelected = false) => {
+    // get current text in textarea element
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    // cursor positions
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.slice(start, end);
+
+    let newText: string;
+    let newCursorPosition: number;
+
+    // if true
+    if (surroundSelected) {
+      // add new syntax
+      newText = `${textarea.value.slice(0, start)}${syntax}${selectedText}${syntax}${textarea.value.slice(end)}`;
+      // new cursor position
+      newCursorPosition = end + syntax.length;
+    } else {
+      newText = `${textarea.value.slice(0, start)}${syntax}${textarea.value.slice(end)}`;
+      newCursorPosition = start + syntax.length;
+    }
+
+    setContent(newText);
+
+    // reposition cursor
+    setTimeout(() => {
+      textarea.setSelectionRange(newCursorPosition, newCursorPosition);
+      textarea.focus();
+    }, 0);
   };
 
   return (
@@ -202,22 +220,11 @@ export default function EditPost({ post }: { post: Post }) {
               <div className="flex flex-row items-center align-middle">
                 <input
                   type="text"
-                  // placeholder="New post title here..."
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="my-auto flex h-[60px] items-center justify-center border-gray-300 align-middle text-3xl font-bold leading-[60px] focus:outline-none md:text-4xl lg:text-5xl"
                 />
               </div>
-              {/* <div className="flex flex-col items-center">
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="my-auto h-[60px] w-full items-center border-gray-300 align-middle text-3xl font-bold leading-none focus:outline-none md:text-4xl lg:text-5xl"
-                  style={{ lineHeight: "normal", padding: "0" }}
-                />
-              </div> */}
-
               <div className="relative flex h-9 w-full">
                 <ul>
                   <li>
@@ -243,37 +250,70 @@ export default function EditPost({ post }: { post: Post }) {
             <div className="flex w-full flex-col px-3 md:px-12 lg:px-16">
               <div className="relative mb-[24px] ml-[-64px] mr-[-12px] flex h-14 items-center bg-gray-100 py-2 pl-16 md:mr-[-64px] md:pr-16">
                 <div className="flex w-full flex-row items-center">
-                  <button className="mr-1 w-fit justify-start rounded-md p-2">
+                  <button
+                    onClick={() => insertMarkdown("**", true)}
+                    className="mr-1 w-fit justify-start rounded-md p-2"
+                  >
                     <RiBold size={24} />
                   </button>
-                  <button className="mr-1 w-fit justify-start rounded-md p-2">
+                  <button
+                    onClick={() => insertMarkdown("_", true)}
+                    className="mr-1 w-fit justify-start rounded-md p-2"
+                  >
                     <RiItalic size={24} />
                   </button>
-                  <button className="mr-1 w-fit justify-start rounded-md p-2">
+                  <button
+                    onClick={() => insertMarkdown("[text](url)")}
+                    className="mr-1 w-fit justify-start rounded-md p-2"
+                  >
                     <RiLink size={24} />
                   </button>
-                  <button className="mr-1 w-fit justify-start rounded-md p-2">
+                  <button
+                    onClick={() => insertMarkdown("1. ", false)}
+                    className="mr-1 w-fit justify-start rounded-md p-2"
+                  >
                     <RiListOrdered size={24} />
                   </button>
-                  <button className="mr-1 w-fit justify-start rounded-md p-2">
+                  <button
+                    onClick={() => insertMarkdown("- ", false)}
+                    className="mr-1 w-fit justify-start rounded-md p-2"
+                  >
                     <RiListUnordered size={24} />
                   </button>
-                  <button className="mr-1 w-fit justify-start rounded-md p-2">
+                  <button
+                    onClick={() => insertMarkdown("# ", false)}
+                    className="mr-1 w-fit justify-start rounded-md p-2"
+                  >
                     <RiHeading size={24} />
                   </button>
-                  <button className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block">
+                  <button
+                    onClick={() => insertMarkdown("> ", false)}
+                    className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                  >
                     <RiDoubleQuotesL size={24} />
                   </button>
-                  <button className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block">
+                  <button
+                    onClick={() => insertMarkdown("`", true)}
+                    className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                  >
                     <RiCodeFill size={24} />
                   </button>
-                  <button className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block">
+                  <button
+                    onClick={() => insertMarkdown("```", true)}
+                    className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                  >
                     <RiCodeBlock size={24} />
                   </button>
-                  <button className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block">
+                  <button
+                    onClick={() => insertMarkdown("{% embed  %}")}
+                    className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                  >
                     <RxLightningBolt size={24} />
                   </button>
-                  <button className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block">
+                  <button
+                    onClick={() => insertMarkdown("![alt text](image_url)")}
+                    className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                  >
                     <RiImageFill size={24} />
                   </button>
                   <button className="ml-auto mr-1 w-fit justify-end rounded-md p-2">
@@ -286,6 +326,7 @@ export default function EditPost({ post }: { post: Post }) {
             <div className="flex w-full flex-grow flex-col px-3 pb-3 md:px-12 md:pb-8 lg:px-16">
               <textarea
                 placeholder="Write your post content here..."
+                ref={textareaRef}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 className="w-full resize-none items-start whitespace-pre-wrap break-words font-mono focus:outline-none md:min-h-[189px]"
@@ -296,7 +337,7 @@ export default function EditPost({ post }: { post: Post }) {
 
         <div className="col-start-1 flex h-[56px] flex-row items-center justify-start px-2 md:col-span-2 md:h-[72px] lg:h-[88px]">
           <button
-            onClick={(e) => handleEditPost(post.id)}
+            onClick={() => handleEditPost(post.id)}
             className="mr-2 flex h-[40px] min-w-min items-center justify-center whitespace-nowrap rounded-md bg-blue-700 px-4 py-2 text-white"
             type="submit"
             disabled={editPost.isPending}

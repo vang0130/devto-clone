@@ -26,7 +26,6 @@ export default function SettingsClient() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [state, setState] = useState<UploadState>(initialState);
-  const [file, setFile] = useState<File | null>(null);
   const [image, setImageUrl] = useState(session?.user?.image ?? ""); // Use initial image from session
 
   // Mutation to update user information
@@ -45,7 +44,6 @@ export default function SettingsClient() {
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const selectedFile = event.target.files?.[0] ?? null;
-    setFile(selectedFile); // Update file state when user selects a file
 
     if (selectedFile) {
       const formData = new FormData();

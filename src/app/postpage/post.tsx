@@ -11,7 +11,7 @@ import { useSession } from "next-auth/react";
 import ReactMarkdown from "react-markdown";
 import "github-markdown-css/github-markdown.css";
 import { api } from "src/trpc/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { RiHeart2Line } from "react-icons/ri";
 import {
   RiListOrdered,
@@ -28,6 +28,7 @@ import {
 import { RxLightningBolt } from "react-icons/rx";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import type { Comment, Post } from "src/server/auth";
+import "github-markdown-css/github-markdown.css";
 
 export default function PostPage({ post }: { post: Post }) {
   const { data: session } = useSession();
@@ -38,6 +39,10 @@ export default function PostPage({ post }: { post: Post }) {
 
   // if user clicks on textbox, change view
   const [isFocused, setFocused] = useState(false);
+
+  const [isPreviewComment, setPreviewComment] = useState(false);
+  const [isPreviewReply, setPreviewReply] = useState(false);
+
   const handleFocus = () => {
     setFocused(true);
   };
@@ -206,6 +211,52 @@ export default function PostPage({ post }: { post: Post }) {
     setActiveChildrenParentId(parentId);
   };
 
+  // useRef - persists across re-renders
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const replytextareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // instead markdown at cursor
+  const insertMarkdown = (
+    syntax: string,
+    surroundSelected = false,
+    ref: React.RefObject<HTMLTextAreaElement>,
+    isReply = false,
+  ) => {
+    // get current text in textarea element
+    const textarea = ref.current;
+    if (!textarea) return;
+
+    // cursor positions
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.slice(start, end);
+
+    let newText: string;
+    let newCursorPosition: number;
+
+    // if true
+    if (surroundSelected) {
+      // add new syntax
+      newText = `${textarea.value.slice(0, start)}${syntax}${selectedText}${syntax}${textarea.value.slice(end)}`;
+      // new cursor position
+      newCursorPosition = end + syntax.length;
+    } else {
+      newText = `${textarea.value.slice(0, start)}${syntax}${textarea.value.slice(end)}`;
+      newCursorPosition = start + syntax.length;
+    }
+
+    if (isReply) {
+      setReplyContent(newText); // Use setReplyContent for reply box
+    } else {
+      setContent(newText); // Use setContent for comment box
+    }
+    // reposition cursor
+    setTimeout(() => {
+      textarea.setSelectionRange(newCursorPosition, newCursorPosition);
+      textarea.focus();
+    }, 0);
+  };
+
   const renderComments = (commentsRendered: Comment[]) => {
     console.table(commentsRendered);
     return commentsRendered.map((comment) => (
@@ -238,63 +289,175 @@ export default function PostPage({ post }: { post: Post }) {
                 </div>
               </div>
               <div className="mb-4 mt-2 bg-white px-3">
-                <p className="min-h-[24px] w-full resize-none text-start align-top focus:outline-none">
-                  {comment.content}
-                </p>
+                <div className="markdown-body markdown-content min-h-[24px] w-full resize-none text-start align-top focus:outline-none">
+                  <ReactMarkdown className="markdown-content">
+                    {comment.content}
+                  </ReactMarkdown>
+                </div>
               </div>
             </div>
             {/* create a reply to only the current parent */}
             {replyFocus && activeReplyParentId === comment.id ? (
               <div className="mb-4 flex flex-grow flex-col pt-4">
                 <div className="h-[171.5px]">
-                  <div className="ml-2 h-[130.5px] rounded-t-md border-[1px] border-gray-300 bg-white p-2">
-                    <textarea
-                      className="h-full w-full resize-none text-start align-top focus:outline-none"
-                      value={replyContent}
-                      placeholder="Reply..."
-                      onChange={(e) => setReplyContent(e.target.value)}
-                    />
-                  </div>
-                  <div className="ml-2 h-[41px] rounded-b-md border-b-[1px] border-l-[1px] border-r-[1px] border-gray-300">
-                    <div className="flex w-full flex-row items-center">
-                      <button className="mr-1 w-fit justify-start rounded-md p-2">
-                        <RiBold size={24} />
-                      </button>
-                      <button className="mr-1 w-fit justify-start rounded-md p-2">
-                        <RiItalic size={24} />
-                      </button>
-                      <button className="mr-1 w-fit justify-start rounded-md p-2">
-                        <RiLink size={24} />
-                      </button>
-                      <button className="mr-1 w-fit justify-start rounded-md p-2">
-                        <RiListOrdered size={24} />
-                      </button>
-                      <button className="mr-1 w-fit justify-start rounded-md p-2">
-                        <RiListUnordered size={24} />
-                      </button>
-                      <button className="mr-1 hidden w-fit justify-start rounded-md p-2 md:block">
-                        <RiHeading size={24} />
-                      </button>
-                      <button className="mr-1 hidden w-fit justify-start rounded-md p-2 md:block">
-                        <RiDoubleQuotesL size={24} />
-                      </button>
-                      <button className="mr-1 hidden w-fit justify-start rounded-md p-2 md:block">
-                        <RiCodeFill size={24} />
-                      </button>
-                      <button className="mr-1 hidden w-fit justify-start rounded-md p-2 md:block">
-                        <RiCodeBlock size={24} />
-                      </button>
-                      <button className="mr-1 hidden w-fit justify-start rounded-md p-2 md:block">
-                        <RxLightningBolt size={24} />
-                      </button>
-                      <button className="mr-1 w-fit justify-start rounded-md p-2">
-                        <RiImageFill size={24} />
-                      </button>
-                      <button className="ml-auto mr-1 w-fit justify-end rounded-md p-2">
-                        <BsThreeDotsVertical size={24} />
-                      </button>
+                  {isPreviewReply ? (
+                    <div className="flex w-full flex-grow flex-col">
+                      <div className="h- ml-2 h-[170.5px] rounded-md border-[1px] border-gray-300 bg-white p-2">
+                        <div className="markdown-body markdown-content h-full w-full resize-none overflow-y-auto text-start align-top focus:outline-none">
+                          <ReactMarkdown className="markdown-content mt-4">
+                            {replyContent}
+                          </ReactMarkdown>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="flex w-full flex-grow flex-col">
+                      <div className="ml-2 h-[130.5px] rounded-t-md border-[1px] border-gray-300 bg-white p-2">
+                        <textarea
+                          className="h-full w-full resize-none text-start align-top focus:outline-none"
+                          ref={replytextareaRef}
+                          value={replyContent}
+                          placeholder="Reply..."
+                          onChange={(e) => setReplyContent(e.target.value)}
+                        />
+                      </div>
+                      <div className="ml-2 h-[41px] rounded-b-md border-b-[1px] border-l-[1px] border-r-[1px] border-gray-300">
+                        <div className="flex w-full flex-row items-center">
+                          <button
+                            onClick={() =>
+                              insertMarkdown("**", true, replytextareaRef, true)
+                            }
+                            className="mr-1 w-fit justify-start rounded-md p-2"
+                          >
+                            <RiBold size={24} />
+                          </button>
+                          <button
+                            onClick={() =>
+                              insertMarkdown("_", true, replytextareaRef, true)
+                            }
+                            className="mr-1 w-fit justify-start rounded-md p-2"
+                          >
+                            <RiItalic size={24} />
+                          </button>
+                          <button
+                            onClick={() =>
+                              insertMarkdown(
+                                "[text](url)",
+                                false,
+                                replytextareaRef,
+                                true,
+                              )
+                            }
+                            className="mr-1 w-fit justify-start rounded-md p-2"
+                          >
+                            <RiLink size={24} />
+                          </button>
+                          <button
+                            onClick={() =>
+                              insertMarkdown(
+                                "1. ",
+                                false,
+                                replytextareaRef,
+                                true,
+                              )
+                            }
+                            className="mr-1 w-fit justify-start rounded-md p-2"
+                          >
+                            <RiListOrdered size={24} />
+                          </button>
+                          <button
+                            onClick={() =>
+                              insertMarkdown(
+                                "- ",
+                                false,
+                                replytextareaRef,
+                                true,
+                              )
+                            }
+                            className="mr-1 w-fit justify-start rounded-md p-2"
+                          >
+                            <RiListUnordered size={24} />
+                          </button>
+                          <button
+                            onClick={() =>
+                              insertMarkdown(
+                                "# ",
+                                false,
+                                replytextareaRef,
+                                true,
+                              )
+                            }
+                            className="mr-1 w-fit justify-start rounded-md p-2"
+                          >
+                            <RiHeading size={24} />
+                          </button>
+                          <button
+                            onClick={() =>
+                              insertMarkdown(
+                                "> ",
+                                false,
+                                replytextareaRef,
+                                true,
+                              )
+                            }
+                            className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                          >
+                            <RiDoubleQuotesL size={24} />
+                          </button>
+                          <button
+                            onClick={() =>
+                              insertMarkdown("`", true, replytextareaRef, true)
+                            }
+                            className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                          >
+                            <RiCodeFill size={24} />
+                          </button>
+                          <button
+                            onClick={() =>
+                              insertMarkdown(
+                                "```",
+                                true,
+                                replytextareaRef,
+                                true,
+                              )
+                            }
+                            className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                          >
+                            <RiCodeBlock size={24} />
+                          </button>
+                          <button
+                            onClick={() =>
+                              insertMarkdown(
+                                "{% embed  %}",
+                                true,
+                                replytextareaRef,
+                                true,
+                              )
+                            }
+                            className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                          >
+                            <RxLightningBolt size={24} />
+                          </button>
+                          <button
+                            onClick={() =>
+                              insertMarkdown(
+                                "![alt text](image_url)",
+                                false,
+                                replytextareaRef,
+                                true,
+                              )
+                            }
+                            className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                          >
+                            <RiImageFill size={24} />
+                          </button>
+                          <button className="ml-auto mr-1 w-fit justify-end rounded-md p-2">
+                            <BsThreeDotsVertical size={24} />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-row">
                   <button
@@ -305,8 +468,13 @@ export default function PostPage({ post }: { post: Post }) {
                   >
                     {createReply.isPending ? "Submitting..." : "Submit"}
                   </button>
-                  <button className="mt-3 items-center justify-start rounded-md bg-gray-300 px-4 py-2 text-center text-base text-gray-600">
-                    Preview
+                  <button
+                    onClick={() =>
+                      setPreviewReply(isPreviewReply ? false : true)
+                    }
+                    className="mt-3 items-center justify-start rounded-md bg-gray-300 px-4 py-2 text-center text-base text-gray-600"
+                  >
+                    {isPreviewReply ? "Edit" : "Preview"}
                   </button>
                   <button
                     className="ml-2 mt-3 items-center justify-start rounded-md px-4 py-2 text-center text-base"
@@ -664,57 +832,137 @@ export default function PostPage({ post }: { post: Post }) {
                       </a>
                     </div>
                     <div className="flex flex-grow flex-col">
-                      <div className="h-[171.5px]">
-                        <div className="ml-2 h-[130.5px] rounded-t-md border-[1px] border-gray-300 bg-white p-2">
-                          <textarea
-                            className="h-full w-full resize-none text-start align-top focus:outline-none"
-                            value={content}
-                            placeholder="Add to the discussion"
-                            onChange={(e) => setContent(e.target.value)}
-                            onFocus={handleFocus}
-                          />
-                        </div>
-                        <div className="ml-2 h-[41px] rounded-b-md border-b-[1px] border-l-[1px] border-r-[1px] border-gray-300">
-                          <div className="flex w-full flex-row items-center">
-                            <button className="mr-1 w-fit justify-start rounded-md p-2">
-                              <RiBold size={24} />
-                            </button>
-                            <button className="mr-1 w-fit justify-start rounded-md p-2">
-                              <RiItalic size={24} />
-                            </button>
-                            <button className="mr-1 w-fit justify-start rounded-md p-2">
-                              <RiLink size={24} />
-                            </button>
-                            <button className="mr-1 w-fit justify-start rounded-md p-2">
-                              <RiListOrdered size={24} />
-                            </button>
-                            <button className="mr-1 w-fit justify-start rounded-md p-2">
-                              <RiListUnordered size={24} />
-                            </button>
-                            <button className="mr-1 hidden w-fit justify-start rounded-md p-2 md:block">
-                              <RiHeading size={24} />
-                            </button>
-                            <button className="mr-1 hidden w-fit justify-start rounded-md p-2 md:block">
-                              <RiDoubleQuotesL size={24} />
-                            </button>
-                            <button className="mr-1 hidden w-fit justify-start rounded-md p-2 md:block">
-                              <RiCodeFill size={24} />
-                            </button>
-                            <button className="mr-1 hidden w-fit justify-start rounded-md p-2 md:block">
-                              <RiCodeBlock size={24} />
-                            </button>
-                            <button className="mr-1 hidden w-fit justify-start rounded-md p-2 md:block">
-                              <RxLightningBolt size={24} />
-                            </button>
-                            <button className="mr-1 w-fit justify-start rounded-md p-2">
-                              <RiImageFill size={24} />
-                            </button>
-                            <button className="ml-auto mr-1 w-fit justify-end rounded-md p-2">
-                              <BsThreeDotsVertical size={24} />
-                            </button>
+                      {isPreviewComment ? (
+                        <div className="flex w-full flex-grow flex-col">
+                          <div className="h- ml-2 h-[170.5px] rounded-md border-[1px] border-gray-300 bg-white p-2">
+                            <div className="markdown-body markdown-content h-full w-full resize-none overflow-y-auto text-start align-top focus:outline-none">
+                              <ReactMarkdown className="markdown-content mt-4">
+                                {content}
+                              </ReactMarkdown>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="h-[171.5px]">
+                          <div className="ml-2 h-[130.5px] rounded-t-md border-[1px] border-gray-300 bg-white p-2">
+                            <textarea
+                              className="h-full w-full resize-none text-start align-top focus:outline-none"
+                              ref={textareaRef}
+                              value={content}
+                              placeholder="Add to the discussion"
+                              onChange={(e) => setContent(e.target.value)}
+                              onFocus={handleFocus}
+                            />
+                          </div>
+                          <div className="ml-2 h-[41px] rounded-b-md border-b-[1px] border-l-[1px] border-r-[1px] border-gray-300">
+                            <div className="flex w-full flex-row items-center">
+                              <button
+                                onClick={() =>
+                                  insertMarkdown("**", true, textareaRef)
+                                }
+                                className="mr-1 w-fit justify-start rounded-md p-2"
+                              >
+                                <RiBold size={24} />
+                              </button>
+                              <button
+                                onClick={() =>
+                                  insertMarkdown("_", true, textareaRef)
+                                }
+                                className="mr-1 w-fit justify-start rounded-md p-2"
+                              >
+                                <RiItalic size={24} />
+                              </button>
+                              <button
+                                onClick={() =>
+                                  insertMarkdown(
+                                    "[text](url)",
+                                    false,
+                                    textareaRef,
+                                  )
+                                }
+                                className="mr-1 w-fit justify-start rounded-md p-2"
+                              >
+                                <RiLink size={24} />
+                              </button>
+                              <button
+                                onClick={() =>
+                                  insertMarkdown("1. ", false, textareaRef)
+                                }
+                                className="mr-1 w-fit justify-start rounded-md p-2"
+                              >
+                                <RiListOrdered size={24} />
+                              </button>
+                              <button
+                                onClick={() =>
+                                  insertMarkdown("- ", false, textareaRef)
+                                }
+                                className="mr-1 w-fit justify-start rounded-md p-2"
+                              >
+                                <RiListUnordered size={24} />
+                              </button>
+                              <button
+                                onClick={() =>
+                                  insertMarkdown("# ", false, textareaRef)
+                                }
+                                className="mr-1 w-fit justify-start rounded-md p-2"
+                              >
+                                <RiHeading size={24} />
+                              </button>
+                              <button
+                                onClick={() =>
+                                  insertMarkdown("> ", false, textareaRef)
+                                }
+                                className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                              >
+                                <RiDoubleQuotesL size={24} />
+                              </button>
+                              <button
+                                onClick={() =>
+                                  insertMarkdown("`", true, textareaRef)
+                                }
+                                className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                              >
+                                <RiCodeFill size={24} />
+                              </button>
+                              <button
+                                onClick={() =>
+                                  insertMarkdown("```", true, textareaRef)
+                                }
+                                className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                              >
+                                <RiCodeBlock size={24} />
+                              </button>
+                              <button
+                                onClick={() =>
+                                  insertMarkdown(
+                                    "{% embed  %}",
+                                    false,
+                                    textareaRef,
+                                  )
+                                }
+                                className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                              >
+                                <RxLightningBolt size={24} />
+                              </button>
+                              <button
+                                onClick={() =>
+                                  insertMarkdown(
+                                    "![alt text](image_url)",
+                                    false,
+                                    textareaRef,
+                                  )
+                                }
+                                className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                              >
+                                <RiImageFill size={24} />
+                              </button>
+                              <button className="ml-auto mr-1 w-fit justify-end rounded-md p-2">
+                                <BsThreeDotsVertical size={24} />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                       <div className="flex flex-row">
                         <button
                           type="submit"
@@ -724,8 +972,13 @@ export default function PostPage({ post }: { post: Post }) {
                         >
                           {createComment.isPending ? "Submitting..." : "Submit"}
                         </button>
-                        <button className="mt-3 items-center justify-start rounded-md bg-gray-300 px-4 py-2 text-center text-base text-gray-600">
-                          Preview
+                        <button
+                          onClick={() =>
+                            setPreviewComment(isPreviewComment ? false : true)
+                          }
+                          className="mt-3 items-center justify-start rounded-md bg-gray-300 px-4 py-2 text-center text-base text-gray-600"
+                        >
+                          {isPreviewComment ? "Edit" : "Preview"}
                         </button>
                       </div>
                     </div>
@@ -831,23 +1084,14 @@ function SkeletonLoader() {
           <div className="flex flex-grow flex-col">
             <div className="ml-2 flex flex-grow flex-col rounded-md border-[1px] border-gray-300 p-1">
               <div className="flex h-[40px] flex-row items-center px-3 pt-2 text-center align-middle">
-                <div className="h-[21px] w-[80px] animate-pulse rounded-md bg-gray-200 text-sm text-gray-500">
-                  {/* {comment.createdBy.name} */}
-                </div>
+                <div className="h-[21px] w-[80px] animate-pulse rounded-md bg-gray-200 text-sm text-gray-500"></div>
                 <div className="flex h-[21px] justify-center px-2 text-center align-middle text-base text-gray-500">
                   ·
                 </div>
-                <div className="h-[21px] w-[80px] animate-pulse rounded-md bg-gray-200 text-sm text-gray-500">
-                  {/* {new Date(comment.createdAt).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                  })} */}
-                </div>
+                <div className="h-[21px] w-[80px] animate-pulse rounded-md bg-gray-200 text-sm text-gray-500"></div>
               </div>
               <div className="mb-4 mt-2 bg-white px-3">
-                <p className="min-h-[24px] w-full animate-pulse resize-none rounded-md bg-gray-200 text-start align-top focus:outline-none">
-                  {/* {comment.content} */}
-                </p>
+                <p className="min-h-[24px] w-full animate-pulse resize-none rounded-md bg-gray-200 text-start align-top focus:outline-none"></p>
               </div>
             </div>
             <div className="ml-1 flex flex-row items-center pt-1 text-center">

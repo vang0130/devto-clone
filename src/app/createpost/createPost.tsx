@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { api } from "src/trpc/react";
 import ReactMarkdown from "react-markdown";
 import { IoIosClose } from "react-icons/io";
@@ -32,31 +32,37 @@ const initialState: UploadState = { status: "success", message: "" };
 
 export default function CreatePost() {
   const utils = api.useUtils();
-  const [name, setName] = useState("");
-  const [content, setContent] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
-  const [file, setFile] = useState<File | null>(null);
+  const [name, setName] = useState(""); // title
+  const [content, setContent] = useState(""); // content
+  const [tags, setTags] = useState<string[]>([]); // tags
+
+  // image upload
   const [image, setImageUrl] = useState("");
   const [state, setState] = useState<UploadState>(initialState);
+
+  // is preview or not
   const [isPreview, setPreview] = useState(false);
 
+  // called when file is uploaded
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const selectedFile = event.target.files?.[0] ?? null;
-    setFile(selectedFile);
 
+    // if file exists
     if (selectedFile) {
       const formData = new FormData();
       formData.append("file", selectedFile);
 
+      // upload to s3
       const result = await uploadFile(formData, state);
       if (typeof result === "string") {
-        setImageUrl(result);
+        setImageUrl(result); // set image url in user
       }
     }
   };
 
+  // reset form
   const createPost = api.post.create.useMutation({
     onSuccess: async () => {
       await utils.post.invalidate();
@@ -67,6 +73,7 @@ export default function CreatePost() {
     },
   });
 
+  // send user to new post page
   const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -82,6 +89,43 @@ export default function CreatePost() {
         },
       },
     );
+  };
+
+  // useRef - persists across re-renders
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // instead markdown at cursor
+  const insertMarkdown = (syntax: string, surroundSelected = false) => {
+    // get current text in textarea element
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    // cursor positions
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.slice(start, end);
+
+    let newText: string;
+    let newCursorPosition: number;
+
+    // if true
+    if (surroundSelected) {
+      // add new syntax
+      newText = `${textarea.value.slice(0, start)}${syntax}${selectedText}${syntax}${textarea.value.slice(end)}`;
+      // new cursor position
+      newCursorPosition = end + syntax.length;
+    } else {
+      newText = `${textarea.value.slice(0, start)}${syntax}${textarea.value.slice(end)}`;
+      newCursorPosition = start + syntax.length;
+    }
+
+    setContent(newText);
+
+    // reposition cursor
+    setTimeout(() => {
+      textarea.setSelectionRange(newCursorPosition, newCursorPosition);
+      textarea.focus();
+    }, 0);
   };
 
   return (
@@ -200,37 +244,70 @@ export default function CreatePost() {
             <div className="flex w-full flex-col px-3 md:px-12 lg:px-16">
               <div className="relative mb-[24px] ml-[-64px] mr-[-12px] flex h-14 items-center bg-gray-100 py-2 pl-16 md:mr-[-64px] md:pr-16">
                 <div className="flex w-full flex-row items-center">
-                  <button className="mr-1 w-fit justify-start rounded-md p-2">
+                  <button
+                    onClick={() => insertMarkdown("**", true)}
+                    className="mr-1 w-fit justify-start rounded-md p-2"
+                  >
                     <RiBold size={24} />
                   </button>
-                  <button className="mr-1 w-fit justify-start rounded-md p-2">
+                  <button
+                    onClick={() => insertMarkdown("_", true)}
+                    className="mr-1 w-fit justify-start rounded-md p-2"
+                  >
                     <RiItalic size={24} />
                   </button>
-                  <button className="mr-1 w-fit justify-start rounded-md p-2">
+                  <button
+                    onClick={() => insertMarkdown("[text](url)")}
+                    className="mr-1 w-fit justify-start rounded-md p-2"
+                  >
                     <RiLink size={24} />
                   </button>
-                  <button className="mr-1 w-fit justify-start rounded-md p-2">
+                  <button
+                    onClick={() => insertMarkdown("1. ", false)}
+                    className="mr-1 w-fit justify-start rounded-md p-2"
+                  >
                     <RiListOrdered size={24} />
                   </button>
-                  <button className="mr-1 w-fit justify-start rounded-md p-2">
+                  <button
+                    onClick={() => insertMarkdown("- ", false)}
+                    className="mr-1 w-fit justify-start rounded-md p-2"
+                  >
                     <RiListUnordered size={24} />
                   </button>
-                  <button className="mr-1 w-fit justify-start rounded-md p-2">
+                  <button
+                    onClick={() => insertMarkdown("# ", false)}
+                    className="mr-1 w-fit justify-start rounded-md p-2"
+                  >
                     <RiHeading size={24} />
                   </button>
-                  <button className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block">
+                  <button
+                    onClick={() => insertMarkdown("> ", false)}
+                    className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                  >
                     <RiDoubleQuotesL size={24} />
                   </button>
-                  <button className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block">
+                  <button
+                    onClick={() => insertMarkdown("`", true)}
+                    className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                  >
                     <RiCodeFill size={24} />
                   </button>
-                  <button className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block">
+                  <button
+                    onClick={() => insertMarkdown("```", true)}
+                    className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                  >
                     <RiCodeBlock size={24} />
                   </button>
-                  <button className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block">
+                  <button
+                    onClick={() => insertMarkdown("{% embed  %}")}
+                    className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                  >
                     <RxLightningBolt size={24} />
                   </button>
-                  <button className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block">
+                  <button
+                    onClick={() => insertMarkdown("![alt text](image_url)")}
+                    className="mr-1 hidden w-fit justify-start rounded-md p-2 sm:block"
+                  >
                     <RiImageFill size={24} />
                   </button>
                   <button className="ml-auto mr-1 w-fit justify-end rounded-md p-2">
@@ -244,8 +321,9 @@ export default function CreatePost() {
               <textarea
                 placeholder="Write your post content here..."
                 value={content}
+                ref={textareaRef}
                 onChange={(e) => setContent(e.target.value)}
-                className="w-full resize-none items-start whitespace-pre-wrap break-words font-mono focus:outline-none md:min-h-[189px]"
+                className="w-full flex-grow resize-none items-start whitespace-pre-wrap break-words font-mono focus:outline-none md:min-h-[189px]"
               ></textarea>
             </div>
           </div>

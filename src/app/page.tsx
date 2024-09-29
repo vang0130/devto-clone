@@ -789,7 +789,7 @@ export default function Home() {
               ) : (
                 recentPosts?.map((post) => (
                   <div key={post.id} className="border-b-[1px] border-gray-100">
-                    <a className="flex flex-col p-4">
+                    <a href={`/post/${post.id}`} className="flex flex-col p-4">
                       {post.name}
                       <div className="pt-1 text-xs text-gray-500">
                         {Array.isArray(post.comments)
