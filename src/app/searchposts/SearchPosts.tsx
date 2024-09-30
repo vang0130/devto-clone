@@ -1,48 +1,16 @@
 "use client";
 // import { useSession } from "next-auth/react";
-import { api } from "src/trpc/react";
 import Header from "../header/header";
 import { RiChat1Line } from "react-icons/ri";
 import { RiSearchLine } from "react-icons/ri";
 import { HiOutlineBookmark } from "react-icons/hi2";
+import { api } from "src/trpc/react";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 
-type Post = {
-  id: number;
-  name: string;
-  content: string;
-  image: string | null;
-  createdAt: Date;
-  tags: string[];
-  createdById: string;
-  userId: string;
-  userName: string;
-  userEmail: string;
-  userImage: string;
-  // createdBy: {
-  //   id: string;
-  //   name: string | null;
-  //   email: string | null;
-  //   emailVerified: Date | null;
-  //   image: string | null;
-  //   bio: string | null;
-  //   location: string | null;
-  //   website: string | null;
-  //   createdAt: Date;
-  // };
-};
-
-export default function SearchPage({ searchslug }: { searchslug: string }) {
-  const {
-    data: posts,
-    isLoading,
-    // isError,
-  } = api.post.searchPosts.useQuery({
-    searchslug: searchslug,
-  });
-
+export default function SearchPosts() {
+  const { data: session, status } = useSession();
   const router = useRouter();
   const pathname = usePathname(); // get url
   const [searchTerm, setSearchTerm] = useState("");
@@ -84,10 +52,7 @@ export default function SearchPage({ searchslug }: { searchslug: string }) {
       }
     }
   };
-  // console.table(posts);
-
-  // if (isLoading) return <div>Loading...</div>;
-  // if (isError) return <div>Error loading posts.</div>;
+  const { data: posts, isLoading } = api.post.findMany.useQuery();
 
   return (
     <div className="mx-auto max-w-[1024px]">
@@ -113,7 +78,7 @@ export default function SearchPage({ searchslug }: { searchslug: string }) {
             <div className="flex flex-row items-center">
               <div className="hidden justify-start sm:flex">
                 <h1 className="whitespace-nowrap align-middle text-3xl font-bold">
-                  Search results for {searchslug}
+                  {/* Search results for {searchslug} */}
                 </h1>
               </div>
               <div className="flex h-[48px] w-full flex-row py-1 sm:justify-end">
@@ -195,10 +160,150 @@ export default function SearchPage({ searchslug }: { searchslug: string }) {
               </ul>
             </nav>
           </div>
-          <div className="mb-2 flex flex-col space-y-2">
+
+          <div className="mb-2 flex flex-col space-y-4">
             {isLoading ? (
               <SkeletonLoader />
-            ) : Array.isArray(posts) && posts.length > 0 ? (
+            ) : (
+              posts?.map((post) => (
+                <div
+                  key={post.id}
+                  className="w-full bg-white sm:rounded-md md:border-[1.5px]"
+                >
+                  {post.image && (
+                    <div className="aspect-[2/1] w-full sm:rounded-t-md">
+                      <img
+                        src={post.image}
+                        alt="Post image"
+                        className="h-full w-full object-cover sm:rounded-t-md"
+                      />
+                    </div>
+                  )}
+                  <div className="p-5">
+                    <div className="mb-2 mr-2 flex max-h-[35px] items-center">
+                      <div className="mr-2 h-8 w-8 overflow-hidden rounded-full">
+                        <a href={`/user/${post.createdBy.id}`}>
+                          <img
+                            src={post.createdBy.image ?? "/images/avatar.png"}
+                            className="h-full w-full object-cover"
+                          />
+                        </a>
+                      </div>
+                      <div className="flex flex-col">
+                        <div className="flex max-h-[17.5px] items-center text-sm">
+                          {post.createdBy.name}
+                        </div>
+                        <div className="flex max-h-[15px] items-center text-xs">
+                          {new Date(post.createdAt).toLocaleDateString(
+                            "en-US",
+                            { month: "short", day: "numeric" },
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center md:pl-[20px] lg:pl-[40px]">
+                      <h2 className="mb-1 w-full justify-start text-2xl font-bold">
+                        <a href={`/post/${post.id}`}>{post.name}</a>
+                      </h2>
+                      <div className="mb-2 flex w-full text-gray-500">
+                        {post.tags.map((tag) => (
+                          <a
+                            key={tag}
+                            className="ml-[-7px] px-[7px] py-[4px] text-sm"
+                            href={`/t/${tag}`}
+                          >
+                            {tag}
+                          </a>
+                        ))}
+                      </div>
+                      <div className="flex w-full flex-row items-center">
+                        <div className="flex flex-row items-center">
+                          <a className="flex h-[36px] flex-row items-center py-1 pr-3 text-sm">
+                            <div className="flex flex-row items-center">
+                              <div className="relative z-40 h-[28px] w-[28px] items-center rounded-full border-[2px] border-white bg-gray-100">
+                                <span
+                                  role="img"
+                                  aria-label="heart"
+                                  className="flex cursor-pointer items-center justify-center text-center align-middle text-lg"
+                                >
+                                  💖 ️
+                                </span>
+                              </div>
+                              <div className="relative z-30 ml-[-10.5px] h-[28px] w-[28px] items-center rounded-full border-[2px] border-white bg-gray-100">
+                                <span
+                                  role="img"
+                                  aria-label="heart"
+                                  className="flex cursor-pointer items-center justify-center text-center align-middle text-lg"
+                                >
+                                  🦄
+                                </span>
+                              </div>
+                              <div className="relative z-20 ml-[-10.5px] h-[28px] w-[28px] items-center rounded-full border-[2px] border-white bg-gray-100">
+                                <span
+                                  role="img"
+                                  aria-label="heart"
+                                  className="flex cursor-pointer items-center justify-center text-center align-middle text-lg"
+                                >
+                                  🔥
+                                </span>
+                              </div>
+                              <div className="relative z-10 ml-[-10.5px] h-[28px] w-[28px] items-center rounded-full border-[2px] border-white bg-gray-100">
+                                <span
+                                  role="img"
+                                  aria-label="heart"
+                                  className="flex cursor-pointer items-center justify-center text-center align-middle text-lg"
+                                >
+                                  👏
+                                </span>
+                              </div>
+                              <div className="relative ml-[-10.5px] h-[28px] w-[28px] items-center rounded-full border-[2px] border-white bg-gray-100">
+                                <span
+                                  role="img"
+                                  aria-label="heart"
+                                  className="flex cursor-pointer items-center justify-center text-center align-middle text-lg"
+                                >
+                                  🤯
+                                </span>
+                              </div>
+                            </div>
+                            <span className="ml-[14px] hidden text-gray-500 sm:inline-block">
+                              {post.reactions.length} reactions
+                            </span>
+                            {/* <span className="ml-[14px] inline-block text-gray-500 sm:hidden">
+                                {post.reactions.length}
+                              </span> */}
+                          </a>
+                          <a className="flex flex-row items-center py-1 pl-2 pr-3 text-sm">
+                            <div className="mr-1 flex h-6 w-6 flex-row items-center">
+                              <RiChat1Line className="h-5 w-5" />
+                            </div>
+                            <span className="hidden text-gray-500 sm:inline-block">
+                              {post.comments.length} comments
+                            </span>
+                          </a>
+                        </div>
+                        <div className="ml-auto flex flex-row items-center">
+                          <small className="mr-2 items-center text-gray-500">
+                            4 min read
+                          </small>
+                          <button className="p-2">
+                            <span className="flex h-6 w-6 items-center justify-center text-center align-middle">
+                              <HiOutlineBookmark className="h-[18px] w-[18px]" />
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+          {/* <div className="mb-2 flex flex-col space-y-2">
+            {isLoading ? (
+              <SkeletonLoader />
+            ) : 
+            Array.isArray(posts) && posts.length > 0 ? (
               posts.map((post: Post) => (
                 <div
                   key={post.id}
@@ -277,24 +382,21 @@ export default function SearchPage({ searchslug }: { searchslug: string }) {
                   </div>
                 </div>
               ))
-            ) : (
+             ) : ( 
               <div>No posts found</div>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
   );
 }
-
 function SkeletonLoader() {
   return (
     <div className="space-y-4">
       {Array.from({ length: 3 }).map((_, index) => (
-        <div
-          key={index}
-          className="w-full border-[1.5px] bg-white sm:rounded-md"
-        >
+        <div key={index} className="w-full bg-white sm:rounded-md">
+          <div className="aspect-[2/1] w-full animate-pulse bg-gray-300 sm:rounded-b-none sm:rounded-t-md" />
           <div className="p-5">
             <div className="mb-2 mr-2 flex max-h-[35px] items-center">
               <div className="mr-2 h-8 w-8 animate-pulse overflow-hidden rounded-full bg-gray-200"></div>
@@ -314,13 +416,59 @@ function SkeletonLoader() {
                   </a>
                 </div>
                 <div className="ml-auto flex flex-row items-center">
-                  <div className="h-[24px] w-[80px] animate-pulse rounded-md bg-gray-200 sm:w-[150px]" />
+                  <div className="h-[24px] w-[150px] animate-pulse rounded-md bg-gray-200" />
                 </div>
               </div>
+            </div>{" "}
+            {/* <div className="mb-2 mr-2 flex max-h-[35px] items-center">
+              <div className="mr-2 h-8 w-8 animate-pulse overflow-hidden rounded-full bg-gray-300"></div>
+              <div className="flex flex-col">
+                <div className="h-4 w-24 animate-pulse rounded-md bg-gray-300"></div>
+                <div className="mt-1 h-3 w-16 animate-pulse rounded-md bg-gray-300"></div>
+              </div>
             </div>
+            <div className="mt-3 h-6 w-3/4 animate-pulse rounded-md bg-gray-300"></div>
+            <div className="mt-2 h-4 w-1/2 animate-pulse rounded-md bg-gray-300"></div> */}
           </div>
         </div>
       ))}
     </div>
   );
 }
+// function SkeletonLoader() {
+//   return (
+//     <div className="space-y-4">
+//       {Array.from({ length: 3 }).map((_, index) => (
+//         <div
+//           key={index}
+//           className="w-full border-[1.5px] bg-white sm:rounded-md"
+//         >
+//           <div className="p-5">
+//             <div className="mb-2 mr-2 flex max-h-[35px] items-center">
+//               <div className="mr-2 h-8 w-8 animate-pulse overflow-hidden rounded-full bg-gray-200"></div>
+//               <div className="flex flex-col">
+//                 <div className="mb-1 h-[15px] w-[80px] animate-pulse rounded-md bg-gray-200" />
+//                 <div className="flex h-[12px] w-[40px] animate-pulse items-center rounded-md bg-gray-200 text-xs" />
+//               </div>
+//             </div>
+//             <div className="flex flex-col items-center pl-[10px] md:pl-[20px] lg:pl-[40px]">
+//               <div className="mb-2 mr-auto h-[29.5px] w-[250px] animate-pulse justify-start rounded-md bg-gray-200" />
+//               <div className="mb-2 mr-auto flex h-[27px] w-[200px] animate-pulse justify-start rounded-md bg-gray-200 text-gray-500"></div>
+//               <div className="flex w-full flex-row items-center">
+//                 <div className="flex flex-row items-center">
+//                   <div className="h-[24px] w-[120px] animate-pulse rounded-md bg-gray-200" />
+//                   <a className="hidden flex-row items-center py-1 pl-2 pr-3 text-sm sm:flex">
+//                     <div className="h-[24px] w-[120px] animate-pulse rounded-md bg-gray-200" />
+//                   </a>
+//                 </div>
+//                 <div className="ml-auto flex flex-row items-center">
+//                   <div className="h-[24px] w-[80px] animate-pulse rounded-md bg-gray-200 sm:w-[150px]" />
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       ))}
+//     </div>
+//   );
+// }

@@ -28,7 +28,7 @@ export default function Header() {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
-    }, 200);
+    }, 5 - 0);
     // cleanup if user types again before 200ms passes
     return () => {
       clearTimeout(handler);
@@ -42,7 +42,7 @@ export default function Header() {
     }
   }, [debouncedSearchTerm, router]);
 
-  // conduct search if user click enter
+  // conduct search if user clicks enter
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -60,7 +60,9 @@ export default function Header() {
           <Image src="/images/logo.png" alt="logo" width={50} height={50} />
         </a>
         <button className="mr-1 flex flex-grow justify-end p-2 md:hidden">
-          <RiSearchLine className="h-6 w-6" />
+          <a href="/searchposts">
+            <RiSearchLine className="h-6 w-6" />
+          </a>
         </button>
         <div className="mx-4 hidden max-w-2xl flex-grow md:block md:w-[680px]">
           <form className="flex h-[40px] items-center rounded-md border border-gray-300">
@@ -86,11 +88,6 @@ export default function Header() {
                 <div className="mr-2 hidden w-[116.5px] items-center justify-center rounded-md border border-blue-700 px-3 py-2 text-center text-sm text-blue-700 sm:flex">
                   Create Post
                 </div>
-              </a>
-            </div>
-            <div className="p-2 sm:hidden">
-              <a href="/">
-                <RiSearchLine className="h-6 w-6" />
               </a>
             </div>
             <div className="mx-1 p-2">

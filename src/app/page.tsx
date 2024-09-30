@@ -1278,7 +1278,7 @@ c32 20 52 41 67 72 21 43 22 54 19 374 l-3 330 -31 39 c-61 76 -30 73 -669 73
                 posts?.map((post) => (
                   <div
                     key={post.id}
-                    className="w-full border-[1.5px] bg-white sm:rounded-md"
+                    className="w-full bg-white sm:rounded-md md:border-[1.5px]"
                   >
                     {post.image && (
                       <div className="aspect-[2/1] w-full sm:rounded-t-md">
